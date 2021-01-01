@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
             DONE - po wybraniu kośc wędruje na środek (battlefield)
                 DONE (its hidden and blocked)* miejsce po wybranej kosci nie bierze udziału w dalszym losowaniu
                 DONE * zmiana jasności pola kości lub jego zniknięcie
-            - 3 tury rzutów, po tym razie wszystkie wylosowane kosci ląduja na srodku
+            DONE - 3 tury rzutów, po tym razie wszystkie wylosowane kosci ląduja na srodku
         => FAZA WYBORU SKILI BÓSTW (W planach na później)
         => FAZA PRZYZNANIA GOLDA
         => FAZA ATAKU I OBRONY
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
             if (TurnNumber > 3.0)
             {
                 print("its time for duel :D");
-                //  ChangeUIToBattleMode();
+                ChangeUIToBattleMode();
             }
         }
     }
@@ -83,6 +83,10 @@ public class GameManager : MonoBehaviour
             {
                 GameObject.Find("GameCanvas").transform.Find("Player1").transform.Find("Roll Button").transform.SetSiblingIndex(1);
             }
+            else if(GameObject.Find("Player1").GetComponentInChildren<DiceManager>().NumberOfDicesOnBattlefield >= 6)
+            {
+                GameObject.Find("GameCanvas").transform.Find("Player1").transform.Find("Roll Button").transform.SetSiblingIndex(1);
+            }
         }
 
         if (Player2_RollingCounter >= 3.0)
@@ -91,7 +95,11 @@ public class GameManager : MonoBehaviour
             {
                 GameObject.Find("GameCanvas").transform.Find("Player2").transform.Find("DiceHolder").GetComponent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = true;
             }
-            else if (Player1_RollingCounter >= 4)
+            else if (Player2_RollingCounter >= 4)
+            {
+                GameObject.Find("GameCanvas").transform.Find("Player2").transform.Find("Roll Button").transform.SetSiblingIndex(1);
+            }
+            else if(GameObject.Find("Player2").GetComponentInChildren<DiceManager>().NumberOfDicesOnBattlefield >= 6)
             {
                 GameObject.Find("GameCanvas").transform.Find("Player2").transform.Find("Roll Button").transform.SetSiblingIndex(1);
             }
@@ -134,15 +142,40 @@ public class GameManager : MonoBehaviour
         CurrentPlayer = playerName;
         ChangePlayersTurn();
         print($"<b>{playerName}</b> decide to end of his turn. now its <b>{CurrentPlayer}</b> turn.");
+
+        // automatyczne przelączenie sie do widoku walki jezeli na polu bitwy znajduje sie 12 kostek
+        var battlefield = GameObject.Find("Battlefield").transform;
+        int player1DiceOnField = battlefield.Find("Player1Dices").childCount;
+        int player2DiceOnField = battlefield.Find("Player2Dices").childCount;
+        print(player1DiceOnField +", "+player2DiceOnField);
+        if((player1DiceOnField + player2DiceOnField)== 12){
+            ChangeUIToBattleMode();
+        }
+
+
     }
     void ChangeUIToBattleMode()
     {
-
-        // zmiana wielkości areny
+        // zmiana wielkości areny przelicznik 3.2x wysokosc
+        var battlefieldRT = BattleField.GetComponent<RectTransform>();
+        battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x,battlefieldRT.sizeDelta.y*3.2f);
 
         // ukrycie paneli przyciemniajacych - sygnalizowanie ktory gracz ma ture
+        Player1TurnBlocker.SetActive(false);
+        Player2TurnBlocker.SetActive(false);
 
         // ? albo w trakcie )1 posortowanie kosci na planszy ? deff / attack / steal
+        #region notatki dotyczące numeracji i znaczenia poszczególnych kości
+        /*
+            1,2     Axe     Mele Attack
+            3       Hand    Steal
+            4       Bow     Ranged Attack
+            5       Sheield Ranged Deffence
+            6       Helmet  Mele Deffence
+
+            
+        */
+        #endregion
 
         // wybranie skilla bozka jezeli to mozliwe
 
@@ -154,7 +187,7 @@ public class GameManager : MonoBehaviour
         // atak 2giego gracza
 
         // kradziez gracza 1 , potem 2
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 }
 

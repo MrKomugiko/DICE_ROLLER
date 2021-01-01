@@ -14,20 +14,20 @@ public class DiceRollScript : MonoBehaviour
 
     [SerializeField] private bool rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
-    [SerializeField] public Image diceImage;
+    [SerializeField] private Image _diceImage;
 
     [SerializeField] bool _isSentToBattlefield;
     [SerializeField] bool _isAbleToPickup;
 
-    public bool IsAbleToPickup 
-    { 
-        get => _isAbleToPickup; 
+    public bool IsAbleToPickup
+    {
+        get => _isAbleToPickup;
         set
         {
             try
             {
-                _isAbleToPickup = value; 
-                if(_isAbleToPickup == false)
+                _isAbleToPickup = value;
+                if (_isAbleToPickup == false)
                 {
                     this.GetComponent<Button>().interactable = false;
                 }
@@ -38,34 +38,36 @@ public class DiceRollScript : MonoBehaviour
             }
             catch (System.Exception)
             {
-                print("Dice in battleground dont have buttons");
+                // print("Dice in battleground dont have buttons");
             }
         }
     }
-    public bool IsSentToBattlefield 
-    { 
-        get => _isSentToBattlefield; 
+    public bool IsSentToBattlefield
+    {
+        get => _isSentToBattlefield;
         set
         {
-            _isSentToBattlefield = value; 
-            if(value == true){
+            _isSentToBattlefield = value;
+            if (value == true)
+            {
                 this.GetComponent<Image>().color = Color.clear;
                 this.GetComponent<Button>().interactable = false;
+                this.IsAbleToPickup = false;
             }
         }
     }
 
-    public bool RollingIsCompleted 
-    { 
-        get => rollingIsCompleted; 
+    public bool RollingIsCompleted
+    {
+        get => rollingIsCompleted;
         set
         {
-            rollingIsCompleted = value; 
-            if(value == true)
+            rollingIsCompleted = value;
+            if (value == true)
             {
-                if(GetComponentInParent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES == true)
+                if (GetComponentInParent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES == true)
                 {
-                    if(IsSentToBattlefield == false)
+                    if (IsSentToBattlefield == false)
                     {
                         SendDiceToBattlefield();
                     }
@@ -74,25 +76,37 @@ public class DiceRollScript : MonoBehaviour
         }
     }
 
+    public Image DiceImage
+    {
+        get => _diceImage;
+        set
+        {
+            _diceImage = value;
+            this.GetComponent<Image>().sprite = DiceImage.sprite;
+        }
+    }
+
     public void SendDiceToBattlefield()
     {
-  
-       print($"{this.GetComponent<Image>().sprite.name} going to battlefield.");
-       IsSentToBattlefield = true;
 
-       var diceOnBattlefield = Instantiate(GameObject.Find("GameManager").GetComponent<GameManager>().DicePrefab,GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position,Quaternion.identity,GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
-       diceOnBattlefield.GetComponent<DiceRollScript>().diceImage = diceImage;
-       diceOnBattlefield.GetComponent<Image>().sprite = diceImage.sprite;
-       if(GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.name =="Player1Dices")
-       {
-           diceOnBattlefield.transform.Rotate(0,0,180f,Space.Self);
-       }
+        print($"{this.GetComponent<Image>().sprite.name} going to battlefield.");
+        IsSentToBattlefield = true;
+
+        var diceOnBattlefield = Instantiate(GameObject.Find("GameManager").GetComponent<GameManager>().DicePrefab, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position, Quaternion.identity, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
+        diceOnBattlefield.GetComponent<DiceRollScript>().DiceImage = DiceImage;
+        diceOnBattlefield.GetComponent<Image>().sprite = DiceImage.sprite;
+        diceOnBattlefield.GetComponent<DiceRollScript>().DiceImage = this.DiceImage;
+        if (GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.name == "Player1Dices")
+        {
+            diceOnBattlefield.transform.Rotate(0, 0, 180f, Space.Self);
+        }
+        GetComponentInParent<DiceManager>().NumberOfDicesOnBattlefield++;
     }
 
     void Start()
     {
         IsAbleToPickup = false;
-        diceImage = this.GetComponent<Image>();
+        DiceImage = this.GetComponent<Image>();
     }
     public void StartRolling()
     {

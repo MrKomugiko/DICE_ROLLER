@@ -783,7 +783,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 204312834}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &204312834
@@ -881,6 +881,7 @@ MonoBehaviour:
   - {fileID: 1947504098}
   - {fileID: 316941340}
   _setDicesOff: 0
+  _numberOfDicesOnBattlefield: 0
 --- !u!114 &228421450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,7 +1073,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 289617829}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &289617829
@@ -1201,6 +1202,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _setDicesOff: 0
+  _numberOfDicesOnBattlefield: 0
 --- !u!114 &301026911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1866,7 +1868,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 487309582}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &487309582
@@ -2703,7 +2705,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 720987814}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &720987814
@@ -2956,7 +2958,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 748574811}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &748574811
@@ -3332,7 +3334,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.5, y: 6}
+  m_AnchoredPosition: {x: -1.5, y: -9}
   m_SizeDelta: {x: 1005.1, y: 341.09375}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &965387222
@@ -3726,7 +3728,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1109740593}
   - component: {fileID: 1109740595}
-  - component: {fileID: 1109740594}
+  - component: {fileID: 1109740596}
   m_Layer: 0
   m_Name: Player2Dices
   m_TagString: Untagged
@@ -3753,52 +3755,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1005.1, y: 157.9}
   m_Pivot: {x: 1, y: 0}
---- !u!114 &1109740594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109740592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04d31fdf53088484f86bc7f13ca7119f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerBattlefieldDiceHolder: {fileID: 0}
-  _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES: 0
-  Dices:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _setDicesOff: 0
 --- !u!114 &1109740595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3823,6 +3779,36 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 2
   m_ConstraintCount: 1
+--- !u!114 &1109740596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109740592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c567ddb262d93ee45b0649f2620b73b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listOfEveryDiceFaces:
+  - {fileID: -1327247425645525364, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 5905191007318081897, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 8796966304636516665, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 2650688637898870366, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  DicesOnBattleground: []
+  DicesOnBattleground_Names: []
+  _dicesOnBattleground_Images: []
+  needToSort: 0
+  diceSorted: 0
 --- !u!1 &1116093115
 GameObject:
   m_ObjectHideFlags: 0
@@ -4024,6 +4010,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _setDicesOff: 0
+  _numberOfDicesOnBattlefield: 0
 --- !u!114 &1124506829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4106,7 +4093,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1141824670}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1141824670
@@ -4240,7 +4227,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1274629994}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1274629994
@@ -4628,6 +4615,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _setDicesOff: 0
+  _numberOfDicesOnBattlefield: 0
 --- !u!114 &1286232605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5001,7 +4989,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1392148790}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1392148790
@@ -5715,6 +5703,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _setDicesOff: 0
+  _numberOfDicesOnBattlefield: 0
 --- !u!114 &1603468636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5797,7 +5786,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1684264359}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1684264359
@@ -6020,7 +6009,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1751040046}
   - component: {fileID: 1751040048}
-  - component: {fileID: 1751040047}
+  - component: {fileID: 1751040049}
   m_Layer: 0
   m_Name: Player1Dices
   m_TagString: Untagged
@@ -6047,40 +6036,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1000, y: 185.5}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &1751040047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1751040045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04d31fdf53088484f86bc7f13ca7119f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerBattlefieldDiceHolder: {fileID: 0}
-  _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES: 0
-  Dices:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _setDicesOff: 0
 --- !u!114 &1751040048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6105,6 +6060,36 @@ MonoBehaviour:
   m_Spacing: {x: 10, y: 10}
   m_Constraint: 2
   m_ConstraintCount: 1
+--- !u!114 &1751040049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751040045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c567ddb262d93ee45b0649f2620b73b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  listOfEveryDiceFaces:
+  - {fileID: -1327247425645525364, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 5905191007318081897, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 8796966304636516665, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 2650688637898870366, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  - {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9, type: 3}
+  DicesOnBattleground: []
+  DicesOnBattleground_Names: []
+  _dicesOnBattleground_Images: []
+  needToSort: 0
+  diceSorted: 0
 --- !u!1001 &1765786286
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6406,6 +6391,7 @@ MonoBehaviour:
   - {fileID: 1368933027}
   - {fileID: 1372347208}
   _setDicesOff: 0
+  _numberOfDicesOnBattlefield: 0
 --- !u!114 &1795155978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6668,7 +6654,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1876903881}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1876903881
@@ -6766,7 +6752,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1885324636}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1885324636
@@ -7760,7 +7746,7 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 1973512058}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
 --- !u!114 &1973512058

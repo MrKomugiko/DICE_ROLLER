@@ -9,6 +9,7 @@ public class DiceManager : MonoBehaviour
     [SerializeField] private bool _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES;
     [SerializeField] private List<DiceRollScript> Dices;
     [SerializeField] bool _setDicesOff;
+    [SerializeField] private int _numberOfDicesOnBattlefield;
 
     public bool AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES
     {
@@ -33,6 +34,8 @@ public class DiceManager : MonoBehaviour
             }
         }
     }
+
+    public int NumberOfDicesOnBattlefield { get => _numberOfDicesOnBattlefield; set => _numberOfDicesOnBattlefield = value; }
 
     void Start()
     {
