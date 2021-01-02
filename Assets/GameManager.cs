@@ -14,17 +14,8 @@ public class GameManager : MonoBehaviour
         => START GRY
             - rzut monetą, wybór orła lub reszki. Wygrany zaczyna pierwszy.
         => FAZA LOSOWANIA
-            DONE - pojedyńcze losowanie na turę
-            DONE - kontrolowanie tury gracza:
-            DONE - poprzez blokade losowania lub wybierania kości
             - możliwośc podglądu skili swojego bożka
-            DONE - zapisywanie/wybieranie wylosowanych kości
-            DONE - po wybraniu kośc wędruje na środek (battlefield)
-                DONE (its hidden and blocked)* miejsce po wybranej kosci nie bierze udziału w dalszym losowaniu
-                DONE * zmiana jasności pola kości lub jego zniknięcie
-            DONE - 3 tury rzutów, po tym razie wszystkie wylosowane kosci ląduja na srodku
         => FAZA WYBORU SKILI BÓSTW (W planach na później)
-        => FAZA PRZYZNANIA GOLDA
         => FAZA ATAKU I OBRONY
         => FAZA KRADZIEŻY
             - ponowne sprawdzenie
@@ -33,10 +24,9 @@ public class GameManager : MonoBehaviour
         => RESET GRY
             - wraca możliwośc losowania kośćmi
     */
+    [SerializeField] GameObject BattleField;    
+    [SerializeField] bool isBattleModeTurnOn;
     [SerializeField] public GameObject DicePrefab;
-    [SerializeField] GameObject BattleField;
-[SerializeField] bool isBattleModeTurnOn;
-
     [SerializeField] public string currentGamePhase;
 
     public float TurnNumber
@@ -47,12 +37,10 @@ public class GameManager : MonoBehaviour
             _turnNumber = value;
             if (TurnNumber > 3.0)
             {
-                print("its time for duel :D");
                 ChangeUIToBattleMode();
             }
         }
     }
-
     [SerializeField] float _turnNumber;
 
     [SerializeField] GameObject Player1TurnBlocker;
@@ -77,38 +65,28 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
-        if (Player1_RollingCounter >= 3.0)
-        {
-            if (Player1_RollingCounter == 3.0)
-            {
-                GameObject.Find("GameCanvas").transform.Find("Player1").transform.Find("DiceHolder").GetComponent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = true;
-            }
-            else if (Player1_RollingCounter >= 4)
-            {
-                GameObject.Find("GameCanvas").transform.Find("Player1").transform.Find("Roll Button").transform.SetSiblingIndex(1);
-            }
-            else if(GameObject.Find("Player1").GetComponentInChildren<DiceManager>().NumberOfDicesOnBattlefield >= 6)
-            {
-                GameObject.Find("GameCanvas").transform.Find("Player1").transform.Find("Roll Button").transform.SetSiblingIndex(1);
-            }
-        }
-
-        if (Player2_RollingCounter >= 3.0)
-        {
-            if (Player2_RollingCounter == 3.0)
-            {
-                GameObject.Find("GameCanvas").transform.Find("Player2").transform.Find("DiceHolder").GetComponent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = true;
-            }
-            else if (Player2_RollingCounter >= 4)
-            {
-                GameObject.Find("GameCanvas").transform.Find("Player2").transform.Find("Roll Button").transform.SetSiblingIndex(1);
-            }
-            else if(GameObject.Find("Player2").GetComponentInChildren<DiceManager>().NumberOfDicesOnBattlefield >= 6)
-            {
-                GameObject.Find("GameCanvas").transform.Find("Player2").transform.Find("Roll Button").transform.SetSiblingIndex(1);
-            }
-        }
+        ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter,"Player1");
+        ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter,"Player2");
     }
+
+    private void ManageOrderingRollButtonsAndActivateLastRollingTurn(int rollingTurnNumber, string player)
+    {
+        if (rollingTurnNumber >= 3.0)
+        {
+            var player2Object =GameObject.Find("GameCanvas").transform.Find(player).transform;
+            var rollButtonObject = player2Object.Find("Roll Button").transform;
+            
+            if (rollingTurnNumber == 3.0)
+            {
+                player2Object.Find("DiceHolder").GetComponent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = true;
+            }
+            else if (rollingTurnNumber >= 4 || player2Object.GetComponentInChildren<DiceManager>().NumberOfDicesOnBattlefield >= 6) 
+            {
+                rollButtonObject.SetSiblingIndex(1);
+            }
+        }
+    }   
+
     void ChangePlayersTurn()
     {
         TurnNumber += 0.5f;

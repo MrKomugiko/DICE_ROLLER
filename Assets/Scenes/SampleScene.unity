@@ -5003,10 +5003,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b21ad0bf6b09247b54ce358bba1112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DicePrefab: {fileID: 3485725472894925093, guid: 0cc0f974926fbeb45827b9a3cfa9f03a,
-    type: 3}
   BattleField: {fileID: 965387220}
   isBattleModeTurnOn: 0
+  DicePrefab: {fileID: 3485725472894925093, guid: 0cc0f974926fbeb45827b9a3cfa9f03a,
+    type: 3}
   currentGamePhase: 
   _turnNumber: 0
   Player1TurnBlocker: {fileID: 167097285}

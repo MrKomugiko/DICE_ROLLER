@@ -56,7 +56,6 @@ public class DiceRollScript : MonoBehaviour
             }
         }
     }
-
     public bool RollingIsCompleted
     {
         get => rollingIsCompleted;
@@ -75,23 +74,45 @@ public class DiceRollScript : MonoBehaviour
             }
         }
     }
-
     public Image DiceImage
     {
         get => _diceImage;
         set
         {
             _diceImage = value;
-            this.GetComponent<Image>().sprite = DiceImage.sprite;
-            this.name = DiceImage.sprite.name;
+
+            // this.GetComponent<Image>().sprite = value.sprite;
         }
     }
 
-    public void SendDiceToBattlefield()
+    void Update()
     {
-        print($"{this.GetComponent<Image>().sprite.name} going to battlefield.");
-        IsSentToBattlefield = true;
+        if(this.name != this.GetComponent<Image>().sprite.name){
+            this.name = this.GetComponent<Image>().sprite.name;
+            this.DiceImage.sprite = this.GetComponent<Image>().sprite;
+            print("zmiana nazwy obiektu i \"diceimage\" na identyczna jak aktualny obrazek");
+    }
+}
+    void Start()
+    {
+        IsAbleToPickup = false;
+        DiceImage = this.GetComponent<Image>();
+    }
+    public void StartRolling()
+    {
+        RollingIsCompleted = false;
+        List<int> WynikiLosowania = GenerujListeWynikowRzutemKoscia("classic");
+        StartCoroutine(RollingAnimation(WynikiLosowania));
 
+        #region statistic debug
+        //  List<int> PodsumowanieLosowania = PodliczIloscWyrzuconychWartosciWCalymLosowaniu(WynikiLosowania);
+        //  PokazProcentowyUdzialWylosowanychLiczb(PodsumowanieLosowania);
+        // Pokaz10PierwszychWylosowanychElementow(WynikiLosowania);
+        #endregion
+    }
+    private void SendDiceToBattlefield()
+    {
+        IsSentToBattlefield = true;
         var diceOnBattlefield = Instantiate(GameObject.Find("GameManager").GetComponent<GameManager>().DicePrefab, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position, Quaternion.identity, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
         diceOnBattlefield.GetComponent<DiceRollScript>().DiceImage = DiceImage;
         diceOnBattlefield.GetComponent<Image>().sprite = DiceImage.sprite;
@@ -102,23 +123,17 @@ public class DiceRollScript : MonoBehaviour
         }
         GetComponentInParent<DiceManager>().NumberOfDicesOnBattlefield++;
     }
-
-    void Start()
+    IEnumerator RollingAnimation(List<int> wynikiLosowania)
     {
-        IsAbleToPickup = false;
-        DiceImage = this.GetComponent<Image>();
+        for (int i = 0; i < 25; i++)
+        {
+            this.GetComponent<Image>().sprite = listaDiceImages.ElementAt(wynikiLosowania[i] - 1);
+            yield return new WaitForSeconds(0.05f);
+        }
+        RollingIsCompleted = true;
     }
-    public void StartRolling()
-    {
-        RollingIsCompleted = false;
-        List<int> WynikiLosowania = GenerujListeWynikowRzutemKoscia("classic");
-        //  List<int> PodsumowanieLosowania = PodliczIloscWyrzuconychWartosciWCalymLosowaniu(WynikiLosowania);
 
-        //  PokazProcentowyUdzialWylosowanychLiczb(PodsumowanieLosowania);
-        // Pokaz10PierwszychWylosowanychElementow(WynikiLosowania);
-
-        StartCoroutine(RollingAnimation(WynikiLosowania));
-    }
+    #region Generator + Statystyki
     private static List<int> GenerujListeWynikowRzutemKoscia(string type)
     {
         List<int> wynikiLosowania = new List<int>();
@@ -126,7 +141,6 @@ public class DiceRollScript : MonoBehaviour
         switch (type)
         {
             case "classic":
-                // // // Console.WriteLine("\nLosowanie bardziej 'losowe'");
                 for (int i = 0; i < ILOSC_RZUTOW; i++)
                 {
                     wynikiLosowania.Add(RandomNumberGenerator.NumberBetween(1, WIELKOSC_KOSCI));
@@ -134,7 +148,6 @@ public class DiceRollScript : MonoBehaviour
                 break;
 
             case "simple":
-                // // Console.WriteLine("\nProste losowanie");
                 for (int i = 0; i < ILOSC_RZUTOW; i++)
                 {
                     wynikiLosowania.Add(RandomNumberGenerator.SimpleNumberBetween(1, WIELKOSC_KOSCI));
@@ -143,15 +156,12 @@ public class DiceRollScript : MonoBehaviour
         }
         return wynikiLosowania;
     }
-    private static List<int> PodliczIloscWyrzuconychWartosciWCalymLosowaniu(List<int> wynikiLosowania)
+    private static void PokazProcentowyUdzialWylosowanychLiczb(List<int> podsumowanieLosowania)
     {
-        List<int> podsumowanie = new List<int>();
-        for (int i = 1; i <= WIELKOSC_KOSCI; i++)
+        for (int i = 0; i < WIELKOSC_KOSCI; i++)
         {
-            podsumowanie.Add(wynikiLosowania.Where(p => p.Equals(i)).Count());
+            Console.Write($"{i + 1} licba wystąpień = {podsumowanieLosowania[i]} [{((float)(podsumowanieLosowania[i] * 100) / ILOSC_RZUTOW)}%]\n");
         }
-
-        return podsumowanie;
     }
     private void Pokaz10PierwszychWylosowanychElementow(List<int> wynikiLosowania)
     {
@@ -159,26 +169,17 @@ public class DiceRollScript : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             wyniki += wynikiLosowania[i].ToString() + ", ";
-            // this.GetComponent<Image>().sprite = listaDiceImages.ElementAt(wynikiLosowania[i]-1);
         }
-        //Debug.Log(wyniki);
+       Debug.Log(wyniki);
     }
-    private static void PokazProcentowyUdzialWylosowanychLiczb(List<int> podsumowanieLosowania)
+    private static List<int> PodliczIloscWyrzuconychWartosciWCalymLosowaniu(List<int> wynikiLosowania)
     {
-        for (int i = 0; i < WIELKOSC_KOSCI; i++)
+        List<int> podsumowanie = new List<int>();
+        for (int i = 1; i <= WIELKOSC_KOSCI; i++)
         {
-            // Console.Write($"{i + 1} licba wystąpień = {podsumowanieLosowania[i]} [{((float)(podsumowanieLosowania[i] * 100) / ILOSC_RZUTOW)}%]\n");
+            podsumowanie.Add(wynikiLosowania.Where(p => p.Equals(i)).Count());
         }
+        return podsumowanie;
     }
-    IEnumerator RollingAnimation(List<int> wynikiLosowania)
-    {
-        for (int i = 0; i < 25; i++)
-        {
-            //print(i.ToString()+" => "+wynikiLosowania[i].ToString());
-            this.GetComponent<Image>().sprite = listaDiceImages.ElementAt(wynikiLosowania[i] - 1);
-            yield return new WaitForSeconds(0.05f);
-        }
-
-        RollingIsCompleted = true;
-    }
+    #endregion
 }

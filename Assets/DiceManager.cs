@@ -40,12 +40,10 @@ public class DiceManager : MonoBehaviour
     void Start()
     {
         _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
-        //  Dices.AddRange(GetComponentsInChildren<DiceRollScript>());
     }
 
     public void OnClick_ROLLDICES()
     {
-        // TODO: before rolling - player cant pick dice to battlefield its too late for this move.
         foreach (var dice in Dices)
         {
             dice.StartRolling();

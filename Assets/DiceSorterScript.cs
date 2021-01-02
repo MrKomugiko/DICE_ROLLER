@@ -50,15 +50,16 @@ public class DiceSorterScript : MonoBehaviour
     void ReplaceDicesOnBattleground(Dictionary<int, string> sortedDicesDict){
         foreach (KeyValuePair<int, string> dice in sortedDicesDict)
         {
-            print(dice.Key + " " + dice.Value+" test");
             this.transform.GetChild(dice.Key).GetComponent<DiceRollScript>().DiceImage.sprite = listOfEveryDiceFaces.Where(p=>p.name == dice.Value).FirstOrDefault();
+            print("podmiana obrazka");
         }
-        print("done");
     }
 
     Dictionary<int, string> SortDicesByType(List<Image> dicesOnBattleground)
     {
-        // TODO: OGANAC KOLEJNOŚĆ KTO PIERWSZY ATAKUJE A KTO MA DEFA NA POCZATKU?
+        Dictionary<int, string> SortedDict = new Dictionary<int, string>();
+
+        List<int> correctOrderDiceFaces = new List<int>(){1,2,6,4,5,3};
         /*
             1,2     Axe     Mele Attack
             6       Helmet  Mele Deffence 
@@ -67,11 +68,7 @@ public class DiceSorterScript : MonoBehaviour
             3       Hand    Steal
         */
         
-
         int diceIndex = 0;
-        Dictionary<int, string> SortedDict = new Dictionary<int, string>();
-
-        List<int> correctOrderDiceFaces = new List<int>(){1,2,6,4,5,3};
         foreach (int diceFace in correctOrderDiceFaces)
         {
             foreach (Image diceImage in dicesOnBattleground)
@@ -84,67 +81,11 @@ public class DiceSorterScript : MonoBehaviour
                 }
             }
         }
-
-        // foreach (Image diceImage in dicesOnBattleground)
-        // {
-        //     // MELE ATTACK
-        //     if (diceImage.sprite.name.ElementAt(0).ToString() == "1")
-        //     {
-        //         SortedDict.Add(diceIndex, diceImage.sprite.name);
-        //         diceIndex++;
-        //     }
-        // }
-
-        // foreach (Image diceImage in dicesOnBattleground)
-        // {
-        //     // MELE ATTACK
-        //     if (diceImage.sprite.name.ElementAt(0).ToString() == "2")
-        //     {
-        //         SortedDict.Add(diceIndex, diceImage.sprite.name);
-        //         diceIndex++;
-        //     }
-        // }
-
-        // foreach (Image diceImage in dicesOnBattleground)
-        // {
-        //     // MELE DEFFENCE
-        //     if (diceImage.sprite.name.ElementAt(0).ToString() == "6")
-        //     {
-        //         SortedDict.Add(diceIndex, diceImage.sprite.name);
-        //         diceIndex++;
-        //     }
-        // }
-
-        // foreach (Image diceImage in dicesOnBattleground)
-        // {
-        //     // RANGED ATTACK
-        //     if (diceImage.sprite.name.ElementAt(0).ToString() == "4")
-        //     {
-        //         SortedDict.Add(diceIndex, diceImage.sprite.name);
-        //         diceIndex++;
-        //     }
-        // }
-
-        // foreach (Image diceImage in dicesOnBattleground)
-        // {
-        //     // RANGED DEFFENCE
-        //     if (diceImage.sprite.name.ElementAt(0).ToString() == "5")
-        //     {
-        //         SortedDict.Add(diceIndex, diceImage.sprite.name);
-        //         diceIndex++;
-        //     }
-        // }
-
-        // foreach (Image diceImage in dicesOnBattleground)
-        // {
-        //     // STEAL
-        //     if (diceImage.sprite.name.ElementAt(0).ToString() == "3")
-        //     {
-        //         SortedDict.Add(diceIndex, diceImage.sprite.name);
-        //         diceIndex++;
-        //     }
-        // }
-
         return SortedDict;
+    }
+
+    private void UpdateDiceObjectName(int index)
+    {
+       this.GetComponentInParent<DiceRollScript>().DiceImage = this.GetComponent<Image>();
     }
 }
