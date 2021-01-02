@@ -19,7 +19,8 @@ public class DiceActionScript : MonoBehaviour
             if (value == true)
             {
                 // najpierw sprawdzenie czy item jest faktycznie "blogoslawiony"
-                if(this.name.Contains("Blessed")){
+                if (this.name.Contains("Blessed"))
+                {
                     StartCoroutine(AddGodCoin());
                 }
             }
@@ -83,23 +84,31 @@ public class DiceActionScript : MonoBehaviour
 
         for (float i = 0f; i <= 1.1; i += 0.05f)
         {
-             print(i.ToString());
+            print(i.ToString());
             //print(i.ToString()+" => "+wynikiLosowania[i].ToString());
             p1coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
             p2coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
-            if (i >= 0.5f && i <= 0.55f)
+            if (i >= 0.5f && i < 0.55f)
             {
-                 print(i.ToString()+"???");
+                print(i.ToString() + "???");
                 var p1GoldMain = Convert.ToInt32(GameObject.Find("Player1").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().text);
+                if (collectedGoldP1 > 0)
+                {
+                    collectedGoldP1 = 1;
+                }
                 int goldP1 = p1GoldMain + collectedGoldP1;
                 GameObject.Find("Player1").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().SetText(goldP1.ToString());
 
                 var p2GoldMain = Convert.ToInt32(GameObject.Find("Player2").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().text);
+                if (collectedGoldP2 > 0)
+                {
+                    collectedGoldP2 = 1;
+                }
                 int goldP2 = p2GoldMain + collectedGoldP2;
                 GameObject.Find("Player2").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().SetText(goldP2.ToString());
 
             }
-            
+
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
             yield return new WaitForSeconds(0.05f);
             p1coin.SetText("0");
