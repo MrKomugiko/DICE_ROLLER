@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Linq;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,7 +35,9 @@ public class GameManager : MonoBehaviour
     */
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] GameObject BattleField;
+[SerializeField] bool isBattleModeTurnOn;
 
+    [SerializeField] public string currentGamePhase;
 
     public float TurnNumber
     {
@@ -66,6 +69,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
         Player1_RollingCounter = 0;
         Player2_RollingCounter = 0;
@@ -156,31 +160,33 @@ public class GameManager : MonoBehaviour
     }
     void ChangeUIToBattleMode()
     {
-        // zmiana wielkości areny przelicznik 3.2x wysokosc
+        if(isBattleModeTurnOn == false){
+
+        
+        currentGamePhase = "Battle: Phase 1 -> ''sorting dices''";
+        // DONE zmiana wielkości areny przelicznik 3.2x wysokosc
         var battlefieldRT = BattleField.GetComponent<RectTransform>();
         battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x,battlefieldRT.sizeDelta.y*3.2f);
 
-        // ukrycie paneli przyciemniajacych - sygnalizowanie ktory gracz ma ture
+        //DONE ukrycie paneli przyciemniajacych - sygnalizowanie ktory gracz ma ture
         Player1TurnBlocker.SetActive(false);
         Player2TurnBlocker.SetActive(false);
 
-        // ? albo w trakcie )1 posortowanie kosci na planszy ? deff / attack / steal
-        #region notatki dotyczące numeracji i znaczenia poszczególnych kości
-        /*
-            1,2     Axe     Mele Attack
-            3       Hand    Steal
-            4       Bow     Ranged Attack
-            5       Sheield Ranged Deffence
-            6       Helmet  Mele Deffence
-
-            
-        */
-        #endregion
-
+         // DONE ? albo w trakcie )1 posortowanie kosci na planszy ? deff / attack / steal
+    
         // wybranie skilla bozka jezeli to mozliwe
 
         // przyzna kazzdej ze strony golda
+        List<DiceActionScript> DicesOnBF = new List<DiceActionScript>();
+        DicesOnBF.AddRange(BattleField.transform.Find("Player1Dices").GetComponentsInChildren<DiceActionScript>().ToList());
+        DicesOnBF.AddRange(BattleField.transform.Find("Player2Dices").GetComponentsInChildren<DiceActionScript>().ToList());
 
+            foreach (var dice in DicesOnBF)
+            {
+                // a skrypt w kostce sprawdzi do kogo nalezy i czy jest "pobłogosławiona"
+                //  oraz zostanie wywołana animacja i podsumowanie
+                dice.AddGoldFromBlessedItems = true; 
+            }
         // pojedyńcze atakowanie, jeżeli napotka swojego defa to przeciwnik nie otrzymuje obrażeń
             // - helm to obona na topór
             // - tarcza obona na łuk
@@ -188,6 +194,8 @@ public class GameManager : MonoBehaviour
 
         // kradziez gracza 1 , potem 2
         //throw new NotImplementedException();
+        isBattleModeTurnOn = true;
+        }
     }
 }
 

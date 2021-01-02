@@ -83,12 +83,12 @@ public class DiceRollScript : MonoBehaviour
         {
             _diceImage = value;
             this.GetComponent<Image>().sprite = DiceImage.sprite;
+            this.name = DiceImage.sprite.name;
         }
     }
 
     public void SendDiceToBattlefield()
     {
-
         print($"{this.GetComponent<Image>().sprite.name} going to battlefield.");
         IsSentToBattlefield = true;
 

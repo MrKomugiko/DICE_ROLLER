@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3485725472894925089}
   - component: {fileID: 3485725472894925094}
   - component: {fileID: 3485725472894925095}
+  - component: {fileID: 5629002160798461361}
   m_Layer: 5
   m_Name: DICE_FIGHT_SIMPLE
   m_TagString: Untagged
@@ -87,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17376d00a0440b741aeb3dbb3bc9d36f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rollingIsCompleted: 0
   listaDiceImages:
   - {fileID: 1026941594032378316, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -1611702914628681612, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
@@ -94,6 +96,19 @@ MonoBehaviour:
   - {fileID: -2888862228446784379, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5571486785279925277, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
   - {fileID: -5880772495988997784, guid: a0b0cdc47af928d4689ec5ccd63daa24, type: 3}
-  diceImage: {fileID: 0}
+  _diceImage: {fileID: 0}
   _isSentToBattlefield: 0
   _isAbleToPickup: 0
+--- !u!114 &5629002160798461361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3485725472894925093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef7669ef45c9a9c4dad99cc0797174ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _addGoldFromBlessedItems: 0
