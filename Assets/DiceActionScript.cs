@@ -91,6 +91,10 @@ public class DiceActionScript : MonoBehaviour
             _makeDiceAsActive = false;
             StartCoroutine(ChangeColor(Color.white));
         }
+
+        /*
+         * TODO: Wysłanie kostki na Arenę
+         */
     }
 
     IEnumerator AddGodCoin()
