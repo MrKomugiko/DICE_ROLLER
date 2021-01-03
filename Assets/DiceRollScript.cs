@@ -9,16 +9,20 @@ using System;
 
 public class DiceRollScript : MonoBehaviour
 {
+    [SerializeField] public int DiceNumber;
     public static int WIELKOSC_KOSCI = 8;
     public static int ILOSC_RZUTOW = 100;
 
+    [SerializeField] public bool DiceSlotIsLocked;
     [SerializeField] private bool rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
     [SerializeField] private Image _diceImage;
 
     [SerializeField] bool _isSentToBattlefield;
     [SerializeField] bool _isAbleToPickup;
+    [SerializeField] private bool _lockDiceOnBattlefield;
 
+    [SerializeField]
     public bool IsAbleToPickup
     {
         get => _isAbleToPickup;
@@ -27,18 +31,34 @@ public class DiceRollScript : MonoBehaviour
             try
             {
                 _isAbleToPickup = value;
-                if (_isAbleToPickup == false)
+                if (this.GetComponentInParent<DiceManager>().gameObject.name == "DiceHolder")
                 {
-                    this.GetComponent<Button>().interactable = false;
-                }
-                else
-                {
-                    this.GetComponent<Button>().interactable = true;
+                    if (_isAbleToPickup == false)
+                    {
+                        this.GetComponent<Button>().interactable = false;
+                    }
+                    else
+                    {
+                        this.GetComponent<Button>().interactable = true;
+                    }
                 }
             }
             catch (System.Exception)
             {
                 // print("Dice in battleground dont have buttons");
+            }
+        }
+    }
+
+    [SerializeField] public bool LockDiceOnBattlefield { get => _lockDiceOnBattlefield; set => _lockDiceOnBattlefield = value; }
+
+    public void OnClick_TEST_WrocKoscZpolaBitwy()
+    {
+        if (DiceSlotIsLocked == false)
+        {
+            if (LockDiceOnBattlefield == false)
+            {
+                IsSentToBattlefield = false;
             }
         }
     }
@@ -54,6 +74,20 @@ public class DiceRollScript : MonoBehaviour
                 this.GetComponent<Button>().interactable = false;
                 this.IsAbleToPickup = false;
             }
+            if (value == false)
+            {
+                // kostce wróciła możliwość losowania i ponownego wrzucenia na plansze
+                this.GetComponent<Image>().color = Color.white;
+                this.GetComponent<Button>().interactable = true;
+                this.IsAbleToPickup = true;
+                this.LockDiceOnBattlefield = false;
+
+                // teraz trzeba usunac tą kostke z planszy
+                // ? losowo, ważne że nazwa identyczna jak obrazek
+
+                GameObject playerBattlefiel = GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder;
+                Destroy(playerBattlefiel.transform.Find(this.DiceImage.sprite.name.ToString()).gameObject);
+            }
         }
     }
     public bool RollingIsCompleted
@@ -62,14 +96,45 @@ public class DiceRollScript : MonoBehaviour
         set
         {
             rollingIsCompleted = value;
+            // jezeli kość nie jest na polu bitwy
+            if (!this.IsSentToBattlefield)
+            {
+                // jezeli losowanie sie zakończyło
+                if (value == true)
+                {
+                    // jeżeli jest to ostatnia tura
+                    if (GetComponentInParent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES == true)
+                    {
+                        // jeżeli jakieś kości zostały na stole
+                        if (IsSentToBattlefield == false)
+                        {
+                            SendDiceToBattlefield();
+                            LockDiceOnBattlefield = true;
+                        }
+                    }
+                    this.IsAbleToPickup = true;
+                }
+                else
+                {
+                    this.IsAbleToPickup = false;
+                }
+            }
+
+            var endturnbuttons = GameObject.FindGameObjectsWithTag("EndTurnButton");
             if (value == true)
             {
-                if (GetComponentInParent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES == true)
+                // po zakończeniu losowania
+                foreach (var button in endturnbuttons)
                 {
-                    if (IsSentToBattlefield == false)
-                    {
-                        SendDiceToBattlefield();
-                    }
+                    button.GetComponent<Button>().interactable = true;
+                }
+            }
+            else
+            {
+                //twanie losowania
+                foreach (var button in endturnbuttons)
+                {
+                    button.GetComponent<Button>().interactable = false;
                 }
             }
         }
@@ -80,22 +145,21 @@ public class DiceRollScript : MonoBehaviour
         set
         {
             _diceImage = value;
-
-            // this.GetComponent<Image>().sprite = value.sprite;
         }
     }
 
     void Update()
     {
-        if(this.name != this.GetComponent<Image>().sprite.name){
+        if (this.name != this.GetComponent<Image>().sprite.name)
+        {
             this.name = this.GetComponent<Image>().sprite.name;
             this.DiceImage.sprite = this.GetComponent<Image>().sprite;
             print("zmiana nazwy obiektu i \"diceimage\" na identyczna jak aktualny obrazek");
+        }
     }
-}
     void Start()
     {
-        IsAbleToPickup = false;
+        this.IsAbleToPickup = false;
         DiceImage = this.GetComponent<Image>();
     }
     public void StartRolling()
@@ -114,9 +178,12 @@ public class DiceRollScript : MonoBehaviour
     {
         IsSentToBattlefield = true;
         var diceOnBattlefield = Instantiate(GameObject.Find("GameManager").GetComponent<GameManager>().DicePrefab, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position, Quaternion.identity, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
-        diceOnBattlefield.GetComponent<DiceRollScript>().DiceImage = DiceImage;
-        diceOnBattlefield.GetComponent<Image>().sprite = DiceImage.sprite;
-        diceOnBattlefield.GetComponent<DiceRollScript>().DiceImage = this.DiceImage;
+        DiceRollScript diceRollScript = diceOnBattlefield.GetComponent<DiceRollScript>();
+        diceRollScript.DiceNumber = this.DiceNumber;
+        diceRollScript.DiceImage = this.DiceImage;
+        diceOnBattlefield.GetComponent<Button>().onClick.AddListener(() => this.OnClick_TEST_WrocKoscZpolaBitwy());
+        diceOnBattlefield.GetComponent<Button>().interactable = true;
+        diceOnBattlefield.GetComponent<Image>().sprite = this.DiceImage.sprite;
         if (GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.name == "Player1Dices")
         {
             diceOnBattlefield.transform.Rotate(0, 0, 180f, Space.Self);
@@ -125,6 +192,7 @@ public class DiceRollScript : MonoBehaviour
     }
     IEnumerator RollingAnimation(List<int> wynikiLosowania)
     {
+        IsAbleToPickup = false;
         for (int i = 0; i < 25; i++)
         {
             this.GetComponent<Image>().sprite = listaDiceImages.ElementAt(wynikiLosowania[i] - 1);
@@ -170,7 +238,7 @@ public class DiceRollScript : MonoBehaviour
         {
             wyniki += wynikiLosowania[i].ToString() + ", ";
         }
-       Debug.Log(wyniki);
+        Debug.Log(wyniki);
     }
     private static List<int> PodliczIloscWyrzuconychWartosciWCalymLosowaniu(List<int> wynikiLosowania)
     {

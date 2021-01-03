@@ -134,6 +134,20 @@ public class GameManager : MonoBehaviour
             ChangeUIToBattleMode();
         }
 
+        // zablokowanie powrotu kości z pola bitwy po zakończeniu swojej tury
+        var currentdicesOnBattlefield = BattleField.GetComponentsInChildren<DiceRollScript>();
+        foreach(var dice in currentdicesOnBattlefield){
+            print(dice.name+" <- ta kostka juz tu zostanie for ever :D");
+            dice.LockDiceOnBattlefield = true;
+            // zablokowanie slotu po tej kości 
+            GameObject.Find(playerName).transform.Find("DiceHolder")
+                .GetComponentsInChildren<DiceRollScript>()
+                .Where(d=>d.DiceNumber == dice.DiceNumber)
+                .First()
+                .DiceSlotIsLocked = true; 
+        }
+
+
 
     }
     void ChangeUIToBattleMode()

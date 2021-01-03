@@ -15,15 +15,17 @@ public class DiceActionScript : MonoBehaviour
         get => _addGoldFromBlessedItems;
         set
         {
-            _addGoldFromBlessedItems = value;
             if (value == true)
             {
                 // najpierw sprawdzenie czy item jest faktycznie "blogoslawiony"
                 if (this.name.Contains("Blessed"))
-                {
+                {   
+                    // jeżeli tak -> uruchom "Animacje" i wszystko co sie z nią wiąże
                     StartCoroutine(AddGodCoin());
                 }
             }
+            // zresetuj wartośc na false
+            _addGoldFromBlessedItems = false;
         }
     }
 

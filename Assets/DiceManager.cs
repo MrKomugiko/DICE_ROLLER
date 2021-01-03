@@ -47,7 +47,7 @@ public class DiceManager : MonoBehaviour
         foreach (var dice in Dices)
         {
             dice.StartRolling();
-            dice.IsAbleToPickup = true;
+        //    dice.IsAbleToPickup = true;
         }
     }
 }
