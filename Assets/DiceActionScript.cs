@@ -9,7 +9,6 @@ using UnityEngine.UI;
 public class DiceActionScript : MonoBehaviour
 {
     [SerializeField] private bool _addGoldFromBlessedItems;
-
     public bool AddGoldFromBlessedItems
     {
         get => _addGoldFromBlessedItems;
@@ -19,7 +18,7 @@ public class DiceActionScript : MonoBehaviour
             {
                 // najpierw sprawdzenie czy item jest faktycznie "blogoslawiony"
                 if (this.name.Contains("Blessed"))
-                {   
+                {
                     // jeżeli tak -> uruchom "Animacje" i wszystko co sie z nią wiąże
                     StartCoroutine(AddGodCoin());
                 }
@@ -29,6 +28,32 @@ public class DiceActionScript : MonoBehaviour
         }
     }
 
+    [SerializeField] private bool _makeDiceAsUsed;
+    public bool MarkDiceAsUsed
+    {
+        get => _makeDiceAsUsed;
+        set
+        {
+            if (value == true)
+            {
+                StartCoroutine(ChangeColor(Color.gray));
+            }
+            _makeDiceAsUsed = false;
+        }
+    }
+    [SerializeField] private bool _makeDiceAsActive;
+    public bool MakeDiceAsActive
+    {
+        get => _makeDiceAsActive;
+        set
+        {
+            if (value == true)
+            {
+                StartCoroutine(ChangeColor(Color.gray));
+            }
+            _makeDiceAsActive = false;
+        }
+    }
     void Start()
     {
 
@@ -36,7 +61,36 @@ public class DiceActionScript : MonoBehaviour
 
     void Update()
     {
+        // sprawdzanie funkcji z posiomu inspektora
 
+        /*
+         * Cała procedura dodawania golda:
+         *      - zmiana koloru na żółty i powrót
+         *      - wyswietlenie info
+         *      - zsumowanie golda w interfejsie graczy
+         */
+
+        if (_addGoldFromBlessedItems)
+        {
+            _addGoldFromBlessedItems = false;
+            StartCoroutine(AddGodCoin());
+        }
+
+        /*
+         * Oznaczenie kości jako aktywnej/nieaktywnej
+         *      - zmiana koloru na szary lub biały
+         */
+
+        if (_makeDiceAsUsed == true)
+        {
+            _makeDiceAsUsed = false;
+            StartCoroutine(ChangeColor(Color.gray));
+        }
+        if (_makeDiceAsActive == true)
+        {
+            _makeDiceAsActive = false;
+            StartCoroutine(ChangeColor(Color.white));
+        }
     }
 
     IEnumerator AddGodCoin()
@@ -99,4 +153,16 @@ public class DiceActionScript : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
     }
+
+    IEnumerator ChangeColor(Color color)
+    {
+        for (float i = 0f; i <= 2; i += 0.05f)
+        {
+            this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
+
+            yield return new WaitForSeconds(0.05f);
+        }
+
+    }
+
 }
