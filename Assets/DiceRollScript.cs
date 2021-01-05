@@ -54,12 +54,33 @@ public class DiceRollScript : MonoBehaviour
 
     public void OnClick_TEST_WrocKoscZpolaBitwy()
     {
+        // sprawdzenie blokady na kostce "matce" na ręce wyszukanej po numeze kości
+        var myContainer = this.GetComponent<DiceActionScript>().transform.parent;
+        DiceRollScript originDice;
+        print(myContainer.name);
+
+
+        if(myContainer.name == "Player1Dices")
+        {
+            var diceOriginContainer = GameObject.Find("Player1").transform.Find("DiceHolder").transform.GetComponentsInChildren<DiceRollScript>();
+            originDice = diceOriginContainer.Where(d=>d.DiceNumber == this.DiceNumber).First();
+        }
+        else
+        {
+            var diceOriginContainer = GameObject.Find("Player2").transform.Find("DiceHolder").transform.GetComponentsInChildren<DiceRollScript>();
+            originDice = diceOriginContainer.Where(d=>d.DiceNumber == this.DiceNumber).First();
+        }
+
         if (DiceSlotIsLocked == false)
         {
             if (LockDiceOnBattlefield == false)
             {
-                IsSentToBattlefield = false;
+                originDice.IsSentToBattlefield = false;
             }
+        }
+        else
+        {
+        
         }
     }
     public bool IsSentToBattlefield
@@ -86,7 +107,8 @@ public class DiceRollScript : MonoBehaviour
                 // ? losowo, ważne że nazwa identyczna jak obrazek
 
                 GameObject playerBattlefiel = GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder;
-                Destroy(playerBattlefiel.transform.Find(this.DiceImage.sprite.name.ToString()).gameObject);
+                var Dices = playerBattlefiel.transform.GetComponentsInChildren<DiceRollScript>();
+                Destroy(Dices.Where(d=>d.DiceNumber == this.DiceNumber).First().gameObject);
             }
         }
     }
@@ -154,7 +176,7 @@ public class DiceRollScript : MonoBehaviour
         {
             this.name = this.GetComponent<Image>().sprite.name;
             this.DiceImage.sprite = this.GetComponent<Image>().sprite;
-            print("zmiana nazwy obiektu i \"diceimage\" na identyczna jak aktualny obrazek");
+//            print("zmiana nazwy obiektu i \"diceimage\" na identyczna jak aktualny obrazek");
         }
     }
     void Start()
@@ -181,7 +203,8 @@ public class DiceRollScript : MonoBehaviour
         DiceRollScript diceRollScript = diceOnBattlefield.GetComponent<DiceRollScript>();
         diceRollScript.DiceNumber = this.DiceNumber;
         diceRollScript.DiceImage = this.DiceImage;
-        diceOnBattlefield.GetComponent<Button>().onClick.AddListener(() => this.OnClick_TEST_WrocKoscZpolaBitwy());
+        diceOnBattlefield.AddComponent<DiceRollScript>();
+        diceOnBattlefield.GetComponent<Button>().onClick.AddListener(() => diceOnBattlefield.GetComponent<DiceRollScript>().OnClick_TEST_WrocKoscZpolaBitwy());
         diceOnBattlefield.GetComponent<Button>().interactable = true;
         diceOnBattlefield.GetComponent<Image>().sprite = this.DiceImage.sprite;
         if (GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.name == "Player1Dices")

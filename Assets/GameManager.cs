@@ -140,11 +140,16 @@ public class GameManager : MonoBehaviour
             print(dice.name+" <- ta kostka juz tu zostanie for ever :D");
             dice.LockDiceOnBattlefield = true;
             // zablokowanie slotu po tej kości 
-            GameObject.Find(playerName).transform.Find("DiceHolder")
+            var listaKosciDoZablokowania = GameObject.Find(playerName).transform.Find("DiceHolder")
                 .GetComponentsInChildren<DiceRollScript>()
                 .Where(d=>d.DiceNumber == dice.DiceNumber)
-                .First()
-                .DiceSlotIsLocked = true; 
+                .ToList();
+                
+               foreach(var kosc in listaKosciDoZablokowania){
+                    kosc.DiceSlotIsLocked = true; 
+               } 
+
+            
         }
 
 
