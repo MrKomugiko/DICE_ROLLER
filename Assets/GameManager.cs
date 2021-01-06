@@ -39,7 +39,16 @@ public class GameManager : MonoBehaviour
             {
                 ChangeUIToBattleMode();
             }
+        
+            // sprawdzenie czy gracz ma jakieś kości któe mogłby przerolować , inaczej nie pokazuj guzika, pokaz pomin ture odrazu 
+
+            int playerAvailableDices = 6-GameObject.Find(CurrentPlayer).transform.GetComponentsInChildren<DiceRollScript>().Where(d=>d.IsSentToBattlefield == true).Count();
+            if(playerAvailableDices == 0){
+                SwapRollButonWithEndTurn_OnClick(CurrentPlayer);
+            }
         }
+
+        
     }
     [SerializeField] float _turnNumber;
 
@@ -57,6 +66,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        CurrentPlayer = "Player1";
         currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
         Player1_RollingCounter = 0;
@@ -137,7 +147,7 @@ public class GameManager : MonoBehaviour
         // zablokowanie powrotu kości z pola bitwy po zakończeniu swojej tury
         var currentdicesOnBattlefield = BattleField.GetComponentsInChildren<DiceRollScript>();
         foreach(var dice in currentdicesOnBattlefield){
-            print(dice.name+" <- ta kostka juz tu zostanie for ever :D");
+           // print(dice.name+" <- ta kostka juz tu zostanie for ever :D");
             dice.LockDiceOnBattlefield = true;
             // zablokowanie slotu po tej kości 
             var listaKosciDoZablokowania = GameObject.Find(playerName).transform.Find("DiceHolder")
@@ -148,8 +158,6 @@ public class GameManager : MonoBehaviour
                foreach(var kosc in listaKosciDoZablokowania){
                     kosc.DiceSlotIsLocked = true; 
                } 
-
-            
         }
 
 

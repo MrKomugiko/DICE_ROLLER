@@ -57,7 +57,7 @@ public class DiceRollScript : MonoBehaviour
         // sprawdzenie blokady na kostce "matce" na ręce wyszukanej po numeze kości
         var myContainer = this.GetComponent<DiceActionScript>().transform.parent;
         DiceRollScript originDice;
-        print(myContainer.name);
+//        print(myContainer.name);
 
 
         if(myContainer.name == "Player1Dices")

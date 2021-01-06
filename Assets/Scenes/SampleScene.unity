@@ -879,7 +879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04d31fdf53088484f86bc7f13ca7119f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerBattlefieldDiceHolder: {fileID: 0}
+  PlayerBattlefieldDiceHolder: {fileID: 1904219872}
   _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES: 0
   Dices:
   - {fileID: 1149590160}
@@ -6155,7 +6155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04d31fdf53088484f86bc7f13ca7119f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerBattlefieldDiceHolder: {fileID: 0}
+  PlayerBattlefieldDiceHolder: {fileID: 298172344}
   _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES: 0
   Dices:
   - {fileID: 1705049854}
