@@ -70,7 +70,7 @@ public class DiceActionScript : MonoBehaviour
          *      - zsumowanie golda w interfejsie graczy
          */
 
-        if (_addGoldFromBlessedItems)
+        if (_addGoldFromBlessedItems && this.name.Contains("Blessed"))
         {
             _addGoldFromBlessedItems = false;
             StartCoroutine(AddGodCoin());
@@ -99,60 +99,53 @@ public class DiceActionScript : MonoBehaviour
 
     IEnumerator AddGodCoin()
     {
+        var GOLDVault1 = GameObject.Find("GameManager").transform;
+        GameManager goldVaults = GOLDVault1.GetComponent<GameManager>();
+
         _addGoldFromBlessedItems = false;
 
         var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
         var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-        int collectedGoldP1 = 0, collectedGoldP2 = 0;
+        int counter = 1;
         for (float i = 0f; i <= 2; i += 0.05f)
         {
             this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.yellow, i);
-            if (i >= 1f && i < 1.05f)
-            {
+
+            if(counter == 1){
                 if (this.transform.parent.name.ToString() == "Player1Dices")
                 {
+                    goldVaults.TemporaryGoldVault_player1+=1;
                     p1coin.color = Color.yellow;
-                    collectedGoldP1 = Convert.ToInt32(p1coin.text) + 1;
-                    p1coin.SetText("+" + collectedGoldP1.ToString());
                 }
 
                 if (this.transform.parent.name.ToString() == "Player2Dices")
                 {
+                    goldVaults.TemporaryGoldVault_player2+=1;
                     p2coin.color = Color.yellow;
-                    collectedGoldP2 = Convert.ToInt32(p2coin.text) + 1;
-                    p2coin.SetText("+" + collectedGoldP2.ToString());
                 }
+            counter --;
             }
             yield return new WaitForSeconds(0.05f);
         }
 
+        int counter2 = 1;
         for (float i = 0f; i <= 1.1; i += 0.05f)
         {
             p1coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
             p2coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
-            if (i >= 0.5f && i < 0.55f)
-            {
-                var p1GoldMain = Convert.ToInt32(GameObject.Find("Player1").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().text);
-                if (collectedGoldP1 > 0)
+            if (counter2 == 1){               
+             if (this.transform.parent.name.ToString() == "Player1Dices")
                 {
-                    collectedGoldP1 = 1;
+                    goldVaults.AddGoldToPlayerVault("Player1",1);
                 }
-                int goldP1 = p1GoldMain + collectedGoldP1;
-                GameObject.Find("Player1").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().SetText(goldP1.ToString());
-
-                var p2GoldMain = Convert.ToInt32(GameObject.Find("Player2").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().text);
-                if (collectedGoldP2 > 0)
+                if (this.transform.parent.name.ToString() == "Player2Dices")
                 {
-                    collectedGoldP2 = 1;
+                    goldVaults.AddGoldToPlayerVault("Player2",1);
                 }
-                int goldP2 = p2GoldMain + collectedGoldP2;
-                GameObject.Find("Player2").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().SetText(goldP2.ToString());
+                counter2 --;
             }
 
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
-
-            p1coin.SetText("0");
-            p2coin.SetText("0");
 
             yield return new WaitForSeconds(0.05f);
         }
