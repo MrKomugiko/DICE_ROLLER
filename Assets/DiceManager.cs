@@ -6,10 +6,10 @@ using UnityEngine;
 public class DiceManager : MonoBehaviour
 {
     [SerializeField] public GameObject PlayerBattlefieldDiceHolder;
-    [SerializeField] private bool _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES;
-    [SerializeField] private List<DiceRollScript> Dices;
+    [SerializeField] bool _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES;
+    [SerializeField] List<DiceRollScript> Dices;
     [SerializeField] bool _setDicesOff;
-    [SerializeField] private int _numberOfDicesOnBattlefield;
+    [SerializeField] int _numberOfDicesOnBattlefield;
 
     public bool AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES
     {
@@ -34,20 +34,20 @@ public class DiceManager : MonoBehaviour
             }
         }
     }
-
-    public int NumberOfDicesOnBattlefield { get => _numberOfDicesOnBattlefield; set => _numberOfDicesOnBattlefield = value; }
-
+    public int NumberOfDicesOnBattlefield 
+    { 
+        get => _numberOfDicesOnBattlefield; 
+        set => _numberOfDicesOnBattlefield = value; 
+    }
     void Start()
     {
         _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
     }
-
     public void OnClick_ROLLDICES()
     {
-        foreach (var dice in Dices)
+        foreach (DiceRollScript dice in Dices)
         {
             dice.StartRolling();
-        //    dice.IsAbleToPickup = true;
         }
     }
 }

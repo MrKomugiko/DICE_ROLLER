@@ -11,80 +11,11 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    /*
-        TODO:
-        => START GRY
-            - rzut monetą, wybór orła lub reszki. Wygrany zaczyna pierwszy.
-        => FAZA LOSOWANIA
-            - możliwośc podglądu skili swojego bożka
-        => FAZA WYBORU SKILI BÓSTW (W planach na później)
-        => FAZA ATAKU I OBRONY
-        => FAZA KRADZIEŻY
-            - ponowne sprawdzenie
-        => FAZA AKTYWACJI SKILA BOŻKA
-            - ponowne sprawdzenie wymagań (gold) po wcześniejszym zyskaniu i kradzieży
-        => RESET GRY
-            - wraca możliwośc losowania kośćmi
-    */
     [SerializeField] GameObject BattleField;
-    [SerializeField] bool isBattleModeTurnOn;
+    bool isBattleModeTurnOn;
     [SerializeField] public GameObject DicePrefab;
-    [SerializeField] public string currentGamePhase;
+    public string currentGamePhase;
 
-    private static int goldBonusesCounter_P1;
-    private static int goldBonusesCounter_P2;
-    [SerializeField] private static int player1TotalGoldFavorEaned;
-    [SerializeField] private static int player2TotalGoldFavorEaned;
-
-    public static int Player1TotalGoldFavorEaned
-    {
-        get => player1TotalGoldFavorEaned;
-        set
-        {
-            goldBonusesCounter_P1++;
-            if (goldBonusesCounter_P1 == GameObject.Find("Battlefield").transform.Find("Player1Dices").transform.GetComponentsInChildren<DiceActionScript>().Where(d => d.name.Contains("Blessed") == true).Count())
-            {
-                player2TotalGoldFavorEaned += value;
-                UpdatePlayersGoldStat(player1TotalGoldFavorEaned, goldBonusesCounter_P1, "Player1");
-                goldBonusesCounter_P1 = 0;
-            }
-        }
-    }
-    public static int Player2TotalGoldFavorEaned
-    {
-        get => player2TotalGoldFavorEaned;
-        set
-        {
-            goldBonusesCounter_P2++;
-            if (goldBonusesCounter_P2 == GameObject.Find("Battlefield").transform.Find("Player2Dices").transform.GetComponentsInChildren<DiceActionScript>().Where(d => d.name.Contains("Blessed") == true).Count())
-            {
-                player2TotalGoldFavorEaned += value;
-                UpdatePlayersGoldStat(player2TotalGoldFavorEaned, goldBonusesCounter_P2, "Player2");
-                goldBonusesCounter_P2 = 0;
-            }
-        }
-    }
-
-    public static void UpdatePlayersGoldStat(int totalValue, int value, string player)
-    {
-        var bf = GameObject.Find("Battlefield");
-        // policzenie ile blessed obiektów jest na arenie
-
-        // sprawdzenie czy każda kostka dodała swoją wartośc do puli
-        if (player == "Player1")
-        {
-            // aktualizowanie znaczników +xx 
-            bf.transform.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>().SetText("+" + value.ToString());
-            // aktualizowanie głównych wartości golda dla graczy
-            GameObject.Find("Player1").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().SetText(totalValue.ToString());
-        }
-        else
-        {
-            bf.transform.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>().SetText("+" + Player2TotalGoldFavorEaned.ToString());
-
-            GameObject.Find("Player2").transform.Find("GoldPoints").GetComponent<TextMeshProUGUI>().SetText(Player2TotalGoldFavorEaned.ToString());
-        }
-    }
     public float TurnNumber
     {
         get => _turnNumber;
@@ -95,9 +26,7 @@ public class GameManager : MonoBehaviour
             {
                 ChangeUIToBattleMode();
             }
-
             // sprawdzenie czy gracz ma jakieś kości któe mogłby przerolować , inaczej nie pokazuj guzika, pokaz pomin ture odrazu 
-
             int playerAvailableDices = 6 - GameObject.Find(CurrentPlayer).transform.GetComponentsInChildren<DiceRollScript>().Where(d => d.IsSentToBattlefield == true).Count();
             if (playerAvailableDices == 0)
             {
@@ -108,26 +37,31 @@ public class GameManager : MonoBehaviour
 
     }
 
-    [SerializeField] float _turnNumber;
+    float _turnNumber;
 
     [SerializeField] GameObject Player1TurnBlocker;
-    [SerializeField] int Player1_RollingCounter;
-    [SerializeField] bool Player1_LastRollWithAutomaticWithdraw;
-
+    int Player1_RollingCounter;
+    bool Player1_LastRollWithAutomaticWithdraw;
 
     [SerializeField] GameObject Player2TurnBlocker;
-    [SerializeField] int Player2_RollingCounter;
-    [SerializeField] bool Player2_LastRollWithAutomaticWithdraw;
+    int Player2_RollingCounter;
+    bool Player2_LastRollWithAutomaticWithdraw;
 
+    string CurrentPlayer;
 
-    [SerializeField] string CurrentPlayer;
-
-    private float time = 0.0f;
-    [SerializeField] public float interpolationPeriod = .5f;
-    [SerializeField] private int currentGold1 = 0;
+    float time = 0.0f;
+    float interpolationPeriod = .5f;
+    private int currentGold1 = 0;
     [SerializeField] TextMeshProUGUI Player1_GoldVault;
-    [SerializeField] private int currentGold2 = 0;
+    private int currentGold2 = 0;
     [SerializeField] TextMeshProUGUI Player2_GoldVault;
+
+    private int liczbaPrzelewowGolda_Player1;
+    private int liczbaPrzelewowGolda_Player2;
+    [SerializeField] public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
+    [SerializeField] public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
+    private int _temporaryGoldVault_player1;
+    private int _temporaryGoldVault_player2;
 
     void Start()
     {
@@ -152,35 +86,47 @@ public class GameManager : MonoBehaviour
         {
             time = time - interpolationPeriod;
 
-            if (liczbaOperacjiDodaniaGolda_player1 > 0)
+            if (liczbaPrzelewowGolda_Player1 > 0)
             {
-                if (liczbaOperacjiDodaniaGolda_player1 == 1)
-                {
-                    TemporaryGoldVault_player1 = 0;
-                }
                 currentGold1++;
                 Player1_GoldVault.SetText(currentGold1.ToString());
-                liczbaOperacjiDodaniaGolda_player1--;
+
+                liczbaPrzelewowGolda_Player1--;
+                if (liczbaPrzelewowGolda_Player1 == 0)
+                {
+                    // wyzeruj skarbonke
+                    TemporaryGoldVault_player1 = 0;
+                    liczbaPrzelewowGolda_Player1 = 0;
+                }
             }
 
-            if (liczbaOperacjiDodaniaGolda_player2 > 0)
+            if (liczbaPrzelewowGolda_Player2 > 0)
             {
-                if (liczbaOperacjiDodaniaGolda_player2 == 1)
-                {
-                    TemporaryGoldVault_player2 = 0;
-                }
                 currentGold2++;
                 Player2_GoldVault.SetText(currentGold2.ToString());
-                liczbaOperacjiDodaniaGolda_player2--;
-            }
 
+                liczbaPrzelewowGolda_Player2--;
+                if (liczbaPrzelewowGolda_Player2 == 0)
+                {
+                    // wyzeruj skarbonke
+                    TemporaryGoldVault_player2 = 0;
+                    liczbaPrzelewowGolda_Player2 = 0;
+                }
+            }
         }
     }
+
+    /// <summary> ustalenie na podstawie numeru tury, czy ejst to ostatnie automatyczne losowanie
+    /// </summary>
+    /// <remarks>
+    ///     <param name ="rollingTurnNumber">aktualna tura rozgrywki</param>
+    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
+    /// </remarks>
     private void ManageOrderingRollButtonsAndActivateLastRollingTurn(int rollingTurnNumber, string player)
     {
         if (rollingTurnNumber >= 3.0)
         {
-            var player2Object = GameObject.Find("GameCanvas").transform.Find(player).transform;
+            var player2Object = GameObject.Find(player).transform;
             var rollButtonObject = player2Object.Find("Roll Button").transform;
 
             if (rollingTurnNumber == 3.0)
@@ -193,6 +139,10 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary> 
+    ///     Oddanie tury przeciwnikowi, oraz przyciemnienie swojej częsci ekranu
+    /// </summary>
     void ChangePlayersTurn()
     {
         TurnNumber += 0.5f;
@@ -218,11 +168,29 @@ public class GameManager : MonoBehaviour
             Player2TurnBlocker.SetActive(false);
         }
     }
+
+    /// <summary> 
+    ///     Zmiana kolejności wyświetlania się przycisków roll i endTurn
+    /// </summary>
+    /// <remarks>
+    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
+    /// </remarks>
     public void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
         print($"<b>{playerName}</b> roll his dices.");
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
     }
+
+    /// <summary> 
+    ///     Metoda odpowiedzialna za kończenie tury 
+    ///     <list type="bullet">
+    ///         <item>Oddanie ruchu przeciwnikowi</item>
+    ///         <item>Zablokowanie kości dodanych na arene</item>
+    ///     </list>
+    /// </summary>
+    /// <remarks>
+    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
+    /// </remarks>
     public void EndYoursTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(1);
@@ -258,19 +226,22 @@ public class GameManager : MonoBehaviour
                 kosc.DiceSlotIsLocked = true;
             }
         }
-
-
-
-
     }
-    [SerializeField] public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
-    [SerializeField] public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
+
+    /// <summary> 
+    ///     Ustawienie trybu potyczki
+    ///     <list type="bullet">
+    ///         <item>zmiana układu i miejsca kości</item>
+    ///         <item>ukrycie paneli blokujących gracza</item>
+    ///         <item>Zainicjowanie wykonania funkcji zbierającej złoto z kości</item>
+    ///     </list>
+    /// </summary>
     void ChangeUIToBattleMode()
     {
         if (isBattleModeTurnOn == false)
         {
             currentGamePhase = "Battle: Phase 1 -> ''sorting dices''";
-            // DONE zmiana wielkości areny przelicznik 3.2x wysokosc
+
             var battlefieldRT = BattleField.GetComponent<RectTransform>();
             battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x, battlefieldRT.sizeDelta.y * 3.2f);
 
@@ -278,17 +249,6 @@ public class GameManager : MonoBehaviour
             Player1TurnBlocker.SetActive(false);
             Player2TurnBlocker.SetActive(false);
 
-            // DONE ? albo w trakcie )1 posortowanie kosci na planszy ? deff / attack / steal
-
-            // wybranie skilla bozka jezeli to mozliwe
-
-            //  posortuj kosci według typu
-            //    print("player 1 and 2 sorted start");
-
-            // GameObject.Find("Player1Dices").GetComponent<DiceSorterScript>().NeedToSort = true;
-            // GameObject.Find("Player2Dices").GetComponent<DiceSorterScript>().NeedToSort = true;
-
-            // przyzna kazzdej ze strony golda
             var p1Dices = GameObject.Find("Player1Dices").GetComponentsInChildren<DiceActionScript>();
             foreach (var dice in p1Dices)
             {
@@ -299,35 +259,9 @@ public class GameManager : MonoBehaviour
             {
                 dice.AddGoldFromBlessedItems = true;
             }
-            // print(dice.name+" player1");
-            // a skrypt w kostce sprawdzi do kogo nalezy i czy jest "pobłogosławiona"
-            //  oraz zostanie wywołana animacja i podsumowanie
-            //  print(dice.GetComponentInParent<DiceActionScript>().name+ "Player 1 dice");
-            //     dice.GetComponentInParent<DiceActionScript>().AddGoldFromBlessedItems = true; 
             isBattleModeTurnOn = true;
         }
-
-        // foreach (var dice in GameObject.Find("Player2Dices").GetComponent<DiceSorterScript>().DicesOnBattleground)
-        // {
-        //    // print(dice.name+" player2");
-        //     // a skrypt w kostce sprawdzi do kogo nalezy i czy jest "pobłogosławiona"
-        //     //  oraz zostanie wywołana animacja i podsumowanie
-        //     dice.GetComponentInParent<DiceActionScript>().AddGoldFromBlessedItems = true; 
-
-        // }
-
-
-        // pojedyńcze atakowanie, jeżeli napotka swojego defa to przeciwnik nie otrzymuje obrażeń
-        // - helm to obona na topór
-        // - tarcza obona na łuk
-        // atak 2giego gracza
-
-        // kradziez gracza 1 , potem 2
-        //throw new NotImplementedException();
-
     }
-    IEnumerable<DiceActionScript> blessedDP1, blessedDP2 = null;
-    [SerializeField] private int _temporaryGoldVault_player1;
     public int TemporaryGoldVault_player1
     {
         get
@@ -339,10 +273,11 @@ public class GameManager : MonoBehaviour
             _temporaryGoldVault_player1 = value;
             var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
             p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
+
+            liczbaPrzelewowGolda_Player1++;
         }
     }
 
-    [SerializeField] private int _temporaryGoldVault_player2;
     public int TemporaryGoldVault_player2
     {
         get
@@ -354,63 +289,35 @@ public class GameManager : MonoBehaviour
             _temporaryGoldVault_player2 = value;
             var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
             p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
-        }
-    }
-    private int liczbaOperacjiDodaniaGolda_player1;
-    private int liczbaOperacjiDodaniaGolda_player2;
-    public void AddGoldToPlayerVault(string playerName, int value)
-    {
-        if (playerName == "Player1")
-        {
-            liczbaOperacjiDodaniaGolda_player1 += value;
-        }
-        else
-        {
-            liczbaOperacjiDodaniaGolda_player2 += value;
+
+            liczbaPrzelewowGolda_Player2++;
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /// <summary> 
+    ///     Testowa metoda wyzwalająca ponowne zebranie "GodFavor" z pola bitwy
+    /// </summary>
     public void ANDROID_AgainAddGold()
     {
-        var dices_P1 = GameObject.Find("Player1Dices").GetComponentsInChildren<DiceActionScript>();
-        blessedDP1 = dices_P1.Where(d => d.name.Contains("Blessed"));
-        var dices_P2 = GameObject.Find("Player2Dices").GetComponentsInChildren<DiceActionScript>();
-        blessedDP2 = dices_P2.Where(d => d.name.Contains("Blessed"));
+        List<DiceActionScript> blessedDP1 = GameObject.Find("Player1Dices")
+            .GetComponentsInChildren<DiceActionScript>()
+            .Where(d => d.name.Contains("Blessed")).ToList();
 
-        GameObject.Find("ANDROID_TEST_GOLDBUTTON").GetComponent<Button>().GetComponentInChildren<TextMeshProUGUI>()
-           .SetText($"{blessedDP1.Count()} <------> {blessedDP2.Count()}");
+        List<DiceActionScript> blessedDP2 = GameObject.Find("Player2Dices")
+            .GetComponentsInChildren<DiceActionScript>()
+            .Where(d => d.name.Contains("Blessed")).ToList();
 
-        GameObject.Find("ANDROID_TEST_GOLDBUTTON").GetComponent<Button>().interactable = false;
-        if (dices_P1.Count() == 6 || dices_P2.Count() == 6)
-        {
-            GameObject.Find("ANDROID_TEST_GOLDBUTTON").GetComponent<Button>().interactable = true;
-        }
-        foreach (var dice in dices_P1)
+        GameObject.Find("ANDROID_TEST_GOLDBUTTON").GetComponent<Button>()
+            .GetComponentInChildren<TextMeshProUGUI>()
+            .SetText($"{blessedDP1.Count()} <------> {blessedDP2.Count()}");
+
+        foreach (DiceActionScript dice in blessedDP1)
         {
             dice.AddGoldFromBlessedItems = true;
         }
-        foreach (var dice in dices_P2)
+        foreach (DiceActionScript dice in blessedDP2)
         {
             dice.AddGoldFromBlessedItems = true;
         }
     }
 }
-
