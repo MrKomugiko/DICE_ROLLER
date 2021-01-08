@@ -1,8 +1,4 @@
-﻿using System.Data;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Collections;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -11,11 +7,29 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    #region 
     [SerializeField] GameObject BattleField;
-    bool isBattleModeTurnOn;
     [SerializeField] public GameObject DicePrefab;
-    public string currentGamePhase;
+    [SerializeField] GameObject Player1TurnBlocker;
+    [SerializeField] GameObject Player2TurnBlocker;
+    [SerializeField] TextMeshProUGUI Player1_GoldVault;
+    [SerializeField] TextMeshProUGUI Player2_GoldVault;
+    [SerializeField] public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
+    [SerializeField] public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
+    #endregion
 
+    private bool isBattleModeTurnOn;
+    private float _turnNumber;
+    private int Player1_RollingCounter, Player2_RollingCounter;
+    private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
+    private string CurrentPlayer;
+    private float time = 0.0f;
+    private float interpolationPeriod = .5f;
+    private int currentGold1 = 0, currentGold2 = 0;
+    private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2;
+    private int _temporaryGoldVault_player1, _temporaryGoldVault_player2;
+   
+    public string currentGamePhase;
     public float TurnNumber
     {
         get => _turnNumber;
@@ -33,36 +47,38 @@ public class GameManager : MonoBehaviour
                 SwapRollButonWithEndTurn_OnClick(CurrentPlayer);
             }
         }
-
-
     }
+    public int TemporaryGoldVault_player1
+    {
+        get
+        {
+            return _temporaryGoldVault_player1;
+        }
+        set
+        {
+            _temporaryGoldVault_player1 = value;
+            var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+            p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
 
-    float _turnNumber;
+            liczbaPrzelewowGolda_Player1++;
+        }
+    }
+    public int TemporaryGoldVault_player2
+    {
+        get
+        {
+            return _temporaryGoldVault_player2;
+        }
+        set
+        {
+            _temporaryGoldVault_player2 = value;
+            var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+            p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
 
-    [SerializeField] GameObject Player1TurnBlocker;
-    int Player1_RollingCounter;
-    bool Player1_LastRollWithAutomaticWithdraw;
-
-    [SerializeField] GameObject Player2TurnBlocker;
-    int Player2_RollingCounter;
-    bool Player2_LastRollWithAutomaticWithdraw;
-
-    string CurrentPlayer;
-
-    float time = 0.0f;
-    float interpolationPeriod = .5f;
-    private int currentGold1 = 0;
-    [SerializeField] TextMeshProUGUI Player1_GoldVault;
-    private int currentGold2 = 0;
-    [SerializeField] TextMeshProUGUI Player2_GoldVault;
-
-    private int liczbaPrzelewowGolda_Player1;
-    private int liczbaPrzelewowGolda_Player2;
-    [SerializeField] public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
-    [SerializeField] public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
-    private int _temporaryGoldVault_player1;
-    private int _temporaryGoldVault_player2;
-
+            liczbaPrzelewowGolda_Player2++;
+        }
+    }
+   
     void Start()
     {
         currentGold1 = Convert.ToInt32(Player1_GoldVault.text);
@@ -122,7 +138,7 @@ public class GameManager : MonoBehaviour
     ///     <param name ="rollingTurnNumber">aktualna tura rozgrywki</param>
     ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
     /// </remarks>
-    private void ManageOrderingRollButtonsAndActivateLastRollingTurn(int rollingTurnNumber, string player)
+    void ManageOrderingRollButtonsAndActivateLastRollingTurn(int rollingTurnNumber, string player)
     {
         if (rollingTurnNumber >= 3.0)
         {
@@ -175,7 +191,7 @@ public class GameManager : MonoBehaviour
     /// <remarks>
     ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
     /// </remarks>
-    public void SwapRollButonWithEndTurn_OnClick(string playerName)
+    void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
         print($"<b>{playerName}</b> roll his dices.");
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
@@ -260,37 +276,6 @@ public class GameManager : MonoBehaviour
                 dice.AddGoldFromBlessedItems = true;
             }
             isBattleModeTurnOn = true;
-        }
-    }
-    public int TemporaryGoldVault_player1
-    {
-        get
-        {
-            return _temporaryGoldVault_player1;
-        }
-        set
-        {
-            _temporaryGoldVault_player1 = value;
-            var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-            p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
-
-            liczbaPrzelewowGolda_Player1++;
-        }
-    }
-
-    public int TemporaryGoldVault_player2
-    {
-        get
-        {
-            return _temporaryGoldVault_player2;
-        }
-        set
-        {
-            _temporaryGoldVault_player2 = value;
-            var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-            p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
-
-            liczbaPrzelewowGolda_Player2++;
         }
     }
 

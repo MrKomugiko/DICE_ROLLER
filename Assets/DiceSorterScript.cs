@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Runtime.Serialization;
+using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Collections;
@@ -8,97 +9,59 @@ using UnityEngine.UI;
 
 public class DiceSorterScript : MonoBehaviour
 {
+    [SerializeField] private bool PosortujKosci = false;
     [SerializeField] private List<Sprite> listOfEveryDiceFaces;
-    public List<Image> DicesOnBattleground;
-    [SerializeField] private bool needToSort;
-    public bool DiceSorted
-    {
-        get
-        {
-            return _diceSorted;
-        }
-        set
-        {
-            _diceSorted = value;
-        }
-    }
 
-[SerializeField] private bool _diceSorted;
-    public bool NeedToSort
-    {
-        get => needToSort;
-        set
-        {
-            if (value == true)
-            {
-                GetDicesFromBattleground();
-                print("sorting finished");
+    void Update(){
+        if(PosortujKosci == true){
 
-                   if(DiceSorted == true)
-                   {
-                        // for (int i = 0; i < 6; i++)
-                        // {
-                        // /////////////////////this.transform.GetChild(i).GetComponent<DiceActionScript>().AddGoldFromBlessedItems = true;
-                        //     print(this.transform.GetChild(i).GetComponent<DiceRollScript>().transform.name + " test from need to sort");
-                        // }
-                    }
-               // print(this.name);
-               // GameObject.Find("GameManager").GetComponent<GameManager>().CollectGold(this.name);
-            }
-            needToSort = false;
-        }
-    }
+// utworzenie listy obiektów kości
+            List<GameObject> listaKosci = new List<GameObject>();
+            
+// policzenie ilosci kosci w kontenerze
+            int diceCounter_p1 = this.GetComponentsInChildren<DiceRollScript>().Count();
 
-    void GetDicesFromBattleground()
-    {
-        foreach (var dice in this.GetComponentsInChildren<DiceRollScript>().Where(d=>d.DiceNumber != 0))
-        {
-            DicesOnBattleground.Add(dice.DiceImage);
-        }
-        ReplaceDicesOnBattleground(SortDicesByType(DicesOnBattleground));
-        
-        //update list of dices in correct order;
-        foreach(var dice in DicesOnBattleground){
-//            print(this.name); 
-            if (this.name == "Player1Dices")
+// pobranie kolejnych kosci z kontenera do listy
+            for (int i = 0; i < diceCounter_p1; i++)
             {
-                GameManager.OnBattlefield_Dice_Player1 = DicesOnBattleground;
-            }
-            else
-            {
-                GameManager.OnBattlefield_Dice_Player2 = DicesOnBattleground;
+                listaKosci.Add(this.transform.GetChild(i).transform.gameObject);
             }
 
-        }
-    
-        DiceSorted = true;
-    }
-    [SerializeField] public List<int> newDiceNumbersOrderedList = new List<int>();
-    void ReplaceDicesOnBattleground(Dictionary<int, string> sortedDicesDict){
-       // int index = 0;
-        //string playerName = "";
-        //if(this.name == "Player1Dices"){
-         //   playerName = "Player1";
-        //}else{
-         //   playerName = "Player2";
-       // }
-        //print(playerName);
-        //var usedDicesFromHand = GameObject.Find(playerName).transform.Find("DiceHolder").GetComponentsInChildren<DiceRollScript>();
-        //print(usedDicesFromHand.Count());
-        foreach (KeyValuePair<int, string> dice in sortedDicesDict)
-        {
-            this.transform.GetChild(dice.Key).GetComponent<DiceRollScript>().DiceImage.sprite = listOfEveryDiceFaces.Where(p=>p.name == dice.Value).FirstOrDefault();
-            this.transform.GetChild(dice.Key).GetComponent<DiceActionScript>().AddGoldFromBlessedItems = true;
-            // dopasowanie ideksów do obrazków
-            //print(this.name);
-            //this.transform.GetChild(dice.Key).GetComponent<DiceRollScript>().DiceNumber = usedDicesFromHand.Where(d=>d.name == this.transform.GetChild(dice.Key).GetComponent<DiceRollScript>().transform.name).First().DiceNumber;
+// debug: zformatowane wyswietlenie zawartosci utworzonej wczesniej listy
+/*
+            string ZawartoscListyString = "";
+            foreach(var obiektKosci in listaKosci){
+                ZawartoscListyString += $"[{listaKosci.IndexOf(obiektKosci)}]\tID[{obiektKosci.GetComponent<DiceRollScript>().DiceNumber}],\t{obiektKosci.name},\n";
+            }
+            print(
+                $"Test procedury sortowania\n"+
+                $"kości gracza 1:\n"+
+                $"{ZawartoscListyString}\n"
+                );
+*/
 
-          //  print("podmiana obrazka");
+// uruchomienie sortowania przekazujac do metody liste kosci  
+// zapisanie dict przechowujacego < id kostki / index poprawnej pozycji >
+            Dictionary<int,int> listaNowychIndexowKosci = SortDicesByType_V2(listaKosci);
+
+// uruchomienie procesu rearanżacji kolejności w  kontenerze
+            RearrangeDicesInContainer(listaNowychIndexowKosci,listaKosci);
+
+// ukonczenie procesu, zablokowowanie  kolejnych iteracji 
+            PosortujKosci = false;
         }
     }
-    Dictionary<int, string> SortDicesByType(List<Image> dicesOnBattleground)
+
+    private void RearrangeDicesInContainer(Dictionary<int, int> listaNowychIndexowKosci, List<GameObject> listaKosci)
     {
-        Dictionary<int, string> SortedDict = new Dictionary<int, string>();
+        // IMPORTANT: dice number stats from 1 to 6, locations from 0 to 5 !
+        // lecim od 0 do 5
+        print("done");
+    }
+
+    Dictionary<int, int> SortDicesByType_V2(List<GameObject> dicesOnBattleground)
+    {
+        Dictionary<int, int> SortedDict = new Dictionary<int, int>();
 
         List<int> correctOrderDiceFaces = new List<int>(){1,2,6,4,5,3};
         /*
@@ -113,21 +76,18 @@ public class DiceSorterScript : MonoBehaviour
         
         foreach (int diceFace in correctOrderDiceFaces)
         {
-            foreach (Image diceImage in dicesOnBattleground)
+            foreach (var diceObject in dicesOnBattleground)
             {
                 // MELE ATTACK
-                if (diceImage.sprite.name.ElementAt(0).ToString() == diceFace.ToString())
+                if (diceObject.GetComponent<DiceRollScript>().DiceImage.sprite.name.ElementAt(0).ToString() == diceFace.ToString())
                 {
-                    SortedDict.Add(diceIndex, diceImage.sprite.name);
+                    SortedDict.Add(diceObject.GetComponent<DiceRollScript>().DiceNumber, diceIndex);
+                    print($"kostka numer [{diceObject.GetComponent<DiceRollScript>().DiceNumber}] z pozycji [{diceObject.transform.GetSiblingIndex().ToString()}] => powinna isc na miejsce [{diceIndex}]");
                     diceIndex++;
                 }
             }
         }
+        // < DICE_NUMBER, NEW_CORRECT_POSITION >
         return SortedDict;
-    }
-
-    private void UpdateDiceObjectName(int index)
-    {
-       this.GetComponentInParent<DiceRollScript>().DiceImage = this.GetComponent<Image>();
     }
 }

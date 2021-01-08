@@ -203,7 +203,7 @@ public class DiceRollScript : MonoBehaviour
         DiceRollScript diceRollScript = diceOnBattlefield.GetComponent<DiceRollScript>();
         diceRollScript.DiceNumber = this.DiceNumber;
         diceRollScript.DiceImage = this.DiceImage;
-        diceOnBattlefield.AddComponent<DiceRollScript>();
+        // diceOnBattlefield.AddComponent<DiceRollScript>();
         diceOnBattlefield.GetComponent<Button>().onClick.AddListener(() => diceOnBattlefield.GetComponent<DiceRollScript>().OnClick_TEST_WrocKoscZpolaBitwy());
         diceOnBattlefield.GetComponent<Button>().interactable = true;
         diceOnBattlefield.GetComponent<Image>().sprite = this.DiceImage.sprite;
