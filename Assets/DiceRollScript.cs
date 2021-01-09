@@ -45,6 +45,7 @@ public class DiceRollScript : MonoBehaviour
             }
             catch (System.Exception)
             {
+                GameManager test = new GameManager();
                 // print("Dice in battleground dont have buttons");
             }
         }
@@ -203,7 +204,7 @@ public class DiceRollScript : MonoBehaviour
         DiceRollScript diceRollScript = diceOnBattlefield.GetComponent<DiceRollScript>();
         diceRollScript.DiceNumber = this.DiceNumber;
         diceRollScript.DiceImage = this.DiceImage;
-        diceOnBattlefield.AddComponent<DiceRollScript>();
+        // diceOnBattlefield.AddComponent<DiceRollScript>();
         diceOnBattlefield.GetComponent<Button>().onClick.AddListener(() => diceOnBattlefield.GetComponent<DiceRollScript>().OnClick_TEST_WrocKoscZpolaBitwy());
         diceOnBattlefield.GetComponent<Button>().interactable = true;
         diceOnBattlefield.GetComponent<Image>().sprite = this.DiceImage.sprite;
@@ -247,6 +248,7 @@ public class DiceRollScript : MonoBehaviour
         }
         return wynikiLosowania;
     }
+    /*
     private static void PokazProcentowyUdzialWylosowanychLiczb(List<int> podsumowanieLosowania)
     {
         for (int i = 0; i < WIELKOSC_KOSCI; i++)
@@ -272,5 +274,6 @@ public class DiceRollScript : MonoBehaviour
         }
         return podsumowanie;
     }
-    #endregion
+   */
+   #endregion
 }
