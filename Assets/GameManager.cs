@@ -20,8 +20,8 @@ public class GameManager : MonoBehaviour
     public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
     public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
 
-    private bool isBattleModeTurnOn;
-    private float _turnNumber;
+    [SerializeField] private bool isBattleModeTurnOn;
+    [SerializeField] private float _turnNumber;
     private int Player1_RollingCounter, Player2_RollingCounter;
     private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
     private string CurrentPlayer;
@@ -36,10 +36,7 @@ public class GameManager : MonoBehaviour
         set
         {
             _turnNumber = value;
-            if (TurnNumber > 3.0)
-            {
-                ChangeUIToBattleMode();
-            }
+
             // sprawdzenie czy gracz ma jakieś kości któe mogłby przerolować , inaczej nie pokazuj guzika, pokaz pomin ture odrazu 
             int playerAvailableDices = 6 - GameObject.Find(CurrentPlayer).transform.GetComponentsInChildren<DiceRollScript>().Where(d => d.IsSentToBattlefield == true).Count();
             if (playerAvailableDices == 0)
@@ -58,8 +55,9 @@ public class GameManager : MonoBehaviour
         {
             _temporaryGoldVault_player1 = value;
             var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-            p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
-
+            if(value != 0){
+                p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
+            }
             liczbaPrzelewowGolda_Player1++;
         }
     }
@@ -73,8 +71,9 @@ public class GameManager : MonoBehaviour
         {
             _temporaryGoldVault_player2 = value;
             var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-            p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
-
+            if(value != 0){
+                p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
+            }
             liczbaPrzelewowGolda_Player2++;
         }
     }
@@ -88,18 +87,17 @@ public class GameManager : MonoBehaviour
             // posortuj kostki na arenie
             if(value)   
             {
-            BattleField.transform.Find("Player1Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
-            BattleField.transform.Find("Player2Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
+                BattleField.transform.Find("Player1Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
+                BattleField.transform.Find("Player2Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
 
-            Player1TurnBlocker.SetActive(false);
-            Player2TurnBlocker.SetActive(false);
+                Player1TurnBlocker.SetActive(false);
+                Player2TurnBlocker.SetActive(false);
 
-            GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(false);
-            GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(false);
+                GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(false);
+                GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(false);
 
-            GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
-            GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
-
+                GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
+                GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
             }
         }
     }
@@ -314,7 +312,6 @@ public class GameManager : MonoBehaviour
                 dice.AddGoldFromBlessedItems = true;
             }
             IsBattleModeTurnOn = true;
-            
         }
     }
 

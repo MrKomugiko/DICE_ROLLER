@@ -111,9 +111,12 @@ public class DiceActionScript : MonoBehaviour
 
         for (float i = 0f; i <= 1; i += 0.05f)
         {
-            p1coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
-
-            p2coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
+            if(p1coin.text != "+0"){
+                p1coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
+            }
+            if(p2coin.text != "+0"){
+                p2coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
+            }
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
             yield return new WaitForSeconds(0.05f);
         }
