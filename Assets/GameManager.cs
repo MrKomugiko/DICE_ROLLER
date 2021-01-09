@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject Player2TurnBlocker;
     [SerializeField] TextMeshProUGUI Player1_GoldVault;
     [SerializeField] TextMeshProUGUI Player2_GoldVault;
+    [SerializeField] private float interpolationPeriod = .5f;
     #endregion
     
     public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
@@ -24,7 +25,6 @@ public class GameManager : MonoBehaviour
     private int Player1_RollingCounter, Player2_RollingCounter;
     private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
     private string CurrentPlayer;
-    private float interpolationPeriod = .5f;
     private int currentGold1 = 0, currentGold2 = 0;
     private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2;
     private int _temporaryGoldVault_player1, _temporaryGoldVault_player2;
@@ -90,6 +90,16 @@ public class GameManager : MonoBehaviour
             {
             BattleField.transform.Find("Player1Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
             BattleField.transform.Find("Player2Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
+
+            Player1TurnBlocker.SetActive(false);
+            Player2TurnBlocker.SetActive(false);
+
+            GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(false);
+            GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(false);
+
+            GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
+            GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
+
             }
         }
     }

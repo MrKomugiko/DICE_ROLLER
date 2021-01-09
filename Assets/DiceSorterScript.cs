@@ -59,6 +59,13 @@ public class DiceSorterScript : MonoBehaviour
         }
     }
 
+    /// <summary> 
+    ///     Posortowanie danej listy obiektów kości wwedług kolejności względem typu jaki sobą reprezentują, /n
+    ///         (przykład  atak fizyczny > obrona fizyczna > atak dystansowy > obrona dystansowa > kradziez).
+    /// </summary>
+    /// <remarks>
+    ///     <param name ="dicesOnBattleground"> lista GameObject'ow z kontenera kości (metoda działa na całych obiektach, włącznie z ich komponnentami) </param>
+    /// </remarks>
     Dictionary<int, int> SortDicesByType_V2(List<GameObject> dicesOnBattleground)
     {
         Dictionary<int, int> SortedDict = new Dictionary<int, int>();

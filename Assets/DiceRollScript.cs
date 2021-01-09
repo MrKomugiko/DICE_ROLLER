@@ -45,6 +45,7 @@ public class DiceRollScript : MonoBehaviour
             }
             catch (System.Exception)
             {
+                GameManager test = new GameManager();
                 // print("Dice in battleground dont have buttons");
             }
         }
