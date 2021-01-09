@@ -7,28 +7,28 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    #region 
+    #region Obiekty dodane w inspektorze [SerializedField]
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] GameObject Player1TurnBlocker;
     [SerializeField] GameObject Player2TurnBlocker;
     [SerializeField] TextMeshProUGUI Player1_GoldVault;
     [SerializeField] TextMeshProUGUI Player2_GoldVault;
-    [SerializeField] public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
-    [SerializeField] public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
     #endregion
+    
+    public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
+    public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
 
     private bool isBattleModeTurnOn;
     private float _turnNumber;
     private int Player1_RollingCounter, Player2_RollingCounter;
     private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
     private string CurrentPlayer;
-    private float time = 0.0f;
     private float interpolationPeriod = .5f;
     private int currentGold1 = 0, currentGold2 = 0;
     private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2;
     private int _temporaryGoldVault_player1, _temporaryGoldVault_player2;
-   
+
     public string currentGamePhase;
     public float TurnNumber
     {
@@ -78,7 +78,22 @@ public class GameManager : MonoBehaviour
             liczbaPrzelewowGolda_Player2++;
         }
     }
-   
+
+    public bool IsBattleModeTurnOn 
+    { 
+        get => isBattleModeTurnOn; 
+        set 
+        { 
+            isBattleModeTurnOn = value; 
+            // posortuj kostki na arenie
+            if(value)   
+            {
+            BattleField.transform.Find("Player1Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
+            BattleField.transform.Find("Player2Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
+            }
+        }
+    }
+
     void Start()
     {
         currentGold1 = Convert.ToInt32(Player1_GoldVault.text);
@@ -91,16 +106,29 @@ public class GameManager : MonoBehaviour
         Player2_RollingCounter = 0;
         ChangePlayersTurn();
     }
+    
+    private float time = 0.0f;
     void Update()
     {
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter, "Player1");
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
-
         time += Time.deltaTime;
+        TransferGoldToPlayers(ref time, interpolationPeriod);
+    }
 
-        if (time >= interpolationPeriod)
+    /// <summary> 
+    ///     Przelewanie golda z wczesniej naliczonych wartości tymczasowych do konta graczy z "animacją"
+    /// </summary>
+    /// <remarks>
+    ///     <param name ="timePassedInGame"> ref => wraca zaktualizowaną wartość ( zeruje ) czas który upłynął w sekundach</param>
+    ///     <param name ="timeDelayinSecons"> wartość opóźnienia między wykonywaniem iteracji</param>
+    /// </remarks>
+    private void TransferGoldToPlayers(ref float timePassedInGame, float timeDelayinSecons)
+    {
+        if (timePassedInGame >= this.interpolationPeriod)
         {
-            time = time - interpolationPeriod;
+            // reset czasu do 0 i naliczanie dalej os początku
+            timePassedInGame = timePassedInGame - interpolationPeriod;
 
             if (liczbaPrzelewowGolda_Player1 > 0)
             {
@@ -254,7 +282,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void ChangeUIToBattleMode()
     {
-        if (isBattleModeTurnOn == false)
+        if (IsBattleModeTurnOn == false)
         {
             currentGamePhase = "Battle: Phase 1 -> ''sorting dices''";
 
@@ -275,7 +303,8 @@ public class GameManager : MonoBehaviour
             {
                 dice.AddGoldFromBlessedItems = true;
             }
-            isBattleModeTurnOn = true;
+            IsBattleModeTurnOn = true;
+            
         }
     }
 

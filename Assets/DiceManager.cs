@@ -43,6 +43,7 @@ public class DiceManager : MonoBehaviour
     {
         _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
     }
+    
     public void OnClick_ROLLDICES()
     {
         foreach (DiceRollScript dice in Dices)
