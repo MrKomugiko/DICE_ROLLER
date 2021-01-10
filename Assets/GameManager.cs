@@ -287,17 +287,17 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            if (liczbaPrzelewowGolda_Player2 > 0)
+            if (liczbaPrzelewaniaObrazen_Player2 > 0)
             {
                 Player2ActualHPValue--;
-                Player2_GoldVault.SetText(Player2ActualHPValue.ToString());
+                Player2_HPPoints.SetText(Player2ActualHPValue.ToString());
 
-                liczbaPrzelewowGolda_Player2--;
-                if (liczbaPrzelewowGolda_Player2 == 0)
+                liczbaPrzelewaniaObrazen_Player2--;
+                if (liczbaPrzelewaniaObrazen_Player2 == 0)
                 {
                     // wyzeruj skarbonke
-                    TemporaryGoldVault_player2 = 0;
-                    liczbaPrzelewowGolda_Player2 = 0;
+                    TemporaryIntakeDamage_Player2 = 0;
+                    liczbaPrzelewaniaObrazen_Player2 = 0;
                 }
             }
         }
