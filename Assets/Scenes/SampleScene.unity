@@ -3527,7 +3527,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.5, y: 0}
+  m_AnchoredPosition: {x: -1.5, y: -20}
   m_SizeDelta: {x: 1005.1, y: 345.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &965387222
@@ -4784,12 +4784,16 @@ MonoBehaviour:
     type: 3}
   Player1TurnBlocker: {fileID: 167097285}
   Player2TurnBlocker: {fileID: 1901050491}
+  Player1_HPPoints: {fileID: 160803603}
+  Player2_HPPoints: {fileID: 640743859}
   Player1_GoldVault: {fileID: 999798399}
   Player2_GoldVault: {fileID: 2078228488}
   interpolationPeriod: 0.5
   isBattleModeTurnOn: 0
   _turnNumber: 0
   currentGamePhase: 
+  _damageCounter_Player1: 0
+  _damageCounter_Player2: 0
 --- !u!4 &1301416608
 Transform:
   m_ObjectHideFlags: 0

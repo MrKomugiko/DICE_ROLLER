@@ -176,51 +176,40 @@ public class CombatManager : MonoBehaviour
     }
     IEnumerator Combat(List<GameObject> attackDices, List<GameObject> deffenceDices)
     {
-
-        print("kostki ataku = " + attackDices.Count + " / kostki obrony = " + deffenceDices.Count());
-        // get longer list as main length
-        yield return new WaitForSeconds(0.5f);
-
         var maxLength = attackDices.Count >= deffenceDices.Count ? attackDices.Count : deffenceDices.Count;
-        print("ok1");
-
         for (int i = 0; i < maxLength; i++)
         {
-            if (i > deffenceDices.Count-1)
+            if (i > deffenceDices.Count - 1)
             {
-                if (attackDices.Count > 0)
+                if (attackDices.Count > i)
                 {
                     attackDices[i].GetComponent<DiceActionScript>().MarkDiceAsAttacking = true;
-                    print("ok3");
                 }
             }
             else
             {
-                if (attackDices.Count > 0)
+                if (attackDices.Count > 0 && attackDices.Count >= deffenceDices.Count())
                 {
                     attackDices[i].GetComponent<DiceActionScript>().MarkDiceAsUsed = true;
-                    print("ok4");
                 }
             }
 
-            if (i < deffenceDices.Count - 1)
+            if (i <= deffenceDices.Count - 1)
             {
-                print("ok5");
                 if (deffenceDices.Count > 0)
                 {
-
                     deffenceDices[i].GetComponent<DiceActionScript>().MarkDiceAsUsed = true;
                 }
             }
             yield return new WaitForSeconds(0.5f);
         }
-
         yield return new WaitForSeconds(1f);
 
         ZdejmijKostkiIZmienKolorNaSzary(attackDices);
         ZdejmijKostkiIZmienKolorNaSzary(deffenceDices);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
+       
         IndexOfCombatAction++;
         readyToFight = true;
     }

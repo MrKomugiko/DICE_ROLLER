@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] GameObject Player1TurnBlocker;
     [SerializeField] GameObject Player2TurnBlocker;
+    [SerializeField] TextMeshProUGUI Player1_HPPoints;
+    [SerializeField] TextMeshProUGUI Player2_HPPoints;
     [SerializeField] TextMeshProUGUI Player1_GoldVault;
     [SerializeField] TextMeshProUGUI Player2_GoldVault;
     [SerializeField] private float interpolationPeriod = .5f;
@@ -77,6 +79,42 @@ public class GameManager : MonoBehaviour
             liczbaPrzelewowGolda_Player2++;
         }
     }
+   [SerializeField] private int _damageCounter_Player1;
+    public int DamageCounter_Player1
+    {
+        get
+        {
+            return _damageCounter_Player1;
+        }
+        set
+        {
+            _damageCounter_Player1 = value;
+            print("HIT");
+                if(value != 0){
+                    var noweHP = Convert.ToInt32(Player1_HPPoints.text)-_damageCounter_Player1; 
+                    Player1_HPPoints.SetText(noweHP.ToString());
+                }
+            _damageCounter_Player1--;
+        }
+    }
+       [SerializeField] private int _damageCounter_Player2;
+    public int DamageCounter_Player2
+    {
+        get
+        {
+            return _damageCounter_Player2;
+        }
+        set
+        {
+            _damageCounter_Player2 = value;
+            print("HIT");
+                if(value != 0){
+                    var noweHP = Convert.ToInt32(Player2_HPPoints.text)-_damageCounter_Player2; 
+                    Player2_HPPoints.SetText(noweHP.ToString());
+                }
+            _damageCounter_Player2--;
+        }
+    }
 
     public bool IsBattleModeTurnOn 
     { 
@@ -101,7 +139,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     void Start()
     {
         currentGold1 = Convert.ToInt32(Player1_GoldVault.text);
@@ -113,8 +150,7 @@ public class GameManager : MonoBehaviour
         Player1_RollingCounter = 0;
         Player2_RollingCounter = 0;
         ChangePlayersTurn();
-    }
-    
+    } 
     private float time = 0.0f;
     void Update()
     {
@@ -122,6 +158,20 @@ public class GameManager : MonoBehaviour
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
         time += Time.deltaTime;
         TransferGoldToPlayers(ref time, interpolationPeriod);
+    }
+
+    public void TakeDamage(string playerName, int damageValue, string diceName)
+    {        
+        if(playerName == "Player1")
+        {
+            DamageCounter_Player1 += damageValue;
+        }
+        
+        if(playerName == "Player2")
+        {
+            DamageCounter_Player2 += damageValue;
+        }
+        print($"Gracz [{playerName}] otrzyma [{damageValue}] obrażeń za pomocą {diceName.Remove(0,2)}");
     }
 
     /// <summary> 
