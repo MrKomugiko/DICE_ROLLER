@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] GameObject Player1TurnBlocker;
     [SerializeField] GameObject Player2TurnBlocker;
+    [SerializeField] TextMeshProUGUI Player1_HPPoints;
+    [SerializeField] TextMeshProUGUI Player2_HPPoints;
     [SerializeField] TextMeshProUGUI Player1_GoldVault;
     [SerializeField] TextMeshProUGUI Player2_GoldVault;
     [SerializeField] private float interpolationPeriod = .5f;
@@ -76,6 +78,82 @@ public class GameManager : MonoBehaviour
             }
             liczbaPrzelewowGolda_Player2++;
         }
+    } 
+    [SerializeField] private int _temporaryIntakeDamage_Player1;
+    public int TemporaryIntakeDamage_Player1
+    {
+        get
+        {
+            return _temporaryIntakeDamage_Player1;
+        }
+        set
+        {
+            _temporaryIntakeDamage_Player1 = value;
+            var p1coin = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
+            if(value != 0){
+                p1coin.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
+            }
+            liczbaPrzelewaniaObrazen_Player1++;
+        }
+    }
+    int liczbaPrzelewaniaObrazen_Player1;
+    [SerializeField] private int _temporaryIntakeDamage_Player2;
+    public int TemporaryIntakeDamage_Player2
+    {
+        get
+        {
+            return _temporaryIntakeDamage_Player2;
+        }
+        set
+        {
+            _temporaryIntakeDamage_Player2 = value;
+            var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
+            if(value != 0){
+                p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
+            }
+            liczbaPrzelewaniaObrazen_Player2++;
+            print("test?");
+        }
+    }
+    int liczbaPrzelewaniaObrazen_Player2;
+   [SerializeField] private int _damageCounter_Player1;
+    public int DamageCounter_Player1
+    {
+        get
+        {
+            return _damageCounter_Player1;
+        }
+        set
+        {
+            _damageCounter_Player1 = value;
+            print("HIT");
+                if(value != 0){
+                    Player1_HPPoints.SetText((Player1ActualHPValue-_damageCounter_Player1).ToString());
+                }
+            _damageCounter_Player1--;
+        }
+    }
+    [SerializeField] int Player1ActualHPValue;
+    [SerializeField] int Player2ActualHPValue;
+
+       [SerializeField] private int _damageCounter_Player2;
+    TextMeshProUGUI logger;
+    public int DamageCounter_Player2
+    {
+        get
+        {
+            return _damageCounter_Player2;
+        }
+        set
+        {
+            _damageCounter_Player2 = value;
+            print("HIT");
+                if(value != 0){
+                    Player2_HPPoints.SetText((Player2ActualHPValue-_damageCounter_Player2).ToString());
+
+                }
+            _damageCounter_Player2--;
+        }
     }
 
     public bool IsBattleModeTurnOn 
@@ -101,9 +179,9 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     void Start()
     {
+        logger = GameObject.Find("ANDROIDLOGGER").GetComponent<TextMeshProUGUI>();
         currentGold1 = Convert.ToInt32(Player1_GoldVault.text);
         currentGold2 = Convert.ToInt32(Player2_GoldVault.text);
 
@@ -113,15 +191,35 @@ public class GameManager : MonoBehaviour
         Player1_RollingCounter = 0;
         Player2_RollingCounter = 0;
         ChangePlayersTurn();
-    }
-    
+    } 
     private float time = 0.0f;
+    private float time2 = 0.0f;
+
     void Update()
     {
+        Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
+        Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter, "Player1");
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
         time += Time.deltaTime;
+        time2 += Time.deltaTime;
+
         TransferGoldToPlayers(ref time, interpolationPeriod);
+        TransferDamageToPlayers(ref time2, interpolationPeriod);
+    }
+
+    public void TakeDamage(string playerName, int damageValue, string diceName)
+    {        
+        if(playerName == "Player1")
+        {
+            DamageCounter_Player1 += damageValue;
+        }
+        
+        if(playerName == "Player2")
+        {
+            DamageCounter_Player2 += damageValue;
+        }
+        print($"Gracz [{playerName}] otrzyma [{damageValue}] obrażeń za pomocą {diceName.Remove(0,2)}");
     }
 
     /// <summary> 
@@ -156,6 +254,43 @@ public class GameManager : MonoBehaviour
             {
                 currentGold2++;
                 Player2_GoldVault.SetText(currentGold2.ToString());
+
+                liczbaPrzelewowGolda_Player2--;
+                if (liczbaPrzelewowGolda_Player2 == 0)
+                {
+                    // wyzeruj skarbonke
+                    TemporaryGoldVault_player2 = 0;
+                    liczbaPrzelewowGolda_Player2 = 0;
+                }
+            }
+        }
+    }
+
+        private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
+    {
+        if (timePassedInGame >= this.interpolationPeriod)
+        {
+            // reset czasu do 0 i naliczanie dalej os początku
+            timePassedInGame = timePassedInGame - interpolationPeriod;
+
+            if (liczbaPrzelewaniaObrazen_Player1 > 0)
+            {
+                Player1ActualHPValue--;
+                Player1_HPPoints.SetText(Player1ActualHPValue.ToString());
+
+                liczbaPrzelewaniaObrazen_Player1--;
+                if (liczbaPrzelewaniaObrazen_Player1 == 0)
+                {
+                    // wyzeruj skarbonke
+                    TemporaryIntakeDamage_Player1 = 0;
+                    liczbaPrzelewaniaObrazen_Player1= 0;
+                }
+            }
+
+            if (liczbaPrzelewowGolda_Player2 > 0)
+            {
+                Player2ActualHPValue--;
+                Player2_GoldVault.SetText(Player2ActualHPValue.ToString());
 
                 liczbaPrzelewowGolda_Player2--;
                 if (liczbaPrzelewowGolda_Player2 == 0)

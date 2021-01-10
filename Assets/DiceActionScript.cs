@@ -91,16 +91,17 @@ public class DiceActionScript : MonoBehaviour
             
             }
             _markDiceAsAttacking = false;
-            string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner=="Player1"?"Player1":"Player2";
-            string oponent = owner=="Player1"?"Player2":"Player1";
-            TextMeshProUGUI oponentHP=GameObject.Find(oponent).transform.Find("StatInfo_UI").transform.Find("HPPoints").GetComponent<TextMeshProUGUI>();
 
-            print(owner+" zadał 1 obrazenie");
-            print("owner = "+owner+" oponent ="+oponent);
-            int oldValue=Convert.ToInt32(oponentHP.text);
-            print(oldValue +" aktualne zyćko");
-            oldValue--;
-            oponentHP.SetText(oldValue.ToString());
+            // string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner=="Player1"?"Player1":"Player2";
+            // string oponent = owner=="Player1"?"Player2":"Player1";
+            // TextMeshProUGUI oponentHP=GameObject.Find(oponent).transform.Find("StatInfo_UI").transform.Find("HPPoints").GetComponent<TextMeshProUGUI>();
+
+            // print(owner+" zadał 1 obrazenie");
+            // print("owner = "+owner+" oponent ="+oponent);
+            // int oldValue=Convert.ToInt32(oponentHP.text);
+            // print(oldValue +" aktualne zyćko");
+            // oldValue--;
+            // oponentHP.SetText(oldValue.ToString());
            }
     }
 
@@ -206,6 +207,24 @@ public class DiceActionScript : MonoBehaviour
             this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
             yield return new WaitForSeconds(0.05f);
         }
+        #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
+            if(color == Color.red)
+            {
+                //get oponent name
+                string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner;
+                string oponent = (owner=="Player1")?"Player2":"Player1";
+//                GameObject.Find("GameManager").GetComponent<GameManager>().TakeDamage(oponent,1,this.name);
+
+if(oponent == "Player1"){
+
+                GameObject.Find("GameManager").GetComponent<GameManager>().TemporaryIntakeDamage_Player1++;
+}else{
+
+                GameObject.Find("GameManager").GetComponent<GameManager>().TemporaryIntakeDamage_Player2++;
+}
+
+            }
+        #endregion
     }
     void MoveToArena(string playerName)
     {
