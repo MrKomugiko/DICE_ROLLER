@@ -176,11 +176,6 @@ public class CombatManager : MonoBehaviour
     }
     IEnumerator Combat(List<GameObject> attackDices, List<GameObject> deffenceDices)
     {
-
-        print("kostki ataku = " + attackDices.Count + " / kostki obrony = " + deffenceDices.Count());
-        // get longer list as main length
-        yield return new WaitForSeconds(0.5f);
-
         var maxLength = attackDices.Count >= deffenceDices.Count ? attackDices.Count : deffenceDices.Count;
         for (int i = 0; i < maxLength; i++)
         {
@@ -189,7 +184,7 @@ public class CombatManager : MonoBehaviour
                 if (attackDices.Count > i)
                 {
                     attackDices[i].GetComponent<DiceActionScript>().MarkDiceAsAttacking = true;
-                    yield return new WaitForSeconds(0.2f);
+                    print("ok3");
                 }
             }
             else
@@ -214,7 +209,7 @@ public class CombatManager : MonoBehaviour
         ZdejmijKostkiIZmienKolorNaSzary(attackDices);
         ZdejmijKostkiIZmienKolorNaSzary(deffenceDices);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         IndexOfCombatAction++;
         readyToFight = true;
     }
