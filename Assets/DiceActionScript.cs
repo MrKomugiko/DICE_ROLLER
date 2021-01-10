@@ -148,10 +148,53 @@ public class DiceActionScript : MonoBehaviour
         if (_markDiceAsAttacking == true)
         {
             StartCoroutine(ChangeColor(Color.red));
-
             _markDiceAsAttacking = false;
         }
         #endregion
+    }
+        IEnumerator TakeDamage()
+    {
+        
+        string parentName = this.transform.parent.name.ToString();
+        print("damage parent"+parentName);
+
+        GameManager HealthVault = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
+
+        var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
+        var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
+
+        // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
+        for (float i = 0f; i <= 2; i += 0.05f)
+        {
+            if (Math.Round(Convert.ToDecimal(i), 3) == 1)
+            {
+                switch (parentName)
+                {
+                    case "Player1Dices_Fight_DiceHolder":
+                        HealthVault.TemporaryIntakeDamage_Player2 += 1;
+                        p2hp.color = Color.red;
+                        break;
+
+                    case "Player2Dices_Fight_DiceHolder":
+                        HealthVault.TemporaryIntakeDamage_Player1 += 1;
+                        p1hp.color = Color.red;
+                        break;
+                }
+            }
+        }
+
+        for (float i = 0f; i <= 1; i += 0.05f)
+        {
+            if (p1hp.text != "-0")
+            {
+                p1hp.color = Color.Lerp(Color.red, Color.clear, (i));
+            }
+            if (p2hp.text != "-0")
+            {
+                p2hp.color = Color.Lerp(Color.red, Color.clear, (i));
+            }
+            yield return new WaitForSeconds(0.05f);
+        }
     }
     IEnumerator AddGodCoin()
     {
@@ -208,22 +251,14 @@ public class DiceActionScript : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
         #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
-            if(color == Color.red)
-            {
-                //get oponent name
-                string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner;
-                string oponent = (owner=="Player1")?"Player2":"Player1";
-//                GameObject.Find("GameManager").GetComponent<GameManager>().TakeDamage(oponent,1,this.name);
-
-if(oponent == "Player1"){
-
-                GameObject.Find("GameManager").GetComponent<GameManager>().TemporaryIntakeDamage_Player1++;
-}else{
-
-                GameObject.Find("GameManager").GetComponent<GameManager>().TemporaryIntakeDamage_Player2++;
-}
-
-            }
+        if (color == Color.red)
+        {
+            //get oponent name
+            string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner;
+            string oponent = (owner == "Player1") ? "Player2" : "Player1";
+            //                GameObject.Find("GameManager").GetComponent<GameManager>().TakeDamage(oponent,1,this.name);
+StartCoroutine(TakeDamage());
+        }
         #endregion
     }
     void MoveToArena(string playerName)
