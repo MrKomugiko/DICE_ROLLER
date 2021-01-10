@@ -9,6 +9,7 @@ using System;
 
 public class DiceRollScript : MonoBehaviour
 {
+    [SerializeField] public string DiceOwner;
     [SerializeField] public int DiceNumber;
     public static int WIELKOSC_KOSCI = 8;
     public static int ILOSC_RZUTOW = 100;
@@ -203,6 +204,7 @@ public class DiceRollScript : MonoBehaviour
         var diceOnBattlefield = Instantiate(GameObject.Find("GameManager").GetComponent<GameManager>().DicePrefab, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position, Quaternion.identity, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
         DiceRollScript diceRollScript = diceOnBattlefield.GetComponent<DiceRollScript>();
         diceRollScript.DiceNumber = this.DiceNumber;
+        diceRollScript.DiceOwner = this.DiceOwner;
         diceRollScript.DiceImage = this.DiceImage;
         // diceOnBattlefield.AddComponent<DiceRollScript>();
         diceOnBattlefield.GetComponent<Button>().onClick.AddListener(() => diceOnBattlefield.GetComponent<DiceRollScript>().OnClick_TEST_WrocKoscZpolaBitwy());
