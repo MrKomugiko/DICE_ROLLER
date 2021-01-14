@@ -88,7 +88,7 @@ public class DiceActionScript : MonoBehaviour
             if (value == true)
             {
                 StartCoroutine(ChangeColor(Color.red));
-            
+
             }
             _markDiceAsAttacking = false;
 
@@ -102,7 +102,7 @@ public class DiceActionScript : MonoBehaviour
             // print(oldValue +" aktualne zyćko");
             // oldValue--;
             // oponentHP.SetText(oldValue.ToString());
-           }
+        }
     }
 
     void Update()
@@ -152,18 +152,17 @@ public class DiceActionScript : MonoBehaviour
         }
         #endregion
     }
-        IEnumerator TakeDamage()
+    IEnumerator TakeDamage()
     {
-        
+
         string parentName = this.transform.parent.name.ToString();
-        print("damage parent"+parentName);
 
         GameManager HealthVault = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
 
         var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
         var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
 
-        // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
+        // dodawanie kumulowania sie dmg 
         for (float i = 0f; i <= 2; i += 0.05f)
         {
             if (Math.Round(Convert.ToDecimal(i), 3) == 1)
@@ -257,19 +256,21 @@ public class DiceActionScript : MonoBehaviour
             string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner;
             string oponent = (owner == "Player1") ? "Player2" : "Player1";
             //                GameObject.Find("GameManager").GetComponent<GameManager>().TakeDamage(oponent,1,this.name);
-StartCoroutine(TakeDamage());
+            StartCoroutine(TakeDamage());
         }
         #endregion
     }
     void MoveToArena(string playerName)
     {
-//        print($"Kość [{this.name}] wędruje na Arenę.");
+        //        print($"Kość [{this.name}] wędruje na Arenę.");
         CombatManager CM = GameObject.Find("FightZone").GetComponent<CombatManager>();
         GameObject container = null;
-        if(playerName == "Player1"){
+        if (playerName == "Player1")
+        {
             container = CM.Player1ArenaDiceContainer;
         }
-        if(playerName == "Player2"){
+        if (playerName == "Player2")
+        {
             container = CM.Player2ArenaDiceContainer;
         }
         this.gameObject.transform.SetParent(container.transform);
@@ -277,12 +278,14 @@ StartCoroutine(TakeDamage());
     }
     void MoveToBattlefield(string playerName)
     {
-//        print($"Kość [{this.name}] wraca na pole bitwy.");
+        //        print($"Kość [{this.name}] wraca na pole bitwy.");
         GameObject container = null;
-        if(playerName == "Player1"){
+        if (playerName == "Player1")
+        {
             container = GameObject.Find("Player1Dices").gameObject;
         }
-        if(playerName == "Player2"){
+        if (playerName == "Player2")
+        {
             container = GameObject.Find("Player2Dices").gameObject;
         }
         this.gameObject.transform.SetParent(container.transform);
