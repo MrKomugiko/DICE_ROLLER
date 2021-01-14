@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] GameObject Player1TurnBlocker;
     [SerializeField] GameObject Player2TurnBlocker;
-    [SerializeField] TextMeshProUGUI Player1_HPPoints;
-    [SerializeField] TextMeshProUGUI Player2_HPPoints;
+    [SerializeField] Text Player1_HPPoints;
+    [SerializeField] Text Player2_HPPoints;
     [SerializeField] TextMeshProUGUI Player1_GoldVault;
     [SerializeField] TextMeshProUGUI Player2_GoldVault;
     [SerializeField] private float interpolationPeriod = .5f;
@@ -110,9 +110,9 @@ public class GameManager : MonoBehaviour
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
             if(value != 0){
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
-            }
             liczbaPrzelewaniaObrazen_Player2++;
-            print("test?");
+            }
+                // print("test p2? "+liczbaPrzelewaniaObrazen_Player2);
         }
     }
     int liczbaPrzelewaniaObrazen_Player2;
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
             _damageCounter_Player1 = value;
             print("HIT");
                 if(value != 0){
-                    Player1_HPPoints.SetText((Player1ActualHPValue-_damageCounter_Player1).ToString());
+                    Player1_HPPoints.text = ((Player1ActualHPValue-_damageCounter_Player1).ToString());
                 }
             _damageCounter_Player1--;
         }
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
             _damageCounter_Player2 = value;
             print("HIT");
                 if(value != 0){
-                    Player2_HPPoints.SetText((Player2ActualHPValue-_damageCounter_Player2).ToString());
+                    Player2_HPPoints.text = ((Player2ActualHPValue-_damageCounter_Player2).ToString());
 
                 }
             _damageCounter_Player2--;
@@ -233,8 +233,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
-        Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter, "Player1");
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
         time += Time.deltaTime;
@@ -320,35 +318,30 @@ public class GameManager : MonoBehaviour
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
+            
+        Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
+        Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
+
             // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
 
             if (liczbaPrzelewaniaObrazen_Player1 > 0)
             {
-                Player1ActualHPValue--;
-                Player1_HPPoints.SetText(Player1ActualHPValue.ToString());
+                int p1Currenthp = Player1ActualHPValue;
+                int p1NewHpValue = p1Currenthp - 1;
+                Player1_HPPoints.text = (p1NewHpValue.ToString());
 
                 liczbaPrzelewaniaObrazen_Player1--;
-                if (liczbaPrzelewaniaObrazen_Player1 == 0)
-                {
-                    // wyzeruj skarbonke
-                    TemporaryIntakeDamage_Player1 = 0;
-                    liczbaPrzelewaniaObrazen_Player1= 0;
-                }
             }
 
             if (liczbaPrzelewaniaObrazen_Player2 > 0)
             {
-                Player2ActualHPValue--;
-                Player2_HPPoints.SetText(Player2ActualHPValue.ToString());
+                int p2Currenthp = Player2ActualHPValue;
+                int p2NewHpValue = p2Currenthp - 1;
+
+                Player2_HPPoints.text = (p2NewHpValue.ToString());
 
                 liczbaPrzelewaniaObrazen_Player2--;
-                if (liczbaPrzelewaniaObrazen_Player2 == 0)
-                {
-                    // wyzeruj skarbonke
-                    TemporaryIntakeDamage_Player2 = 0;
-                    liczbaPrzelewaniaObrazen_Player2 = 0;
-                }
             }
         }
     }
