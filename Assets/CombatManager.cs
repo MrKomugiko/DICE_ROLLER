@@ -201,7 +201,7 @@ public class CombatManager : MonoBehaviour
                     deffenceDices[i].GetComponent<DiceActionScript>().MarkDiceAsUsed = true;
                 }
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
         }
         yield return new WaitForSeconds(1f);
 

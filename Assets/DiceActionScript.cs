@@ -1,8 +1,5 @@
-﻿using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,17 +88,6 @@ public class DiceActionScript : MonoBehaviour
 
             }
             _markDiceAsAttacking = false;
-
-            // string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner=="Player1"?"Player1":"Player2";
-            // string oponent = owner=="Player1"?"Player2":"Player1";
-            // TextMeshProUGUI oponentHP=GameObject.Find(oponent).transform.Find("StatInfo_UI").transform.Find("HPPoints").GetComponent<TextMeshProUGUI>();
-
-            // print(owner+" zadał 1 obrazenie");
-            // print("owner = "+owner+" oponent ="+oponent);
-            // int oldValue=Convert.ToInt32(oponentHP.text);
-            // print(oldValue +" aktualne zyćko");
-            // oldValue--;
-            // oponentHP.SetText(oldValue.ToString());
         }
     }
 
@@ -152,7 +138,7 @@ public class DiceActionScript : MonoBehaviour
         }
         #endregion
     }
-    IEnumerator TakeDamage()
+    void TakeDamage()
     {
 
         string parentName = this.transform.parent.name.ToString();
@@ -162,37 +148,15 @@ public class DiceActionScript : MonoBehaviour
         var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
         var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
 
-        // dodawanie kumulowania sie dmg 
-        for (float i = 0f; i <= 2; i += 0.05f)
+        switch (parentName)
         {
-            if (Math.Round(Convert.ToDecimal(i), 3) == 1)
-            {
-                switch (parentName)
-                {
-                    case "Player1Dices_Fight_DiceHolder":
-                        HealthVault.TemporaryIntakeDamage_Player2 += 1;
-                        p2hp.color = Color.red;
-                        break;
+            case "Player1Dices_Fight_DiceHolder":
+                HealthVault.TemporaryIntakeDamage_Player2 += 1;
+                break;
 
-                    case "Player2Dices_Fight_DiceHolder":
-                        HealthVault.TemporaryIntakeDamage_Player1 += 1;
-                        p1hp.color = Color.red;
-                        break;
-                }
-            }
-        }
-
-        for (float i = 0f; i <= 1; i += 0.05f)
-        {
-            if (p1hp.text != "-0")
-            {
-                p1hp.color = Color.Lerp(Color.red, Color.clear, (i));
-            }
-            if (p2hp.text != "-0")
-            {
-                p2hp.color = Color.Lerp(Color.red, Color.clear, (i));
-            }
-            yield return new WaitForSeconds(0.05f);
+            case "Player2Dices_Fight_DiceHolder":
+                HealthVault.TemporaryIntakeDamage_Player1 += 1;
+                break;
         }
     }
     IEnumerator AddGodCoin()
@@ -244,21 +208,23 @@ public class DiceActionScript : MonoBehaviour
     }
     IEnumerator ChangeColor(Color color)
     {
+        bool done = false;
         for (float i = 0f; i <= 1; i += 0.05f)
         {
             this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
+            #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
+            if (!done)
+            {
+                // jakos tak w pierwszej polowie zmiany koloru zeby odjelo hp pzeciwnika
+                if (color == Color.red)
+                {
+                    TakeDamage();
+                    done = true;
+                }
+            }
+            #endregion
             yield return new WaitForSeconds(0.05f);
         }
-        #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
-        if (color == Color.red)
-        {
-            //get oponent name
-            string owner = this.gameObject.GetComponent<DiceRollScript>().DiceOwner;
-            string oponent = (owner == "Player1") ? "Player2" : "Player1";
-            //                GameObject.Find("GameManager").GetComponent<GameManager>().TakeDamage(oponent,1,this.name);
-            StartCoroutine(TakeDamage());
-        }
-        #endregion
     }
     void MoveToArena(string playerName)
     {

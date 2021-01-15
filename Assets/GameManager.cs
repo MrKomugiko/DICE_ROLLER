@@ -8,17 +8,17 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     #region Obiekty dodane w inspektorze [SerializedField]
-    [SerializeField] GameObject BattleField;
-    [SerializeField] public GameObject DicePrefab;
-    [SerializeField] GameObject Player1TurnBlocker;
-    [SerializeField] GameObject Player2TurnBlocker;
-    [SerializeField] Text Player1_HPPoints;
-    [SerializeField] Text Player2_HPPoints;
-    [SerializeField] TextMeshProUGUI Player1_GoldVault;
-    [SerializeField] TextMeshProUGUI Player2_GoldVault;
-    [SerializeField] private float interpolationPeriod = .5f;
+        [SerializeField] GameObject BattleField;
+        [SerializeField] public GameObject DicePrefab;
+        [SerializeField] GameObject Player1TurnBlocker;
+        [SerializeField] GameObject Player2TurnBlocker;
+        [SerializeField] Text Player1_HPPoints;
+        [SerializeField] Text Player2_HPPoints;
+        [SerializeField] TextMeshProUGUI Player1_GoldVault;
+        [SerializeField] TextMeshProUGUI Player2_GoldVault;
+        [SerializeField] private float interpolationPeriod = .5f;
     #endregion
-    
+
     public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
     public static List<Image> OnBattlefield_Dice_Player2 = new List<Image>();
 
@@ -28,8 +28,8 @@ public class GameManager : MonoBehaviour
     private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
     private string CurrentPlayer;
     private int currentGold1 = 0, currentGold2 = 0;
-    private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2;
-    private int _temporaryGoldVault_player1, _temporaryGoldVault_player2;
+    private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2, liczbaPrzelewaniaObrazen_Player1, liczbaPrzelewaniaObrazen_Player2;
+    private int _temporaryGoldVault_player1, _temporaryGoldVault_player2, _temporaryIntakeDamage_Player1, _temporaryIntakeDamage_Player2;
 
     public string currentGamePhase;
     public float TurnNumber
@@ -57,7 +57,8 @@ public class GameManager : MonoBehaviour
         {
             _temporaryGoldVault_player1 = value;
             var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-            if(value != 0){
+            if (value != 0)
+            {
                 p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
             }
             liczbaPrzelewowGolda_Player1++;
@@ -73,13 +74,13 @@ public class GameManager : MonoBehaviour
         {
             _temporaryGoldVault_player2 = value;
             var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-            if(value != 0){
+            if (value != 0)
+            {
                 p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
             }
             liczbaPrzelewowGolda_Player2++;
         }
-    } 
-    [SerializeField] private int _temporaryIntakeDamage_Player1;
+    }
     public int TemporaryIntakeDamage_Player1
     {
         get
@@ -90,14 +91,13 @@ public class GameManager : MonoBehaviour
         {
             _temporaryIntakeDamage_Player1 = value;
             var p1coin = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
-            if(value != 0){
+            if (value != 0)
+            {
                 p1coin.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
             }
             liczbaPrzelewaniaObrazen_Player1++;
         }
     }
-    int liczbaPrzelewaniaObrazen_Player1;
-    [SerializeField] private int _temporaryIntakeDamage_Player2;
     public int TemporaryIntakeDamage_Player2
     {
         get
@@ -108,43 +108,28 @@ public class GameManager : MonoBehaviour
         {
             _temporaryIntakeDamage_Player2 = value;
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
-            if(value != 0){
+            if (value != 0)
+            {
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
-            liczbaPrzelewaniaObrazen_Player2++;
+                liczbaPrzelewaniaObrazen_Player2++;
             }
-                // print("test p2? "+liczbaPrzelewaniaObrazen_Player2);
+            // print("test p2? "+liczbaPrzelewaniaObrazen_Player2);
         }
     }
-    int liczbaPrzelewaniaObrazen_Player2;
-   [SerializeField] private int _damageCounter_Player1;
-    public int DamageCounter_Player1
-    {
-        get
-        {
-            return _damageCounter_Player1;
-        }
-        set
-        {
-            _damageCounter_Player1 = value;
-            print("HIT");
-                if(value != 0){
-                    Player1_HPPoints.text = ((Player1ActualHPValue-_damageCounter_Player1).ToString());
-                }
-            _damageCounter_Player1--;
-        }
-    }
+
     [SerializeField] int Player1ActualHPValue, Player2ActualHPValue;
 
-    TextMeshProUGUI logger;
+    
+    [SerializeField] TextMeshProUGUI logger;
 
-    public bool IsBattleModeTurnOn 
-    { 
-        get => isBattleModeTurnOn; 
-        set 
-        { 
-            isBattleModeTurnOn = value; 
+    public bool IsBattleModeTurnOn
+    {
+        get => isBattleModeTurnOn;
+        set
+        {
+            isBattleModeTurnOn = value;
             // posortuj kostki na arenie
-            if(value)   
+            if (value)
             {
                 BattleField.transform.Find("Player1Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
                 BattleField.transform.Find("Player2Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
@@ -172,14 +157,14 @@ public class GameManager : MonoBehaviour
         Player1_RollingCounter = 0;
         Player2_RollingCounter = 0;
         ChangePlayersTurn();
-    } 
-    private float time = 0.0f;
-    private float time2 = 0.0f;
+    }
+    private float time = 0.0f, time2 = 0.0f;
 
     void Update()
     {
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter, "Player1");
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
+
         time += Time.deltaTime;
         time2 += Time.deltaTime;
 
@@ -231,13 +216,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-        private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
+    private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
-            
-        Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
-        Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
+            Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
+            Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
 
             // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
