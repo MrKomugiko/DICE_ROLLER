@@ -184,7 +184,6 @@ public class CombatManager : MonoBehaviour
                 if (attackDices.Count > i)
                 {
                     attackDices[i].GetComponent<DiceActionScript>().MarkDiceAsAttacking = true;
-                    print("ok3");
                 }
             }
             else

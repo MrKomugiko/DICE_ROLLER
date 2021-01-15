@@ -133,64 +133,9 @@ public class GameManager : MonoBehaviour
             _damageCounter_Player1--;
         }
     }
-    [SerializeField] int Player1ActualHPValue;
-    [SerializeField] int Player2ActualHPValue;
+    [SerializeField] int Player1ActualHPValue, Player2ActualHPValue;
 
-       [SerializeField] private int _damageCounter_Player2;
     TextMeshProUGUI logger;
-    public int DamageCounter_Player2
-    {
-        get
-        {
-            return _damageCounter_Player2;
-        }
-        set
-        {
-            _damageCounter_Player2 = value;
-            print("HIT");
-                if(value != 0){
-                    Player2_HPPoints.text = ((Player2ActualHPValue-_damageCounter_Player2).ToString());
-
-                }
-            _damageCounter_Player2--;
-        }
-    }
-   [SerializeField] private int _damageCounter_Player1;
-    public int DamageCounter_Player1
-    {
-        get
-        {
-            return _damageCounter_Player1;
-        }
-        set
-        {
-            _damageCounter_Player1 = value;
-            print("HIT");
-                if(value != 0){
-                    var noweHP = Convert.ToInt32(Player1_HPPoints.text)-_damageCounter_Player1; 
-                    Player1_HPPoints.SetText(noweHP.ToString());
-                }
-            _damageCounter_Player1--;
-        }
-    }
-       [SerializeField] private int _damageCounter_Player2;
-    public int DamageCounter_Player2
-    {
-        get
-        {
-            return _damageCounter_Player2;
-        }
-        set
-        {
-            _damageCounter_Player2 = value;
-            print("HIT");
-                if(value != 0){
-                    var noweHP = Convert.ToInt32(Player2_HPPoints.text)-_damageCounter_Player2; 
-                    Player2_HPPoints.SetText(noweHP.ToString());
-                }
-            _damageCounter_Player2--;
-        }
-    }
 
     public bool IsBattleModeTurnOn 
     { 
@@ -240,34 +185,6 @@ public class GameManager : MonoBehaviour
 
         TransferGoldToPlayers(ref time, interpolationPeriod);
         TransferDamageToPlayers(ref time2, interpolationPeriod);
-    }
-
-    public void TakeDamage(string playerName, int damageValue, string diceName)
-    {        
-        if(playerName == "Player1")
-        {
-            DamageCounter_Player1 += damageValue;
-        }
-        
-        if(playerName == "Player2")
-        {
-            DamageCounter_Player2 += damageValue;
-        }
-        print($"Gracz [{playerName}] otrzyma [{damageValue}] obrażeń za pomocą {diceName.Remove(0,2)}");
-    }
-
-    public void TakeDamage(string playerName, int damageValue, string diceName)
-    {        
-        if(playerName == "Player1")
-        {
-            DamageCounter_Player1 += damageValue;
-        }
-        
-        if(playerName == "Player2")
-        {
-            DamageCounter_Player2 += damageValue;
-        }
-        print($"Gracz [{playerName}] otrzyma [{damageValue}] obrażeń za pomocą {diceName.Remove(0,2)}");
     }
 
     /// <summary> 
