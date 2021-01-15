@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private int Player1_RollingCounter, Player2_RollingCounter;
     private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
     private string CurrentPlayer;
-    private int currentGold1 = 0, currentGold2 = 0;
+    [SerializeField] private int currentGold1 = 0, currentGold2 = 0;
        [SerializeField] private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2, liczbaPrzelewaniaObrazen_Player1, liczbaPrzelewaniaObrazen_Player2;
     [SerializeField] private int _temporaryGoldVault_player1, _temporaryGoldVault_player2, _temporaryIntakeDamage_Player1, _temporaryIntakeDamage_Player2;
 
@@ -81,9 +81,9 @@ public class GameManager : MonoBehaviour
                     liczbaPrzelewowGolda_Player1--;
                 }
             }
-            if (value == 0){
-                p1coin.SetText("");
-            }
+            // if (value == 0){
+            //     p1coin.SetText("");
+            // }
                 _temporaryGoldVault_player1 = value;
         }
     }
@@ -121,9 +121,9 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            if (value == 0){
-                p2coin.SetText("");
-            }
+            // if (value == 0){
+            //     p2coin.SetText("");
+            // }
             
                   _temporaryGoldVault_player2 = value;
         }
@@ -239,6 +239,23 @@ public class GameManager : MonoBehaviour
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
+
+            if (cumulativeGoldStealingCounterP2 == 0)
+            {
+                var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+                p2coin.SetText("");
+               currentGold2 = Convert.ToInt32(Player2_GoldVault.text);
+
+                
+            }
+            if (cumulativeGoldStealingCounterP1 == 0)
+            {
+                var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+                p1coin.SetText("");
+                     currentGold1 = Convert.ToInt32(Player1_GoldVault.text);    
+       
+            }
+
             // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
 

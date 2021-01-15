@@ -119,7 +119,15 @@ public class CombatManager : MonoBehaviour
 
             StartCoroutine(Combat(attack, deffence));
         }
-        if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
+        if(IndexOfCombatAction ==5)
+        {
+             // na wszelki wypadek wyzerowanie pozostałlości po początku fazy przyznawania golda z blessed itemkow
+             var GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+             GM.cumulativeGoldStealingCounterP1 = 0;
+             GM.cumulativeGoldStealingCounterP2 = 0;
+             IndexOfCombatAction++;
+        }
+        if ((IndexOfCombatAction == 6 || IndexOfCombatAction == 7) && readyToFight)
         {
             print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
@@ -227,12 +235,13 @@ public class CombatManager : MonoBehaviour
     }
     IEnumerator Steal(List<GameObject> goldStealingDices)
     { 
+        yield return new WaitForSeconds(1f);
         foreach (var handDice in goldStealingDices)
         {
             handDice.GetComponent<DiceActionScript>().StealGoldUsingHandItem = true;
             yield return new WaitForSeconds(1f);
         }
-
+        yield return new WaitForSeconds(1f);
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
 
         GameObject.Find("GameManager").GetComponent<GameManager>().cumulativeGoldStealingCounterP1 = 0;
