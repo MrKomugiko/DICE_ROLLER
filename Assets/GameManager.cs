@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     private string CurrentPlayer;
     private int currentGold1 = 0, currentGold2 = 0;
     private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2, liczbaPrzelewaniaObrazen_Player1, liczbaPrzelewaniaObrazen_Player2;
-    private int _temporaryGoldVault_player1, _temporaryGoldVault_player2, _temporaryIntakeDamage_Player1, _temporaryIntakeDamage_Player2;
+    [SerializeField] private int _temporaryGoldVault_player1, _temporaryGoldVault_player2, _temporaryIntakeDamage_Player1, _temporaryIntakeDamage_Player2;
 
     public string currentGamePhase;
     public float TurnNumber
@@ -90,12 +90,17 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player1 = value;
-            var p1coin = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
+            var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
             if (value != 0)
             {
-                p1coin.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
+                p1hp.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
+                liczbaPrzelewaniaObrazen_Player1++;
             }
-            liczbaPrzelewaniaObrazen_Player1++;
+
+            if (value == 0)
+            {
+                p1hp.SetText("");
+            }
         }
     }
     public int TemporaryIntakeDamage_Player2
@@ -113,7 +118,11 @@ public class GameManager : MonoBehaviour
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
                 liczbaPrzelewaniaObrazen_Player2++;
             }
-            // print("test p2? "+liczbaPrzelewaniaObrazen_Player2);
+          
+            if (value == 0)
+            {
+                p2hp.SetText("");
+            }
         }
     }
 

@@ -214,6 +214,10 @@ public class CombatManager : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
 
+        // wyzorowanie info o otryzmanych obrazeniach
+        GameObject.Find("GameManager").GetComponent<GameManager>().TemporaryIntakeDamage_Player1 = 0;
+        GameObject.Find("GameManager").GetComponent<GameManager>().TemporaryIntakeDamage_Player2 = 0;
+
         ZdejmijKostkiIZmienKolorNaSzary(attackDices);
         ZdejmijKostkiIZmienKolorNaSzary(deffenceDices);
 
@@ -225,7 +229,7 @@ public class CombatManager : MonoBehaviour
     {
         // TODO: write stealing system method
         yield return new WaitForSeconds(1f);
-        
+
         print("STEALING IN PROCESS ;d");
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
 
