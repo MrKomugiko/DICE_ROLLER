@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DiceActionScript : MonoBehaviour
 {
     [SerializeField] private bool _addGoldFromBlessedItems;
+    [SerializeField] private bool _stealGoldUsingHandItem;
     [SerializeField] private bool _markDiceAsUsed;
     [SerializeField] private bool _markDiceAsActive;
     [SerializeField] private bool _inArena;
@@ -29,6 +30,24 @@ public class DiceActionScript : MonoBehaviour
             }
             // zresetuj wartośc na false
             _addGoldFromBlessedItems = false;
+        }
+    }
+    public bool StealGoldUsingHandItem
+    {
+        get => _stealGoldUsingHandItem;
+        set
+        {
+            if (value == true)
+            {
+                // najpierw sprawdzenie czy item może kraść -> jest to "Hand"
+                if (this.name.Contains("Hand"))
+                {
+                    // jeżeli tak -> uruchom "Animacje" i wszystko co sie z nią wiąże
+                    StartCoroutine(StealGodCoinFromOponent());
+                }
+            }
+            // zresetuj wartośc na false
+            _stealGoldUsingHandItem = false;
         }
     }
     public bool MarkDiceAsUsed
@@ -98,6 +117,12 @@ public class DiceActionScript : MonoBehaviour
         {
             _addGoldFromBlessedItems = false;
             StartCoroutine(AddGodCoin());
+        }
+
+        if (_stealGoldUsingHandItem && this.name.Contains("Hand"))
+        {
+            _stealGoldUsingHandItem = false;
+            StartCoroutine(StealGodCoinFromOponent());
         }
 
         if (_markDiceAsUsed == true)
@@ -200,6 +225,48 @@ public class DiceActionScript : MonoBehaviour
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
             yield return new WaitForSeconds(0.05f);
         }
+    }
+    IEnumerator StealGodCoinFromOponent()
+    {
+        _stealGoldUsingHandItem = false;
+        // szukanie do kogo należy obiekt kości
+        string parentName = this.transform.parent.name.ToString(); 
+        var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+        var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+
+        GameManager goldVaults = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
+
+        // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
+        for (float i = 0f; i <= 2; i += 0.1f)
+        {
+            if (Math.Round(Convert.ToDecimal(i), 3) == Convert.ToDecimal(0.3f))
+            {
+                switch (parentName)
+                {
+                    case "Player1Dices_Fight_DiceHolder":
+                    // właśicicielem jest gracz 1, ondostanie golda, przeciwnikiem player2 jemu zaboerzemy
+                        // właściciel
+                        goldVaults.TemporaryGoldVault_player1 += 1;
+                        p1coin.color = Color.yellow;
+                        // przeciwnik
+                        goldVaults.TemporaryGoldVault_player2 -= 1;
+                        p2coin.color = Color.red;
+                        break;
+
+                    case "Player2Dices_Fight_DiceHolder":
+                    // właśicicielem jest gracz 1, ondostanie golda, przeciwnikiem player2 jemu zaboerzemy
+                        // właściciel
+                        goldVaults.TemporaryGoldVault_player2 += 1;
+                        p2coin.color = Color.yellow;
+                        // przeciwnik
+                        goldVaults.TemporaryGoldVault_player1 -= 1;
+                        p1coin.color = Color.red;
+                        break;
+                }   
+            }
+            this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.green, i);
+            yield return new WaitForSeconds(0.05f);
+       }
     }
     IEnumerator ChangeColor(Color color)
     {

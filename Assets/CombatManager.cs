@@ -226,14 +226,18 @@ public class CombatManager : MonoBehaviour
         readyToFight = true;
     }
     IEnumerator Steal(List<GameObject> goldStealingDices)
-    {
-        // TODO: write stealing system method
-        yield return new WaitForSeconds(1f);
+    { 
+        foreach (var handDice in goldStealingDices)
+        {
+            handDice.GetComponent<DiceActionScript>().StealGoldUsingHandItem = true;
+            yield return new WaitForSeconds(1f);
+        }
 
-        print("STEALING IN PROCESS ;d");
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
 
-        yield return new WaitForSeconds(1f);
+        GameObject.Find("GameManager").GetComponent<GameManager>().cumulativeGoldStealingCounterP1 = 0;
+        GameObject.Find("GameManager").GetComponent<GameManager>().cumulativeGoldStealingCounterP2 = 0;
+
         IndexOfCombatAction++;
         readyToFight = true;
     }

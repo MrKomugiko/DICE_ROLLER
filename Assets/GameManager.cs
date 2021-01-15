@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
         [SerializeField] Text Player2_HPPoints;
         [SerializeField] TextMeshProUGUI Player1_GoldVault;
         [SerializeField] TextMeshProUGUI Player2_GoldVault;
-        [SerializeField] private float interpolationPeriod = .25f;
+        [SerializeField] private float interpolationPeriod = .5f;
     #endregion
 
     public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     private bool Player1_LastRollWithAutomaticWithdraw, Player2_LastRollWithAutomaticWithdraw;
     private string CurrentPlayer;
     private int currentGold1 = 0, currentGold2 = 0;
-    private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2, liczbaPrzelewaniaObrazen_Player1, liczbaPrzelewaniaObrazen_Player2;
+       [SerializeField] private int liczbaPrzelewowGolda_Player1, liczbaPrzelewowGolda_Player2, liczbaPrzelewaniaObrazen_Player1, liczbaPrzelewaniaObrazen_Player2;
     [SerializeField] private int _temporaryGoldVault_player1, _temporaryGoldVault_player2, _temporaryIntakeDamage_Player1, _temporaryIntakeDamage_Player2;
 
     public string currentGamePhase;
@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    [SerializeField] public int cumulativeGoldStealingCounterP1, cumulativeGoldStealingCounterP2;
     public int TemporaryGoldVault_player1
     {
         get
@@ -55,13 +56,35 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            _temporaryGoldVault_player1 = value;
             var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-            if (value != 0)
+            if(value > 0)
             {
-                p1coin.SetText("+" + _temporaryGoldVault_player1.ToString());
+                print("dodawanie [Player1] value = "+ value);
+                // DODAWANIE GOLDA
+                // var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+                if (value != 0)
+                {
+                    cumulativeGoldStealingCounterP1++;
+                    p1coin.SetText("+" + cumulativeGoldStealingCounterP1.ToString());
+                    liczbaPrzelewowGolda_Player1++;
+                }
             }
-            liczbaPrzelewowGolda_Player1++;
+            if(value < 0)
+            {
+                print("odejmowanie [Player1] value = "+value);  
+                // ODEJMOWANIE GOLDA
+                //var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+                if (value != 0)
+                {
+                    cumulativeGoldStealingCounterP1--;
+                    p1coin.SetText(cumulativeGoldStealingCounterP1.ToString());
+                    liczbaPrzelewowGolda_Player1--;
+                }
+            }
+            if (value == 0){
+                p1coin.SetText("");
+            }
+                _temporaryGoldVault_player1 = value;
         }
     }
     public int TemporaryGoldVault_player2
@@ -72,13 +95,37 @@ public class GameManager : MonoBehaviour
         }
         set
         {
-            _temporaryGoldVault_player2 = value;
             var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-            if (value != 0)
+            if (value > 0)
             {
-                p2coin.SetText("+" + _temporaryGoldVault_player2.ToString());
+                print("dodawanie [Player2] value = " + value);
+                // DODAWANIE GOLDA
+                //var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+                if (value != 0)
+                {
+                    cumulativeGoldStealingCounterP2++;
+                    p2coin.SetText("+" + cumulativeGoldStealingCounterP2.ToString());
+                    liczbaPrzelewowGolda_Player2++;
+                }
             }
-            liczbaPrzelewowGolda_Player2++;
+            if (value < 0)
+            {
+                print("odejmowanie [Player2] value = " + value);
+                // ODEJMOWANIE GOLDA
+                //var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+                if (value != 0)
+                {
+                    cumulativeGoldStealingCounterP2--;
+                    p2coin.SetText(cumulativeGoldStealingCounterP2.ToString());
+                    liczbaPrzelewowGolda_Player2--;
+                }
+            }
+
+            if (value == 0){
+                p2coin.SetText("");
+            }
+            
+                  _temporaryGoldVault_player2 = value;
         }
     }
     public int TemporaryIntakeDamage_Player1
@@ -197,12 +244,31 @@ public class GameManager : MonoBehaviour
 
             if (liczbaPrzelewowGolda_Player1 > 0)
             {
+                // DODAWANIE GOLDA
                 currentGold1++;
                 Player1_GoldVault.SetText(currentGold1.ToString());
 
                 liczbaPrzelewowGolda_Player1--;
                 if (liczbaPrzelewowGolda_Player1 == 0)
                 {
+                    // wyzeruj skarbonke
+                    TemporaryGoldVault_player1 = 0;
+                    liczbaPrzelewowGolda_Player1 = 0;
+                }
+            }
+            
+            if(liczbaPrzelewowGolda_Player1 < 0)
+            {
+                
+                // ODEJMOWANIE GOLDA
+                currentGold1 = Convert.ToInt32(Player1_GoldVault.text);
+                currentGold1--;
+                Player1_GoldVault.SetText(currentGold1.ToString());
+
+                liczbaPrzelewowGolda_Player1++;
+                if (liczbaPrzelewowGolda_Player1 == 0)
+                {
+                    print("test odejmowanie P1");
                     // wyzeruj skarbonke
                     TemporaryGoldVault_player1 = 0;
                     liczbaPrzelewowGolda_Player1 = 0;
@@ -220,6 +286,26 @@ public class GameManager : MonoBehaviour
                     // wyzeruj skarbonke
                     TemporaryGoldVault_player2 = 0;
                     liczbaPrzelewowGolda_Player2 = 0;
+                }
+            }
+            
+            if(liczbaPrzelewowGolda_Player2 < 0)
+            {
+                // ODEJMOWANIE GOLDA
+                //  print("test odejmowanie P2");
+                currentGold2 = Convert.ToInt32(Player2_GoldVault.text);
+                currentGold2--;
+                Player2_GoldVault.SetText(currentGold2.ToString());
+
+                liczbaPrzelewowGolda_Player2++;
+                if (liczbaPrzelewowGolda_Player2 == 0)
+                {
+                     print("test odejmowanie P2");
+                    // wyzeruj skarbonke
+                    TemporaryGoldVault_player2 = 0;
+                    liczbaPrzelewowGolda_Player2 = 0;
+                    
+                    
                 }
             }
         }
