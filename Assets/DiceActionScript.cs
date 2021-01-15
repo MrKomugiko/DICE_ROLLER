@@ -90,7 +90,6 @@ public class DiceActionScript : MonoBehaviour
             _markDiceAsAttacking = false;
         }
     }
-
     void Update()
     {
         #region debbuging inspector function checker
@@ -140,13 +139,9 @@ public class DiceActionScript : MonoBehaviour
     }
     void TakeDamage()
     {
-
         string parentName = this.transform.parent.name.ToString();
 
         GameManager HealthVault = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
-
-        var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
-        var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
 
         switch (parentName)
         {
@@ -209,7 +204,7 @@ public class DiceActionScript : MonoBehaviour
     IEnumerator ChangeColor(Color color)
     {
         bool done = false;
-        for (float i = 0f; i <= 1; i += 0.05f)
+        for (float i = 0f; i <= 1; i += 0.1f)
         {
             this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
             #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
@@ -228,7 +223,6 @@ public class DiceActionScript : MonoBehaviour
     }
     void MoveToArena(string playerName)
     {
-        //        print($"Kość [{this.name}] wędruje na Arenę.");
         CombatManager CM = GameObject.Find("FightZone").GetComponent<CombatManager>();
         GameObject container = null;
         if (playerName == "Player1")
@@ -244,7 +238,6 @@ public class DiceActionScript : MonoBehaviour
     }
     void MoveToBattlefield(string playerName)
     {
-        //        print($"Kość [{this.name}] wraca na pole bitwy.");
         GameObject container = null;
         if (playerName == "Player1")
         {

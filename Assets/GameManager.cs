@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
         [SerializeField] Text Player2_HPPoints;
         [SerializeField] TextMeshProUGUI Player1_GoldVault;
         [SerializeField] TextMeshProUGUI Player2_GoldVault;
-        [SerializeField] private float interpolationPeriod = .5f;
+        [SerializeField] private float interpolationPeriod = .25f;
     #endregion
 
     public static List<Image> OnBattlefield_Dice_Player1 = new List<Image>();
@@ -216,6 +216,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary> 
+    ///     przenoszenie nazbieranych obrażeń naliczonych w wartości tymczasowych do konta graczy z "animacją" 
+    /// </summary>
+    /// <remarks>
+    ///     <param name ="timePassedInGame"> ref => wraca zaktualizowaną wartość ( zeruje ) czas który upłynął w sekundach</param>
+    ///     <param name ="timeDelayinSecons"> wartość opóźnienia między wykonywaniem iteracji</param>
+    /// </remarks>
     private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)

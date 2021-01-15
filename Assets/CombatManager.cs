@@ -119,6 +119,16 @@ public class CombatManager : MonoBehaviour
 
             StartCoroutine(Combat(attack, deffence));
         }
+        if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
+        {
+            print("steal 1/2 <=> steal 2/1");
+            var playerComtainer = IndexOfCombatAction == 5?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
+            readyToFight = false;
+
+            var goldStealDices = GetDiceOfType("Steal", GetDicesFromContainer(playerComtainer));
+            WrzucKostkiNaArene(goldStealDices);
+            StartCoroutine(Steal(goldStealDices));
+        }
     }
 
     private void WrzucKostkiNaArene(List<GameObject> dices)
@@ -139,12 +149,12 @@ public class CombatManager : MonoBehaviour
     List<GameObject> GetDiceOfType(string diceType, List<GameObject> playerDices)
     {
         /*
-        1,2     Axe     Mele Attack
-        6       Helmet  Mele Deffence 
-        4       Bow     Ranged Attack
-        5       Sheield Ranged Deffence
-        3       Hand    Steal
-    */
+        *    1,2     Axe     Mele Attack
+        *     6      Helmet  Mele Deffence 
+        *     4      Bow     Ranged Attack
+        *     5      Sheield Ranged Deffence
+        *     3      Hand    Steal
+        */
 
         List<GameObject> dices = new List<GameObject>();
 
@@ -171,7 +181,6 @@ public class CombatManager : MonoBehaviour
                 break;
         }
 
-        //        print(dices.Count()+"szt kostek typu "+diceType+" znalezione i dodane do listy.");
         return dices;
     }
     IEnumerator Combat(List<GameObject> attackDices, List<GameObject> deffenceDices)
@@ -201,14 +210,26 @@ public class CombatManager : MonoBehaviour
                     deffenceDices[i].GetComponent<DiceActionScript>().MarkDiceAsUsed = true;
                 }
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
         }
         yield return new WaitForSeconds(1f);
 
         ZdejmijKostkiIZmienKolorNaSzary(attackDices);
         ZdejmijKostkiIZmienKolorNaSzary(deffenceDices);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
+        IndexOfCombatAction++;
+        readyToFight = true;
+    }
+    IEnumerator Steal(List<GameObject> goldStealingDices)
+    {
+        // TODO: write stealing system method
+        yield return new WaitForSeconds(1f);
+        
+        print("STEALING IN PROCESS ;d");
+        ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
+
+        yield return new WaitForSeconds(1f);
         IndexOfCombatAction++;
         readyToFight = true;
     }
