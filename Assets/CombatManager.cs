@@ -17,6 +17,8 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
+        GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = false;
+
         GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (Player1ArenaDiceContainer == null)
         {
@@ -113,6 +115,12 @@ public class CombatManager : MonoBehaviour
 
             StartCoroutine(Steal(goldStealDices, playerComtainer.name));
         }
+        if (IndexOfCombatAction == 7 && readyToFight)
+        {
+           GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
+           IndexOfCombatAction++;
+        }
+        
     }
     void WrzucKostkiNaArene(List<GameObject> dices)
     {
@@ -258,5 +266,10 @@ public class CombatManager : MonoBehaviour
     {
         IndexOfCombatAction = 1;
         readyToFight = true;
+    }
+
+    public void ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL()
+    {
+        GM_Script.ChangeUIToRollingMode();
     }
 }

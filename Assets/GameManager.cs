@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] float interpolationPeriod = .5f;
     [SerializeField] float _turnNumber;
     [SerializeField] bool isBattleModeTurnOn;
-    bool IsBattleModeTurnOn
+    public bool IsBattleModeTurnOn
     {
         get => isBattleModeTurnOn;
         set
@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #endregion
-    
+
     void Start()
     {
         CurrentGold1 = Convert.ToInt32(Player1_GoldVault.text);
@@ -283,7 +283,7 @@ public class GameManager : MonoBehaviour
                 // ZEROWANIE WARTOSCI TYMCZASOWYCH
                 TemporaryGoldVault_player1 = 0;
                 liczbaPrzelewowGolda_Player1 = 0;
-                
+
                 if (cumulativeGoldStealingCounterP1 == 0)
                 {
                     var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
@@ -501,6 +501,66 @@ public class GameManager : MonoBehaviour
                 dice.AddGoldFromBlessedItems = true;
             }
             IsBattleModeTurnOn = true;
+
+            GameObject.Find("ANDROID_TEST_STARTCOMBATROUTINE").GetComponent<Button>().interactable = true;
+        }
+    }
+
+    public void ChangeUIToRollingMode()
+    {
+        if (IsBattleModeTurnOn == true)
+        {
+            // 0. nazwanie aktualnego etapu gry
+            currentGamePhase = "Dice Rolling Mode";
+
+            // 1. zmniejszenie battlegroundu
+            var battlefieldRT = BattleField.GetComponent<RectTransform>();
+            battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x, battlefieldRT.sizeDelta.y / 3.2f);
+
+            // 2. wyzerowanie numeru tury i liczby losowan przez graczy
+            TurnNumber = 0;
+            Player1_RollingCounter = 0;
+            Player2_RollingCounter = 0;
+
+            // 3. zmiana trybu battlemade na OFF
+            IsBattleModeTurnOn = false;
+
+            // 4. odkrycie buttonków rolla i końca tury dla graczy
+            GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(true);
+            GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(true);
+
+            GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(true);
+            GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(true);
+
+            // 5. odblokowanie kostek na "ręce" 
+            // ----> poprzez odblokowanie 
+            // ---> wrócenie sie kostek z pola bitwy
+            // --> zablokowanie piknięcia kostki bez rolla
+            var p1MainDices = GameObject.Find("Player1").transform.Find("DiceHolder").GetComponentsInChildren<DiceRollScript>();
+            foreach (var dice in p1MainDices)
+            {
+                dice.IsAbleToPickup = true;
+                dice.IsSentToBattlefield = false;
+                dice.RollingIsCompleted = false;
+            }
+            var p2MainDices = GameObject.Find("Player2").transform.Find("DiceHolder").GetComponentsInChildren<DiceRollScript>();
+            foreach (var dice in p2MainDices)
+            {
+                dice.IsAbleToPickup = true;
+                dice.IsSentToBattlefield = false;
+                dice.RollingIsCompleted = false;
+            }
+
+            // 6. pokazanie sie paneli "blokady tury"
+            ChangePlayersTurn();
+
+            // 7. przywrócenie opcji losowania ( zamiana miejscami z guzikiem konca tury )
+            GameObject.Find("Player1").transform.Find("EndTurnButton").SetSiblingIndex(1);
+            GameObject.Find("Player2").transform.Find("EndTurnButton").SetSiblingIndex(1);
+
+            // 8. przycisk zakonczenia walki i powrotu zostane dezaktywowany
+            GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = false;
+            GameObject.Find("ANDROID_TEST_STARTCOMBATROUTINE").GetComponent<Button>().interactable = false;
         }
     }
 
