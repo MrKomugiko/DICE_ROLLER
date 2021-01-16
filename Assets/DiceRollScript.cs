@@ -15,22 +15,8 @@ public class DiceRollScript : MonoBehaviour
     [SerializeField] public bool DiceSlotIsLocked;
     [SerializeField] bool rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
-<<<<<<< Updated upstream
-    [SerializeField] Image _diceImage;
-=======
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-    [SerializeField] private Image _diceImage;
->>>>>>> Stashed changes
 
-=======
     [SerializeField] Image _diceImage;
->>>>>>> Stashed changes
     [SerializeField] bool _isSentToBattlefield;
     [SerializeField] bool _isAbleToPickup;
     [SerializeField] bool _lockDiceOnBattlefield;
@@ -62,24 +48,11 @@ public class DiceRollScript : MonoBehaviour
             }
         }
     }
-    [SerializeField] public bool LockDiceOnBattlefield { get => _lockDiceOnBattlefield; set => _lockDiceOnBattlefield = value; }
-<<<<<<< Updated upstream
-=======
-
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
-=======
     [SerializeField] public bool LockDiceOnBattlefield 
     { 
         get => _lockDiceOnBattlefield; 
         set => _lockDiceOnBattlefield = value; 
     }
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public void OnClick_TEST_WrocKoscZpolaBitwy()
     {
         // sprawdzenie blokady na kostce "matce" na ręce wyszukanej po numeze kości
