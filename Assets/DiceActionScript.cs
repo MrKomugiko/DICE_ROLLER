@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class DiceActionScript : MonoBehaviour
 {
-    [SerializeField] private bool _addGoldFromBlessedItems;
-    [SerializeField] private bool _stealGoldUsingHandItem;
-    [SerializeField] private bool _markDiceAsUsed;
-    [SerializeField] private bool _markDiceAsActive;
-    [SerializeField] private bool _inArena;
-    [SerializeField] private bool _inBattlefield;
-    [SerializeField] private bool _markDiceAsAttacking;
+    [SerializeField] bool _addGoldFromBlessedItems;
+    [SerializeField] bool _stealGoldUsingHandItem;
+    [SerializeField] bool _markDiceAsUsed;
+    [SerializeField] bool _markDiceAsActive;
+    [SerializeField] bool _inArena;
+    [SerializeField] bool _inBattlefield;
+    [SerializeField] bool _markDiceAsAttacking;
 
     public bool AddGoldFromBlessedItems
     {
@@ -109,6 +109,7 @@ public class DiceActionScript : MonoBehaviour
             _markDiceAsAttacking = false;
         }
     }
+    
     void Update()
     {
         #region debbuging inspector function checker
@@ -178,7 +179,39 @@ public class DiceActionScript : MonoBehaviour
                 HealthVault.TemporaryIntakeDamage_Player1 += 1;
                 break;
         }
+    } 
+    void MoveToArena(string playerName)
+    {
+        CombatManager CM = GameObject.Find("FightZone").GetComponent<CombatManager>();
+        GameObject container = null;
+        if (playerName == "Player1")
+        {
+            container = CM.Player1ArenaDiceContainer;
+        }
+        if (playerName == "Player2")
+        {
+            container = CM.Player2ArenaDiceContainer;
+        }
+        this.gameObject.transform.SetParent(container.transform);
+        _inArena = true;
     }
+    void MoveToBattlefield(string playerName)
+    {
+        GameObject container = null;
+        if (playerName == "Player1")
+        {
+            container = GameObject.Find("Player1Dices").gameObject;
+        }
+        if (playerName == "Player2")
+        {
+            container = GameObject.Find("Player2Dices").gameObject;
+        }
+        this.gameObject.transform.SetParent(container.transform);
+        _inBattlefield = true;
+
+        StartCoroutine(ChangeColor(Color.gray));
+    }
+
     IEnumerator AddGodCoin()
     {
         _addGoldFromBlessedItems = false;
@@ -239,7 +272,7 @@ public class DiceActionScript : MonoBehaviour
         // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
         for (float i = 0f; i <= 2; i += 0.1f)
         {
-            if (Math.Round(Convert.ToDecimal(i), 3) == Convert.ToDecimal(0.3f))
+            if (Math.Round(Convert.ToDecimal(i), 3) == Convert.ToDecimal(.7f))
             {
                 switch (parentName)
                 {
@@ -264,14 +297,14 @@ public class DiceActionScript : MonoBehaviour
                         break;
                 }   
             }
-            this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.green, i);
+            this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.green, i*2);
             yield return new WaitForSeconds(0.05f);
        }
     }
     IEnumerator ChangeColor(Color color)
     {
         bool done = false;
-        for (float i = 0f; i <= 1; i += 0.1f)
+        for (float i = 0f; i <= 1; i += 0.05f)
         {
             this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
             #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
@@ -288,35 +321,4 @@ public class DiceActionScript : MonoBehaviour
             yield return new WaitForSeconds(0.05f);
         }
     }
-    void MoveToArena(string playerName)
-    {
-        CombatManager CM = GameObject.Find("FightZone").GetComponent<CombatManager>();
-        GameObject container = null;
-        if (playerName == "Player1")
-        {
-            container = CM.Player1ArenaDiceContainer;
-        }
-        if (playerName == "Player2")
-        {
-            container = CM.Player2ArenaDiceContainer;
-        }
-        this.gameObject.transform.SetParent(container.transform);
-        _inArena = true;
     }
-    void MoveToBattlefield(string playerName)
-    {
-        GameObject container = null;
-        if (playerName == "Player1")
-        {
-            container = GameObject.Find("Player1Dices").gameObject;
-        }
-        if (playerName == "Player2")
-        {
-            container = GameObject.Find("Player2Dices").gameObject;
-        }
-        this.gameObject.transform.SetParent(container.transform);
-        _inBattlefield = true;
-
-        StartCoroutine(ChangeColor(Color.gray));
-    }
-}
