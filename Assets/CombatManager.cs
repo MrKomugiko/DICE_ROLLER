@@ -25,7 +25,6 @@ public class CombatManager : MonoBehaviour
                 "'../Battlefield/FightZone/Player1Dices_Fight_DiceHolder'.");
             Player1ArenaDiceContainer = transform.GetChild(0).transform.gameObject; // Player1Dices_Fight_DiceHolder
         }
-
         if (Player2ArenaDiceContainer == null)
         {
             print("pole GameObject dla Player2ArenaDiceContainer jest puste, " +
@@ -33,8 +32,6 @@ public class CombatManager : MonoBehaviour
                 "'../Battlefield/FightZone/Player2Dices_Fight_DiceHolder'.");
             Player2ArenaDiceContainer = transform.GetChild(1).transform.gameObject; // Player2Dices_Fight_DiceHolder
         }
-
-        print("Combat Manager = HeadQuater Everything whats happen in Arena.");
     }
     void Update()
     {     
@@ -244,7 +241,7 @@ public class CombatManager : MonoBehaviour
             }
 
         yield return new WaitForSeconds(0.5f);
-        
+
         GM_Script.cumulativeGoldStealingCounterP1 = 0;
         GM_Script.cumulativeGoldStealingCounterP2 = 0;
 

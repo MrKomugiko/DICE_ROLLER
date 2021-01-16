@@ -268,6 +268,7 @@ public class DiceActionScript : MonoBehaviour
         var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
 
         GameManager goldVaults = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
+            yield return new WaitForSeconds(0.5f);
 
         // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
         for (float i = 0f; i <= 2; i += 0.1f)

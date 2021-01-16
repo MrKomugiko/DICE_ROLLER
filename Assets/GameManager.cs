@@ -84,7 +84,6 @@ public class GameManager : MonoBehaviour
             var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
             if (value > 0)
             {
-                print("dodawanie [Player1] value = " + value);
                 // DODAWANIE GOLDA
                 if (value != 0)
                 {
@@ -95,7 +94,6 @@ public class GameManager : MonoBehaviour
             }
             if (value < 0)
             {
-                print("odejmowanie [Player1] value = " + value);
                 // ODEJMOWANIE GOLDA
                 if (value != 0)
                 {
@@ -104,7 +102,6 @@ public class GameManager : MonoBehaviour
                     liczbaPrzelewowGolda_Player1--;
                 }
             }
-
             _temporaryGoldVault_player1 = value;
         }
     }
@@ -167,9 +164,7 @@ public class GameManager : MonoBehaviour
             var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
             if (value > 0)
             {
-                print("dodawanie [Player2] value = " + value);
                 // DODAWANIE GOLDA
-                //var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
                 if (value != 0)
                 {
                     cumulativeGoldStealingCounterP2++;
@@ -179,9 +174,7 @@ public class GameManager : MonoBehaviour
             }
             if (value < 0)
             {
-                print("odejmowanie [Player2] value = " + value);
                 // ODEJMOWANIE GOLDA
-                //var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
                 if (value != 0)
                 {
                     cumulativeGoldStealingCounterP2--;
@@ -230,6 +223,11 @@ public class GameManager : MonoBehaviour
         CurrentGold1 = Convert.ToInt32(Player1_GoldVault.text);
         CurrentGold2 = Convert.ToInt32(Player2_GoldVault.text);
 
+        var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
+        p1hp.text = "";
+        var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
+        p2hp.text = "";
+
         CurrentPlayer = "Player1";
         currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
@@ -258,27 +256,13 @@ public class GameManager : MonoBehaviour
     /// </remarks>
     private void TransferGoldToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
-            if (cumulativeGoldStealingCounterP1 == 0)
-            {
-                // zapisanie w pamięci aktualnej liczby golda wykorzytsanej w pozniejszych iteracjach 
-                CurrentGold1 = Convert.ToInt32(Player1_GoldVault.text);
-                var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-                // wyzerowanie licznika 
-                p1coin.SetText("");
-            }
-            if (cumulativeGoldStealingCounterP2 == 0)
-            {
-                CurrentGold2 = Convert.ToInt32(Player2_GoldVault.text);
-                var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-                p2coin.SetText("");
-            }
         if (timePassedInGame >= this.interpolationPeriod)
         {
 
             // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
-
             //---------------------------------------------------------------------------------------------------------------------------
+
 
             if (liczbaPrzelewowGolda_Player1 > 0)
             {
@@ -299,8 +283,13 @@ public class GameManager : MonoBehaviour
                 // ZEROWANIE WARTOSCI TYMCZASOWYCH
                 TemporaryGoldVault_player1 = 0;
                 liczbaPrzelewowGolda_Player1 = 0;
+                
+                if (cumulativeGoldStealingCounterP1 == 0)
+                {
+                    var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+                    p1coin.SetText("");
+                }
             }
-
             //---------------------------------------------------------------------------------------------------------------------------
 
             if (liczbaPrzelewowGolda_Player2 > 0)
@@ -323,6 +312,12 @@ public class GameManager : MonoBehaviour
                 // ZEROWANIE WARTOSCI TYMCZASOWYCH
                 TemporaryGoldVault_player2 = 0;
                 liczbaPrzelewowGolda_Player2 = 0;
+
+                if (cumulativeGoldStealingCounterP2 == 0)
+                {
+                    var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+                    p2coin.SetText("");
+                }
             }
         }
     }
@@ -427,7 +422,6 @@ public class GameManager : MonoBehaviour
     /// </remarks>
     void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
-        print($"<b>{playerName}</b> roll his dices.");
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
     }
 
@@ -447,13 +441,11 @@ public class GameManager : MonoBehaviour
         GameObject.Find(playerName).transform.Find("DiceHolder").GetComponent<DiceManager>().SetDicesOff = true;
         CurrentPlayer = playerName;
         ChangePlayersTurn();
-        print($"<b>{playerName}</b> decide to end of his turn. now its <b>{CurrentPlayer}</b> turn.");
 
         // automatyczne przelączenie sie do widoku walki jezeli na polu bitwy znajduje sie 12 kostek
         var battlefield = GameObject.Find("Battlefield").transform;
         var player1DiceOnField = battlefield.Find("Player1Dices");
         var player2DiceOnField = battlefield.Find("Player2Dices");
-        //        print(player1DiceOnField +", "+player2DiceOnField);
         if ((player1DiceOnField.childCount + player2DiceOnField.childCount) == 12)
         {
             ChangeUIToBattleMode();
@@ -463,7 +455,6 @@ public class GameManager : MonoBehaviour
         var currentdicesOnBattlefield = BattleField.GetComponentsInChildren<DiceRollScript>();
         foreach (var dice in currentdicesOnBattlefield)
         {
-            // print(dice.name+" <- ta kostka juz tu zostanie for ever :D");
             dice.LockDiceOnBattlefield = true;
             // zablokowanie slotu po tej kości 
             var listaKosciDoZablokowania = GameObject.Find(playerName).transform.Find("DiceHolder")

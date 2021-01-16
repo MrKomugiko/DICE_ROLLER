@@ -15,13 +15,13 @@ public class DiceRollScript : MonoBehaviour
     public static int ILOSC_RZUTOW = 100;
 
     [SerializeField] public bool DiceSlotIsLocked;
-    [SerializeField] private bool rollingIsCompleted;
+    [SerializeField] bool rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
-    [SerializeField] private Image _diceImage;
+    [SerializeField] Image _diceImage;
 
     [SerializeField] bool _isSentToBattlefield;
     [SerializeField] bool _isAbleToPickup;
-    [SerializeField] private bool _lockDiceOnBattlefield;
+    [SerializeField] bool _lockDiceOnBattlefield;
 
     [SerializeField]
     public bool IsAbleToPickup
@@ -47,20 +47,15 @@ public class DiceRollScript : MonoBehaviour
             catch (System.Exception)
             {
                 GameManager test = new GameManager();
-                // print("Dice in battleground dont have buttons");
             }
         }
     }
-
     [SerializeField] public bool LockDiceOnBattlefield { get => _lockDiceOnBattlefield; set => _lockDiceOnBattlefield = value; }
-
     public void OnClick_TEST_WrocKoscZpolaBitwy()
     {
         // sprawdzenie blokady na kostce "matce" na ręce wyszukanej po numeze kości
         var myContainer = this.GetComponent<DiceActionScript>().transform.parent;
         DiceRollScript originDice;
-//        print(myContainer.name);
-
 
         if(myContainer.name == "Player1Dices")
         {
@@ -79,10 +74,6 @@ public class DiceRollScript : MonoBehaviour
             {
                 originDice.IsSentToBattlefield = false;
             }
-        }
-        else
-        {
-        
         }
     }
     public bool IsSentToBattlefield
@@ -104,9 +95,6 @@ public class DiceRollScript : MonoBehaviour
                 this.GetComponent<Button>().interactable = true;
                 this.IsAbleToPickup = true;
                 this.LockDiceOnBattlefield = false;
-
-                // teraz trzeba usunac tą kostke z planszy
-                // ? losowo, ważne że nazwa identyczna jak obrazek
 
                 GameObject playerBattlefiel = GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder;
                 var Dices = playerBattlefiel.transform.GetComponentsInChildren<DiceRollScript>();
@@ -171,14 +159,12 @@ public class DiceRollScript : MonoBehaviour
             _diceImage = value;
         }
     }
-
     void Update()
     {
         if (this.name != this.GetComponent<Image>().sprite.name)
         {
             this.name = this.GetComponent<Image>().sprite.name;
             this.DiceImage.sprite = this.GetComponent<Image>().sprite;
-//            print("zmiana nazwy obiektu i \"diceimage\" na identyczna jak aktualny obrazek");
         }
     }
     void Start()
@@ -191,12 +177,6 @@ public class DiceRollScript : MonoBehaviour
         RollingIsCompleted = false;
         List<int> WynikiLosowania = GenerujListeWynikowRzutemKoscia("classic");
         StartCoroutine(RollingAnimation(WynikiLosowania));
-
-        #region statistic debug
-        //  List<int> PodsumowanieLosowania = PodliczIloscWyrzuconychWartosciWCalymLosowaniu(WynikiLosowania);
-        //  PokazProcentowyUdzialWylosowanychLiczb(PodsumowanieLosowania);
-        // Pokaz10PierwszychWylosowanychElementow(WynikiLosowania);
-        #endregion
     }
     private void SendDiceToBattlefield()
     {
@@ -226,8 +206,6 @@ public class DiceRollScript : MonoBehaviour
         }
         RollingIsCompleted = true;
     }
-
-    #region Generator + Statystyki
     private static List<int> GenerujListeWynikowRzutemKoscia(string type)
     {
         List<int> wynikiLosowania = new List<int>();
@@ -250,32 +228,4 @@ public class DiceRollScript : MonoBehaviour
         }
         return wynikiLosowania;
     }
-    /*
-    private static void PokazProcentowyUdzialWylosowanychLiczb(List<int> podsumowanieLosowania)
-    {
-        for (int i = 0; i < WIELKOSC_KOSCI; i++)
-        {
-            Console.Write($"{i + 1} licba wystąpień = {podsumowanieLosowania[i]} [{((float)(podsumowanieLosowania[i] * 100) / ILOSC_RZUTOW)}%]\n");
-        }
-    }
-    private void Pokaz10PierwszychWylosowanychElementow(List<int> wynikiLosowania)
-    {
-        string wyniki = "";
-        for (int i = 0; i < 10; i++)
-        {
-            wyniki += wynikiLosowania[i].ToString() + ", ";
-        }
-        Debug.Log(wyniki);
-    }
-    private static List<int> PodliczIloscWyrzuconychWartosciWCalymLosowaniu(List<int> wynikiLosowania)
-    {
-        List<int> podsumowanie = new List<int>();
-        for (int i = 1; i <= WIELKOSC_KOSCI; i++)
-        {
-            podsumowanie.Add(wynikiLosowania.Where(p => p.Equals(i)).Count());
-        }
-        return podsumowanie;
-    }
-   */
-   #endregion
 }
