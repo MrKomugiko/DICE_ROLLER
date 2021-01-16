@@ -1498,6 +1498,9 @@ MonoBehaviour:
   Player2ArenaDiceContainer: {fileID: 766390545}
   Player2DicesInArena: []
   readyToFight: 0
+  GMScript: {fileID: 1301416607}
+  player1GOLD_TMP: {fileID: 1238911738}
+  player2GOLD_TMP: {fileID: 1245502807}
 --- !u!1001 &473538105
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2979,6 +2982,7 @@ Transform:
   - {fileID: 964748993}
   - {fileID: 999798398}
   - {fileID: 1963451790}
+  - {fileID: 1238911736}
   m_Father: {fileID: 482941160}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3677,7 +3681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &999798398
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4197,6 +4201,160 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220988476}
   m_CullTransparentMesh: 0
+--- !u!1 &1238911735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1238911736}
+  - component: {fileID: 1238911737}
+  - component: {fileID: 1238911738}
+  m_Layer: 0
+  m_Name: GoldPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1238911736
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238911735}
+  m_LocalRotation: {x: -0, y: -0, z: -1, w: 0.00024523868}
+  m_LocalPosition: {x: 0, y: 0, z: -201.18991}
+  m_LocalScale: {x: 0.00427, y: 0.00427, z: 0.00427}
+  m_Children: []
+  m_Father: {fileID: 835440063}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -179.97202}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.71432495, y: 0.61}
+  m_SizeDelta: {x: 200, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1238911737
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238911735}
+  m_CullTransparentMesh: 0
+--- !u!114 &1238911738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1238911735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.98366404, g: 1, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 10
+    m_MaxSize: 208
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 0
+--- !u!1 &1245502806
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1245502809}
+  - component: {fileID: 1245502808}
+  - component: {fileID: 1245502807}
+  m_Layer: 0
+  m_Name: GoldPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1245502807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245502806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.98366404, g: 1, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 1
+    m_MinSize: 10
+    m_MaxSize: 208
+    m_Alignment: 1
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 0
+--- !u!222 &1245502808
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245502806}
+  m_CullTransparentMesh: 0
+--- !u!224 &1245502809
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245502806}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -201.18991}
+  m_LocalScale: {x: 0.0042735045, y: 0.0042735045, z: 0.0042735045}
+  m_Children: []
+  m_Father: {fileID: 1855445888}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 2.8404236, y: -2.1461291}
+  m_SizeDelta: {x: 200, y: 150}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &1277811492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4634,18 +4792,27 @@ MonoBehaviour:
   Player2TurnBlocker: {fileID: 1901050491}
   Player1_HPPoints: {fileID: 160803603}
   Player2_HPPoints: {fileID: 640743859}
-  Player1_GoldVault: {fileID: 999798399}
-  Player2_GoldVault: {fileID: 2078228488}
+  Player1_GoldVault: {fileID: 1238911738}
+  Player2_GoldVault: {fileID: 1245502807}
   interpolationPeriod: 0.5
   isBattleModeTurnOn: 0
   _turnNumber: 0
-  currentGamePhase: 
+  currentGold2: 0
+  liczbaPrzelewowGolda_Player1: 0
+  liczbaPrzelewowGolda_Player2: 0
+  liczbaPrzelewaniaObrazen_Player1: 0
+  liczbaPrzelewaniaObrazen_Player2: 0
+  _temporaryGoldVault_player1: 0
+  _temporaryGoldVault_player2: 0
   _temporaryIntakeDamage_Player1: 0
   _temporaryIntakeDamage_Player2: 0
-  _damageCounter_Player1: 0
+  currentGamePhase: 
+  cumulativeGoldStealingCounterP1: 0
+  cumulativeGoldStealingCounterP2: 0
   Player1ActualHPValue: 0
   Player2ActualHPValue: 0
-  _damageCounter_Player2: 0
+  logger: {fileID: 0}
+  currentGold1: 0
 --- !u!4 &1301416608
 Transform:
   m_ObjectHideFlags: 0
@@ -5677,6 +5844,7 @@ Transform:
   - {fileID: 238904182}
   - {fileID: 2078228487}
   - {fileID: 796658088}
+  - {fileID: 1245502809}
   m_Father: {fileID: 1587131165}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7306,7 +7474,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2078228487
 RectTransform:
   m_ObjectHideFlags: 0

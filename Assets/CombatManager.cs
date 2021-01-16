@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class CombatManager : MonoBehaviour
 {
-    [SerializeField] int IndexOfCombatAction;
+    [SerializeField] int IndexOfCombatAction = -1;
 
     [SerializeField] public GameObject Player1BattlefieldDiceContainer;
     [SerializeField] public GameObject Player1ArenaDiceContainer;
@@ -39,9 +42,15 @@ public class CombatManager : MonoBehaviour
     int player1DicesCounter;
     int player2DicesCounter;
     [SerializeField] public bool readyToFight;
-    void Update()
-    {
+    
+    
+    [SerializeField] public GameManager GMScript;
+    [SerializeField] public Text player1GOLD_TMP;
+    [SerializeField] public Text player2GOLD_TMP;
 
+        void Update()
+    {
+         
         var P1_Container_ObjectCount = Player1ArenaDiceContainer.transform.childCount;
         var P2_Container_ObjectCount = Player2ArenaDiceContainer.transform.childCount;
 
@@ -119,23 +128,29 @@ public class CombatManager : MonoBehaviour
 
             StartCoroutine(Combat(attack, deffence));
         }
-        if(IndexOfCombatAction ==5)
+        if(IndexOfCombatAction == 5)
         {
-             // na wszelki wypadek wyzerowanie pozostałlości po początku fazy przyznawania golda z blessed itemkow
+            // na wszelki wypadek wyzerowanie pozostałlości po początku fazy przyznawania golda z blessed itemkow
              var GM = GameObject.Find("GameManager").GetComponent<GameManager>();
              GM.cumulativeGoldStealingCounterP1 = 0;
              GM.cumulativeGoldStealingCounterP2 = 0;
-             IndexOfCombatAction++;
+            
+            IndexOfCombatAction++;
         }
         if ((IndexOfCombatAction == 6 || IndexOfCombatAction == 7) && readyToFight)
         {
             print("steal 1/2 <=> steal 2/1");
-            var playerComtainer = IndexOfCombatAction == 5?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
+            var playerComtainer = IndexOfCombatAction == 6 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
             readyToFight = false;
 
             var goldStealDices = GetDiceOfType("Steal", GetDicesFromContainer(playerComtainer));
+            GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+             GM.cumulativeGoldStealingCounterP1 = 0;
+             GM.cumulativeGoldStealingCounterP2 = 0;
             WrzucKostkiNaArene(goldStealDices);
-            StartCoroutine(Steal(goldStealDices));
+
+            StartCoroutine(Steal(goldStealDices, playerComtainer.name));
+
         }
     }
 
@@ -233,15 +248,49 @@ public class CombatManager : MonoBehaviour
         IndexOfCombatAction++;
         readyToFight = true;
     }
-    IEnumerator Steal(List<GameObject> goldStealingDices)
-    { 
+    IEnumerator Steal(List<GameObject> goldStealingDices, string playerWhoStealingName)
+    {
+        print(playerWhoStealingName);
         yield return new WaitForSeconds(1f);
-        foreach (var handDice in goldStealingDices)
-        {
-            handDice.GetComponent<DiceActionScript>().StealGoldUsingHandItem = true;
-            yield return new WaitForSeconds(1f);
-        }
+        int player1Gold = GameObject.Find("GameManager").GetComponent<GameManager>().CurrentGold1;
+        int player2Gold = GameObject.Find("GameManager").GetComponent<GameManager>().CurrentGold2;
+
+        GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text +=$" V1 = {player1Gold} / "+GameObject.Find("GameManager").GetComponent<GameManager>().CurrentGold2;
+        GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text +=$" V2 = {player1Gold} / "+player2GOLD_TMP.text+"\n";
+ 
+        int maxOponentAvailableGoldToSteal = 0;//  = playerWhoStealingName == "Player1Dices" ? player2Gold : player1Gold;
+            switch (playerWhoStealingName)
+            {
+                case "Player1Dices":
+                //maxOponentAvailableGoldToSteal = player2Gold; 
+                maxOponentAvailableGoldToSteal = Convert.ToInt32(player2GOLD_TMP.text);
+                break;
+
+                case "Player2Dices":
+                //maxOponentAvailableGoldToSteal = player1Gold;
+                maxOponentAvailableGoldToSteal = Convert.ToInt32(player1GOLD_TMP.text);
+                break;
+            }
+         GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text +=$"oponent gold:"+maxOponentAvailableGoldToSteal+"\n";
+        for(int i = 1; i <= goldStealingDices.Count;i++)
+            {
+                if(maxOponentAvailableGoldToSteal>0)
+                {
+                    GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text += "Available gold to steal = "+maxOponentAvailableGoldToSteal+"\n";
+                    goldStealingDices[i-1].GetComponent<DiceActionScript>().StealGoldUsingHandItem = true;
+                    yield return new WaitForSeconds(1f);
+                    maxOponentAvailableGoldToSteal--;
+                }
+                else
+                {
+                    print("nie mozesz krać od bankruta xD");
+                    GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text += "Nie możesz kraść od bankruta. "+maxOponentAvailableGoldToSteal+"\n";
+                    continue;
+                }
+            }
+
         yield return new WaitForSeconds(1f);
+
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
 
         GameObject.Find("GameManager").GetComponent<GameManager>().cumulativeGoldStealingCounterP1 = 0;
