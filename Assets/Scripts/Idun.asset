@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5bf70cb9a01b2be4ea925428aac7e05c, type: 3}
-  m_Name: New God
+  m_Name: Idun
   m_EditorClassIdentifier: 
-  Index: 0
-  Image: {fileID: 21300000, guid: de5aede72722d514586d61ce5a90640c, type: 3}
-  Name: 
-  TotemFullName: 
-  Description: 
-  SkillType: 
-  LevelCost: 0
-  Leve2Cost: 0
-  Leve3Cost: 0
-  Level1SkillValue: 
-  Level2SkillValue: 
-  Level3SkillValue: 
+  Index: 9
+  Image: {fileID: 21300000, guid: 8c110f3619f386b4e9f0958a009b8b18, type: 3}
+  Name: Idun
+  TotemFullName: Idun's Rejuvenation
+  Description: Heal Health after the Resolution phase.
+  SkillDescriptionTemplate: '[ Y Gold ] Heal X Health'
+  LevelCost: 4
+  Leve2Cost: 7
+  Leve3Cost: 10
+  Level1SkillValue: 2
+  Level2SkillValue: 4
+  Level3SkillValue: 6

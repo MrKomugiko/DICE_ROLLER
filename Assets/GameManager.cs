@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 1 
     int Player1_RollingCounter;
+    [SerializeField] GameObject Player1GodSkillWindow;
     [SerializeField] GameObject Player1TurnBlocker;
 
     #region GOLD Blessed + Steal
@@ -140,6 +141,7 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 2 
     int Player2_RollingCounter;
+    [SerializeField] GameObject Player2GodSkillWindow;
     [SerializeField] GameObject Player2TurnBlocker;
 
     #region GOLD Blessed + Steal
@@ -567,6 +569,20 @@ public class GameManager : MonoBehaviour
     /// <summary> 
     ///     Testowa metoda wyzwalająca ponowne zebranie "GodFavor" z pola bitwy
     /// </summary>
+    
+    public void OnClick_OpenGodSkillsWindow(string playerName)
+    {
+        switch (playerName)
+        {
+            case "Player1":
+                Player1GodSkillWindow.SetActive(!Player1GodSkillWindow.gameObject.activeSelf);
+            break;
+            
+            case "Player2":
+                Player2GodSkillWindow.SetActive(!Player2GodSkillWindow.gameObject.activeSelf);
+            break;
+        }
+    }
     public void ANDROID_AgainAddGold()
     {
         List<DiceActionScript> blessedDP1 = GameObject.Find("Player1Dices")
