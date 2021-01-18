@@ -1,4 +1,5 @@
-﻿using DiceRoller_Console;
+﻿using System.Linq;
+using DiceRoller_Console;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,32 +8,45 @@ using UnityEngine.UI;
 
 public class GodsManager : MonoBehaviour
 {
-    [SerializeField] Text CurrentGoldText;
-    [SerializeField] string TokensOwnerName;
+    [SerializeField] Text _currentGoldText;
+    [SerializeField] string _tokensOwnerName;
 
-    [SerializeField] List<God> ListOfAvailableGods;
-    public int CurrentGold { get => Convert.ToInt32(CurrentGoldText.text); }
+    [SerializeField] List<God> _listOfAvailableGodsTotems;
+    [SerializeField] List<GodScript> _godCardsInContainer;
+    public int CurrentGold { get => Convert.ToInt32(_currentGoldText.text); }
+
+    void Awake()
+    {
+        _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
+    }
 
     void Start()
     {
-        print($"{TokensOwnerName} current gold = {CurrentGold}");
-        PopulateContainerWithGodTokens(ListOfAvailableGods);
+        print($"{_tokensOwnerName} | current gold = {CurrentGold}");
+        print($"{_tokensOwnerName} | Rozpoczęscie rozlokowywania toemów w kartach gracza");
+        PopulateContainerWithGodTokens(_listOfAvailableGodsTotems);
+        print($"{_tokensOwnerName} | Zakończenie ustawien początkowych.");
     }
 
-    void PopulateContainerWithGodTokens(List<God> gods)
+    void PopulateContainerWithGodTokens(List<God> godTotems)
     {
-        List<int> randomGodsTokenIndexes = GenerateThreeDifferentRandomNumbers(gods.Count);
-        foreach(var GodScript in this.GetComponentsInChildren<GodScript>())
+        print($"{_tokensOwnerName} | aktualnie możliwych totemów:"+godTotems.Count);
+        List<int> randomGodsTokenIndexes = GenerateThreeDifferentRandomNumbers(godTotems.Count);
+        int index = 0;
+        foreach(GodScript godCard in _godCardsInContainer)
         {
-            // zniwelowanie powtórzeń poprzez przechowywanie indeksów w pamięci (szybsze niż sprawdzanie za kazdym razem każdy token)
-
-            GodScript.GodObject = ListOfAvailableGods[randomGodsTokenIndexes[0]];
-            randomGodsTokenIndexes.RemoveAt(0);
+            print($"{_tokensOwnerName} | done");
+            godCard.GodObject = godTotems[randomGodsTokenIndexes[index]];
+            godCard.SelfConfigure();
+            index++;
         }
+        
+        print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
     }
 
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
+        print($"{_tokensOwnerName} | Losowanie trzech totemów.");
         List<int> randomNumbers = new List<int>();
         
         do
@@ -41,10 +55,10 @@ public class GodsManager : MonoBehaviour
             if(!randomNumbers.Contains(number))
             {
                 randomNumbers.Add(number);
-                print($"[{TokensOwnerName}] dodano: {number}, lista zawiera {randomNumbers.Count} liczb"); 
             }    
         } while (randomNumbers.Count < 3);
 
+        print($"{_tokensOwnerName} | indexy totemów: [{randomNumbers[0]}][{randomNumbers[1]}][{randomNumbers[2]}]");
         return randomNumbers;
     }
 

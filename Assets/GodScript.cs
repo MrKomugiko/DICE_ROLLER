@@ -6,23 +6,27 @@ using UnityEngine.UI;
 
 public class GodScript : MonoBehaviour
 {
-    [SerializeField] Sprite DefaultReversImage;
-    [SerializeField] Sprite CardReversImage;
-    [SerializeField] GameObject ContainerOfReverseData;
-    [SerializeField] int spinningSpeedMultiplifer = 4;
+    [SerializeField] status _currentstatus;
+    [SerializeField] God _godData;
+    [SerializeField] Sprite _defaultEmptyImage;
+    [SerializeField] Sprite _cardMainImage;
+    [SerializeField] Sprite _cardReversImage;  
+    [SerializeField] TextMeshProUGUI _cardDescription;
+    [SerializeField] GameObject _cardReversDetailsContainer;
+    [SerializeField] int _spinningSpeedMultiplifer = 4;
     [SerializeField] bool isCurrentSpinning = false;
     [SerializeField] bool _isRevealed = false;
+
     public bool IsRevealed
     {
         get => _isRevealed;
         set
         {
             _isRevealed = value;
-            ContainerOfReverseData.SetActive(value);
+            _cardReversDetailsContainer.SetActive(value);
         }
-    }
-    Sprite _cardMainImage;
-    public Sprite CardMainImage1
+    }  
+    public Sprite CardMainImage
     {
         get => _cardMainImage;
         set
@@ -32,85 +36,114 @@ public class GodScript : MonoBehaviour
         }
     }
 
-    [SerializeField] God _godObject;
+    private Image _cardImage;
+    private Transform _transform;
+ 
     public God GodObject
     {
-        get => _godObject;
+        get => _godData;
         set
         {
-            _godObject = value;
-            SelfConfigure(_godObject);
-        }
-    }
-    
-    void Start()
-    {
-        if(GodObject != null)
-        {
-            SelfConfigure(GodObject);
-        }
-        else
-        {
-            DefaultEmptyGodConfiguration();
+            print("przypisanie boga:"+value.Name);
+            _godData = value;
         }
     }
 
-    void SelfConfigure(God godData)
+    void Awake()
     {
-        this.name = godData.Name;
-        this.CardMainImage1 = godData.Image;
-        ContainerOfReverseData.transform.Find("Description").GetComponent<TextMeshProUGUI>()
-            .SetText($"<size=40><b>{godData.TotemFullName}</b></size>\n<i>{godData.Description}</i>");
+        if(_godData == null) DefaultEmptyGodConfiguration();
+        _cardImage = this.GetComponent<Image>();
+        _transform = this.transform;
+        _cardDescription = _cardReversDetailsContainer.transform.Find("Description").GetComponent<TextMeshProUGUI>();
+    }
+    void Start()
+    {
+    }
+[ContextMenu("Self Configuration")]
+    public void SelfConfigure()
+    {
+        this.name = _godData.Name;
+        this.CardMainImage = _godData.Image;
+        _cardDescription.SetText($"<size=40><b>{_godData.TotemFullName}</b></size>\n<i>{_godData.Description}</i>");
 
         int levelObjectIndex = 1;
 
-        List<string> skillsDescriptionList = godData.GenerateListOFSkillsDescription();
+        List<string> skillsDescriptionList = _godData.GenerateListOFSkillsDescription();
 
         for (int i = 0; i < 3; i++)
         {
-            ContainerOfReverseData.transform.GetChild(levelObjectIndex).GetComponentInChildren<Text>().text = skillsDescriptionList[i];
+            _cardReversDetailsContainer.transform.GetChild(levelObjectIndex).GetComponentInChildren<Text>().text = skillsDescriptionList[i];
             levelObjectIndex++;
         }
     }
-
     void DefaultEmptyGodConfiguration()
     {
-        this.name = "god";
-        this.CardMainImage1 = DefaultReversImage;
+        this.name = "unnamed_god";
+        this.CardMainImage = _defaultEmptyImage;
     }
 
+[ContextMenu("Spin card test")]
     public void OnClick_SpinCard()
     {
-        if (!isCurrentSpinning)
+        _transform = this.transform;
+        if (!isCurrentSpinning && _currentstatus==status.selected)
         {
-            StartCoroutine(SpinAnimation(spinningSpeedMultiplifer));
+            StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
         }
     }
-
+    
     IEnumerator SpinAnimation(int speedMultiplifer)
     {
         isCurrentSpinning = true;
-        Sprite spriteToSet = IsRevealed ? CardMainImage1 : CardReversImage;
+        Sprite spriteToSet = IsRevealed ? CardMainImage : _cardReversImage;
 
         print("start krecenia");
         for (int i = 0; i < 90; i += speedMultiplifer)
         {
-            this.transform.Rotate(new Vector3(0f, speedMultiplifer, 0f), Space.Self);
+            _transform.Rotate(new Vector3(0f, speedMultiplifer, 0f), Space.Self);
             yield return new WaitForFixedUpdate();
         }
 
         print("Podmiana obrazka na rewers i odblokowanie pzycisków");
-        this.GetComponent<Image>().sprite = spriteToSet;
+        _cardImage.sprite = spriteToSet;
         IsRevealed = !IsRevealed;
-        yield return new WaitForSeconds(0.005f);
+        
         for (int i = 90; i > 0; i -= speedMultiplifer)
         {
             //print("spinn in progress current rotate = "+ i);
-            this.transform.Rotate(new Vector3(0f, -speedMultiplifer, 0f), Space.Self);
+            _transform.Rotate(new Vector3(0f, -speedMultiplifer, 0f), Space.Self);
             yield return new WaitForFixedUpdate();
         }
 
-        print("karta gotowa");
         isCurrentSpinning = false;
     }
+
+    IEnumerator SetCardAsSelectedMode()
+    {
+        // metoda odpowiedzialna za zmiane statusu na "Selected" w tym czasie powiększenie karty 
+        // nastepnie wykonanie SetCardAsUnfocused dla pozostałych kart
+        
+        yield return new WaitForSeconds(1f);
+    }
+
+    // TODO: SetCardAsUnfocusedMode()
+    IEnumerator SetCardAsSetCardAsUnfocusedModeSelectedMode()
+    {
+        
+        yield return new WaitForSeconds(1f);
+    }
+    
+    // TODO: SetCardAsStandardMode()
+    IEnumerator SetCardAsStandardMode()
+    {
+       
+        yield return new WaitForSeconds(1f);
+    }
+        enum status 
+    {
+        standard,
+        selected,
+        unfocused
+    }
+
 }
