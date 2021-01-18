@@ -6,11 +6,11 @@ using UnityEngine.UI;
 
 public class GodScript : MonoBehaviour
 {
+    [SerializeField] Sprite DefaultReversImage;
     [SerializeField] Sprite CardReversImage;
     [SerializeField] GameObject ContainerOfReverseData;
     [SerializeField] int spinningSpeedMultiplifer = 4;
     [SerializeField] bool isCurrentSpinning = false;
-
     [SerializeField] bool _isRevealed = false;
     public bool IsRevealed
     {
@@ -21,7 +21,6 @@ public class GodScript : MonoBehaviour
             ContainerOfReverseData.SetActive(value);
         }
     }
-
     Sprite _cardMainImage;
     public Sprite CardMainImage1
     {
@@ -46,8 +45,14 @@ public class GodScript : MonoBehaviour
     
     void Start()
     {
-
-        SelfConfigure(GodObject);
+        if(GodObject != null)
+        {
+            SelfConfigure(GodObject);
+        }
+        else
+        {
+            DefaultEmptyGodConfiguration();
+        }
     }
 
     void SelfConfigure(God godData)
@@ -66,6 +71,12 @@ public class GodScript : MonoBehaviour
             ContainerOfReverseData.transform.GetChild(levelObjectIndex).GetComponentInChildren<Text>().text = skillsDescriptionList[i];
             levelObjectIndex++;
         }
+    }
+
+    void DefaultEmptyGodConfiguration()
+    {
+        this.name = "god";
+        this.CardMainImage1 = DefaultReversImage;
     }
 
     public void OnClick_SpinCard()
