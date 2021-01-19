@@ -13,7 +13,7 @@ public partial class CardScript : MonoBehaviour
 {
     GodScript _godTotem;
     Transform _transform;
-    [SerializeField] Sprite _cardReversImage;  
+    [SerializeField] Sprite _cardReversImage;
     Image _cardImage;
     [SerializeField] Sprite _defaultEmptyImage;
     [SerializeField] GameObject _cardReversDetailsContainer;
@@ -24,22 +24,23 @@ public partial class CardScript : MonoBehaviour
     [SerializeField] bool _isRevealed = false;
     [SerializeField] status _currentstatus = status.standard;
     [SerializeField] List<GameObject> _godSkills;
-    [SerializeField] GodsManager _godsManager;
+    GodsManager _godsManager;
     Button _button;
+    List<CardScript> karty;
     public bool IsReverseRevelated
     {
         get => _isRevealed;
         set
         {
-            if(value) {Currentstatus = status.revealed;}
+            if (value) { Currentstatus = status.revealed; }
             _isRevealed = value;
             _cardReversDetailsContainer.SetActive(value);
         }
     }
-    private status Currentstatus 
-    { 
-        get => _currentstatus; 
-        set 
+    private status Currentstatus
+    {
+        get => _currentstatus;
+        set
         {
             _currentstatus = value;
             print(name + " changed status to " + Currentstatus.ToString());
@@ -48,7 +49,7 @@ public partial class CardScript : MonoBehaviour
                 case status.unfocused:
                     _button.onClick.RemoveAllListeners();
                     _button.onClick.AddListener(() => OnClickSelectCard());
-                break;
+                    break;
 
                 case status.standard:
                     _button.onClick.RemoveAllListeners();
@@ -57,7 +58,7 @@ public partial class CardScript : MonoBehaviour
                     _button.onClick.AddListener(() => OnClickSelectCard());
                     break;
 
-                case status.selected:
+                case status.selected:  
                     _button.onClick.RemoveAllListeners();
                     // gdy karta jest wybrana, nastepny click ją odwróci 
                     _button.onClick.AddListener(() => OnClick_SpinCard());
@@ -72,39 +73,46 @@ public partial class CardScript : MonoBehaviour
         }
     }
     [ContextMenu("Change card to 'SELECTED' mode AND every else to 'UNFOCUSED")]
-        public void OnClickSelectCard()
-        {
-            OnClick_ChangeAllCardsToUnfocusedMode();
-            OnClick_ChangeCardToSelectedMode();
-        }
-
-    public Sprite DefaultEmptyImage { get => _defaultEmptyImage;}
-
+    public void OnClickSelectCard()
+    {
+        OnClick_ChangeAllCardsToUnfocusedMode();
+        OnClick_ChangeCardToSelectedMode();
+    }
+    public Sprite DefaultEmptyImage { get => _defaultEmptyImage; }
+   
+   void Update()
+   {
+       // autoodwracanie sie karty w razie zbyt szybkiego przełączania sie miedzy nimi
+       if(_isCurrentSpinning == false && IsReverseRevelated && (Currentstatus == status.unfocused) ){
+           OnClick_SpinCard();
+       }
+   }
     void Awake()
     {
         _godsManager = this.GetComponentInParent<GodsManager>();
         _button = this.GetComponent<Button>();
-        _godTotem = this.GetComponent<GodScript>(); 
+        _godTotem = this.GetComponent<GodScript>();
         _cardImage = this.GetComponent<Image>();
         _transform = this.transform;
-        
-        for (int i = 1; i <= 3; i++)        
+
+        for (int i = 1; i <= 3; i++)
         {
-            _godSkills.Add(_cardReversDetailsContainer.transform.Find($"Skill Level {i}").gameObject);    
+            _godSkills.Add(_cardReversDetailsContainer.transform.Find($"Skill Level {i}").gameObject);
         }
 
         _cardDescription = _cardReversDetailsContainer.transform.Find("Description").GetComponent<TextMeshProUGUI>();
     }
     void Start()
     {
-        Currentstatus = status.standard;
+        Currentstatus = Currentstatus;
+        karty = _godsManager.ListOfAllCards;
     }
 
     [ContextMenu("Change 'ALL' cards to 'UNFOCUSED' mode.")]
     public void OnClick_ChangeAllCardsToUnfocusedMode()
     {
         print("OnClick_ChangeAllCardsToUnfocusedMode");
-        List<CardScript> karty = _godsManager.ListOfAllCards;
+        karty = _godsManager.ListOfAllCards;
         //print("liczba karty w folderze to "+ karty.Count);
         foreach (CardScript card in _godsManager.ListOfAllCards)
         {
@@ -117,9 +125,9 @@ public partial class CardScript : MonoBehaviour
     {
         print("OnClick_ChangeCardToSelectedMode");
         Currentstatus = status.selected;
-        StartCoroutine(SetCardAsSelectedMode());   
+        StartCoroutine(SetCardAsSelectedMode());
     }
-    
+
     [ContextMenu("Spin a card [only if is 'selected']")]
     public void OnClick_SpinCard()
     {
@@ -129,28 +137,32 @@ public partial class CardScript : MonoBehaviour
         }
     }
 
-public void OnClick_ChangeCardToUnfocusedMode()
-{
+    public void OnClick_ChangeCardToUnfocusedMode()
+    {
         print("OnClick_ChangeCardToUnfocusedMode");
         Currentstatus = status.unfocused;
-        StartCoroutine(SetCardAsUnfocusedMode());   
-}
-  
-   IEnumerator ChangeColor(Color32 color)
-    {
-        print("change color");
-        for (float i = 0f; i <= 1; i += 0.2f)
+        StartCoroutine(SetCardAsUnfocusedMode());
+    }
+
+    IEnumerator ChangeColor(Color32 color)
+    { 
+        //print("change color");
+        for (float i = 0f; i <= 1; i += 0.05f)
         {
             this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.02f);
         }
     }
+
     IEnumerator Resize(float x, float y)
     {
+        
         print("START coroutin resize");
 
+        this.GetComponent<RectTransform>().sizeDelta = new Vector2(x,y);
+
         // obliczenie aktualnej wielkosci
-        
+
         // potem obliczenie roznicy miedzy aktualna i wymaganą
 
         // podzielic ta wartosc na jakąś równą czesc zeby to zapętlic w animacje
@@ -166,8 +178,18 @@ public void OnClick_ChangeCardToUnfocusedMode()
     }
     public void SetSkillDescription(int skillLevel, string skillDescription)
     {
-        _godSkills[skillLevel-1].GetComponentInChildren<Text>().text = skillDescription;
+        _godSkills[skillLevel - 1].GetComponentInChildren<Text>().text = skillDescription;
     }
+    
+    // bool Delegate_SpinningChecker()
+    // {
+    //     if(_isCurrentSpinning) {
+    //         return true;
+    //     }else{
+    //         return false;
+    //     }
+    // }
+
     IEnumerator SpinAnimation(int speedMultiplifer)
     {
         _isCurrentSpinning = true;
@@ -183,7 +205,7 @@ public void OnClick_ChangeCardToUnfocusedMode()
         print("Podmiana obrazka na rewers i odblokowanie pzycisków");
         _cardImage.sprite = spriteToSet;
         IsReverseRevelated = !IsReverseRevelated;
-        
+
         for (int i = 90; i > 0; i -= speedMultiplifer)
         {
             //print("spinn in progress current rotate = "+ i);
@@ -196,65 +218,78 @@ public void OnClick_ChangeCardToUnfocusedMode()
         yield return true;
     }
 
-
+    public void SetCardToNormalMode()
+    {
+        StartCoroutine(BackToNormalSize());
+    }
 
     IEnumerator BackToNormalSize()
     {
         print("START coroutin Back to normal");
         switch (Currentstatus)
         {
-            case status.revealed: 
+            case status.revealed:
                 print("---------- Wybana karta jest Odwrócona skillami na wierzch trzeba ją odwrocic i zmniejszyc ----------");
 
                 print("Trwa odwracanie karty totemem na wierzch");
                 yield return StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
 
                 print("Trwa zmiana rozmiaru");
-                yield return StartCoroutine(Resize(10f,20f));
+                //StopCoroutine("Resize");
+                yield return StartCoroutine(Resize(327.4f, 537.3f));
 
                 print("Zamiana statusu karty na 'standard'");
                 Currentstatus = status.standard;
-            break;
+                break;
 
             case status.selected:
                 print("---------- Wybana karta jest Odwrócona wizerunkiem totemu na wierzch trzeba ją tylko zmiejszyc ----------");
 
                 print("Trwa zmiana rozmiaru");
-                yield return StartCoroutine(Resize(10f,20f));
+                //StopCoroutine("Resize");
+                yield return StartCoroutine(Resize(327.4f, 537.3f));
 
                 print("Zamiana statusu karty na 'standard'");
                 Currentstatus = status.standard;
-            break;
+                break;
 
             case status.standard:
                 print("---------- Wybana karta jest juz ustawiona normalnie nie trzeba nic robic----------");
-            break;
+                break;
 
             case status.unfocused:
                 print("---------- Wybana karta jest w trybie poza focusem, trzeba ją zwiekszych i rozjasnic ----------");
 
                 print("Trwa zmiana rozmiaru");
-                yield return StartCoroutine(Resize(10f,20f));
+                //StopCoroutine("Resize");
+                yield return StartCoroutine(Resize(327.4f, 537.3f));    
 
                 print("zmiana koloru na jasniejszy");
-                StartCoroutine(ChangeColor(new Color32(255,255,255,255)));
+                 
+
+                yield return StartCoroutine(ChangeColor(new Color32(255, 255, 255, 255)));
 
                 print("Zamiana statusu karty na 'standard'");
                 Currentstatus = status.standard;
-            break;
+                break;
         }
-        //yield return new WaitUntil(Delegate_CheckingIfCardSpinning);
         print("KARTA WROCILA DO STANDARDU");
     }
-   
+
     IEnumerator SetCardAsSelectedMode()
     {
-        StartCoroutine(Resize(500,1000));
-        yield return StartCoroutine(ChangeColor(new Color32(255,255,255,255)));
+        //StopCoroutine("Resize");
+        StartCoroutine(Resize(475.6f, 780.67f));
+                 
+        
+        yield return StartCoroutine(ChangeColor(new Color32(255, 255, 255, 255)));
     }
     IEnumerator SetCardAsUnfocusedMode()
     {
-        StartCoroutine(Resize(500,1000));
-        yield return StartCoroutine(ChangeColor(new Color32(75,75,75,255)));
+        StopCoroutine("Resize");
+        StartCoroutine(Resize(270.0f, 443.16f));
+                 
+
+        yield return StartCoroutine(ChangeColor(new Color32(75, 75, 75, 255)));
     }
 }
