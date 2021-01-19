@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DiceRoller_Console;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,9 +34,7 @@ public class GodsManager : MonoBehaviour
         int index = 0;
         foreach(GodScript godCard in _godCardsInContainer)
         {
-            print($"{_tokensOwnerName} | done");
-            godCard.GodObject = godTotems[randomGodsTokenIndexes[index]];
-            godCard.SelfConfigure();
+            godCard.SelfConfigure(godTotems[randomGodsTokenIndexes[index]]);
             index++;
         }
         
