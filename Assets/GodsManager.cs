@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using DiceRoller_Console;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,16 @@ public class GodsManager : MonoBehaviour
 
     [SerializeField] List<God> _listOfAvailableGodsTotems;
     [SerializeField] List<GodScript> _godCardsInContainer;
+    [SerializeField] List<CardScript> _listOfAllCards;
     public int CurrentGold { get => Convert.ToInt32(_currentGoldText.text); }
-
+    public List<CardScript> ListOfAllCards { 
+        get => _listOfAllCards; 
+        set 
+        { 
+            _listOfAllCards = value;
+            print("liczba kart: "+value.Count); 
+        }
+    }
     void Awake()
     {
         _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
@@ -25,6 +34,7 @@ public class GodsManager : MonoBehaviour
         print($"{_tokensOwnerName} | Rozpoczęscie rozlokowywania toemów w kartach gracza");
         PopulateContainerWithGodTokens(_listOfAvailableGodsTotems);
         print($"{_tokensOwnerName} | Zakończenie ustawien początkowych.");
+        ListOfAllCards = this.GetComponentsInChildren<CardScript>().ToList();
     }
 
     void PopulateContainerWithGodTokens(List<God> godTotems)

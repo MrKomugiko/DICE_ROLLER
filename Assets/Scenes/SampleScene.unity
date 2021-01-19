@@ -2369,6 +2369,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7bdd2f040492fba4b975bc2687741ee4, type: 2}
   - {fileID: 11400000, guid: 05cfee2aa1d29a042b8a666ddef13934, type: 2}
   _godCardsInContainer: []
+  _listOfAllCards: []
 --- !u!224 &403017628 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,
@@ -3990,19 +3991,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 535584444}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 535584446}
-        m_TargetAssemblyTypeName: CardScript, Assembly-CSharp
-        m_MethodName: OnClick_SpinCard
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &535584443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4074,6 +4063,7 @@ MonoBehaviour:
   _isRevealed: 0
   _currentstatus: 3
   _godSkills: []
+  _godsManager: {fileID: 0}
 --- !u!1001 &541872453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4876,6 +4866,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 05cfee2aa1d29a042b8a666ddef13934, type: 2}
   - {fileID: 11400000, guid: e7bf7d22d6e2ccd459f3645a7199c391, type: 2}
   _godCardsInContainer: []
+  _listOfAllCards: []
 --- !u!114 &737306871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7156,6 +7147,7 @@ MonoBehaviour:
   _isRevealed: 0
   _currentstatus: 0
   _godSkills: []
+  _godsManager: {fileID: 0}
 --- !u!1 &1135609648
 GameObject:
   m_ObjectHideFlags: 0
@@ -8172,6 +8164,7 @@ MonoBehaviour:
   _isRevealed: 0
   _currentstatus: 0
   _godSkills: []
+  _godsManager: {fileID: 0}
 --- !u!1001 &1277811492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9269,6 +9262,7 @@ MonoBehaviour:
   _isRevealed: 0
   _currentstatus: 0
   _godSkills: []
+  _godsManager: {fileID: 0}
 --- !u!1 &1442193217
 GameObject:
   m_ObjectHideFlags: 0
@@ -9864,19 +9858,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1508751111}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1508751113}
-        m_TargetAssemblyTypeName: CardScript, Assembly-CSharp
-        m_MethodName: OnClick_SpinCard
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1508751110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9948,6 +9930,7 @@ MonoBehaviour:
   _isRevealed: 0
   _currentstatus: 3
   _godSkills: []
+  _godsManager: {fileID: 0}
 --- !u!1001 &1535970970
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10570,19 +10553,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1705407864}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1705407866}
-        m_TargetAssemblyTypeName: CardScript, Assembly-CSharp
-        m_MethodName: OnClick_SpinCard
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1705407863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10654,6 +10625,7 @@ MonoBehaviour:
   _isRevealed: 0
   _currentstatus: 1
   _godSkills: []
+  _godsManager: {fileID: 0}
 --- !u!1 &1738986847
 GameObject:
   m_ObjectHideFlags: 0
