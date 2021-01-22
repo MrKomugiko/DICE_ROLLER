@@ -2479,11 +2479,12 @@ MonoBehaviour:
   _cardReversImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   _defaultEmptyImage: {fileID: 21300000, guid: 0afa01a87fca94345b2f0eca96b8ce50, type: 3}
   _cardReversDetailsContainer: {fileID: 1206692053}
-  _spinningSpeedMultiplifer: 4
+  _spinningSpeedMultiplifer: 8
   _isCurrentSpinning: 0
   _isRevealed: 0
   _currentstatus: 3
   _godSkills: []
+  NewColorChangingInPRocess: 0
 --- !u!114 &330055991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4459,11 +4460,12 @@ MonoBehaviour:
   _cardReversImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   _defaultEmptyImage: {fileID: 21300000, guid: 0afa01a87fca94345b2f0eca96b8ce50, type: 3}
   _cardReversDetailsContainer: {fileID: 680990261}
-  _spinningSpeedMultiplifer: 4
+  _spinningSpeedMultiplifer: 8
   _isCurrentSpinning: 0
   _isRevealed: 0
   _currentstatus: 3
   _godSkills: []
+  NewColorChangingInPRocess: 0
 --- !u!1001 &541872453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5471,7 +5473,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1508751113}
         m_TargetAssemblyTypeName: CardScript, Assembly-CSharp
-        m_MethodName: SetCardToNormalMode
+        m_MethodName: OnClick_SetCardToNormalMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5483,7 +5485,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1705407866}
         m_TargetAssemblyTypeName: CardScript, Assembly-CSharp
-        m_MethodName: SetCardToNormalMode
+        m_MethodName: OnClick_SetCardToNormalMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5495,7 +5497,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 535584446}
         m_TargetAssemblyTypeName: CardScript, Assembly-CSharp
-        m_MethodName: SetCardToNormalMode
+        m_MethodName: OnClick_SetCardToNormalMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6407,11 +6409,12 @@ MonoBehaviour:
   _cardReversImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   _defaultEmptyImage: {fileID: 21300000, guid: 0afa01a87fca94345b2f0eca96b8ce50, type: 3}
   _cardReversDetailsContainer: {fileID: 1215731426}
-  _spinningSpeedMultiplifer: 4
+  _spinningSpeedMultiplifer: 8
   _isCurrentSpinning: 0
   _isRevealed: 0
   _currentstatus: 3
   _godSkills: []
+  NewColorChangingInPRocess: 0
 --- !u!114 &947037498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10039,11 +10042,12 @@ MonoBehaviour:
   _cardReversImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   _defaultEmptyImage: {fileID: 21300000, guid: 0afa01a87fca94345b2f0eca96b8ce50, type: 3}
   _cardReversDetailsContainer: {fileID: 1202780703}
-  _spinningSpeedMultiplifer: 4
+  _spinningSpeedMultiplifer: 8
   _isCurrentSpinning: 0
   _isRevealed: 0
   _currentstatus: 3
   _godSkills: []
+  NewColorChangingInPRocess: 0
 --- !u!1001 &1535970970
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10733,11 +10737,12 @@ MonoBehaviour:
   _cardReversImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   _defaultEmptyImage: {fileID: 21300000, guid: 0afa01a87fca94345b2f0eca96b8ce50, type: 3}
   _cardReversDetailsContainer: {fileID: 1569559258}
-  _spinningSpeedMultiplifer: 4
+  _spinningSpeedMultiplifer: 8
   _isCurrentSpinning: 0
   _isRevealed: 0
   _currentstatus: 1
   _godSkills: []
+  NewColorChangingInPRocess: 0
 --- !u!1 &1717638412
 GameObject:
   m_ObjectHideFlags: 0
@@ -12362,11 +12367,12 @@ MonoBehaviour:
   _cardReversImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   _defaultEmptyImage: {fileID: 21300000, guid: 0afa01a87fca94345b2f0eca96b8ce50, type: 3}
   _cardReversDetailsContainer: {fileID: 1683116536}
-  _spinningSpeedMultiplifer: 4
+  _spinningSpeedMultiplifer: 8
   _isCurrentSpinning: 0
   _isRevealed: 0
   _currentstatus: 1
   _godSkills: []
+  NewColorChangingInPRocess: 0
 --- !u!114 &1933695959
 MonoBehaviour:
   m_ObjectHideFlags: 0
