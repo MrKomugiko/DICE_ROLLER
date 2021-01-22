@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,7 +34,6 @@ public class GodScript : MonoBehaviour
         if(_godData == null) DefaultEmptyGodConfiguration();
     }
 
-    [ContextMenu("Self Configuration")]
     public void SelfConfigure(God godData)
     {   
         _godData = godData;
@@ -59,4 +56,6 @@ public class GodScript : MonoBehaviour
         this.name = "unnamed_god";
         this.GodTotemMainImage = _card.DefaultEmptyImage;
     }
+
+    
 }
