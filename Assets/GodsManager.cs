@@ -13,6 +13,7 @@ public class GodsManager : MonoBehaviour
     [SerializeField] List<God> _listOfAvailableGodsTotems;
     [SerializeField] List<GodScript> _godCardsInContainer;
     [SerializeField] List<CardScript> _listOfAllCards;
+    
 
     public int CurrentGold { get => Convert.ToInt32(_currentGoldText.text); }
 

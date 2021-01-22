@@ -249,13 +249,6 @@ public class GameManager : MonoBehaviour
         TransferDamageToPlayers(ref time2, interpolationPeriod);
     }
 
-    /// <summary> 
-    ///     Przelewanie golda z wczesniej naliczonych wartości tymczasowych do konta graczy z "animacją"
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="timePassedInGame"> ref => wraca zaktualizowaną wartość ( zeruje ) czas który upłynął w sekundach</param>
-    ///     <param name ="timeDelayinSecons"> wartość opóźnienia między wykonywaniem iteracji</param>
-    /// </remarks>
     private void TransferGoldToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
@@ -324,13 +317,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     przenoszenie nazbieranych obrażeń naliczonych w wartości tymczasowych do konta graczy z "animacją" 
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="timePassedInGame"> ref => wraca zaktualizowaną wartość ( zeruje ) czas który upłynął w sekundach</param>
-    ///     <param name ="timeDelayinSecons"> wartość opóźnienia między wykonywaniem iteracji</param>
-    /// </remarks>
     private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
@@ -362,13 +348,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    /// ustalenie na podstawie numeru tury, czy ejst to ostatnie automatyczne losowanie
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="rollingTurnNumber">aktualna tura rozgrywki</param>
-    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
-    /// </remarks>
     void ManageOrderingRollButtonsAndActivateLastRollingTurn(int rollingTurnNumber, string player)
     {
         if (rollingTurnNumber >= 3.0)
@@ -387,9 +366,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Oddanie tury przeciwnikowi, oraz przyciemnienie swojej częsci ekranu
-    /// </summary>
     void ChangePlayersTurn()
     {
         TurnNumber += 0.5f;
@@ -416,27 +392,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Zmiana kolejności wyświetlania się przycisków roll i endTurn
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
-    /// </remarks>
     void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
     }
 
-    /// <summary> 
-    ///     Metoda odpowiedzialna za kończenie tury 
-    ///     <list type="bullet">
-    ///         <item>Oddanie ruchu przeciwnikowi</item>
-    ///         <item>Zablokowanie kości dodanych na arene</item>
-    ///     </list>
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
-    /// </remarks>
     public void EndYoursTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(1);
@@ -471,14 +431,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Ustawienie trybu potyczki
-    ///     <list type="bullet">
-    ///         <item>zmiana układu i miejsca kości</item>
-    ///         <item>ukrycie paneli blokujących gracza</item>
-    ///         <item>Zainicjowanie wykonania funkcji zbierającej złoto z kości</item>
-    ///     </list>
-    /// </summary>
     void ChangeUIToBattleMode()
     {
         if (IsBattleModeTurnOn == false)
@@ -566,21 +518,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Testowa metoda wyzwalająca ponowne zebranie "GodFavor" z pola bitwy
-    /// </summary>
-    
     public void OnClick_OpenGodSkillsWindow(string playerName)
     {
         switch (playerName)
         {
             case "Player1":
                 Player1GodSkillWindow.SetActive(!Player1GodSkillWindow.gameObject.activeSelf);
-            break;
-            
+                break;
+
             case "Player2":
                 Player2GodSkillWindow.SetActive(!Player2GodSkillWindow.gameObject.activeSelf);
-            break;
+                break;
         }
     }
     public void ANDROID_AgainAddGold()

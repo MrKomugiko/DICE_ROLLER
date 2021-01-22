@@ -13,7 +13,7 @@ public partial class CardScript : MonoBehaviour
     TextMeshProUGUI _cardDescription;
     GodsManager _godsManager;
     Button _button;
-    Button _backgroundButton;    
+    Button _backgroundButton;
     bool NewColorChangingInPRocess = false;
     bool _isCurrentSpinning = false;
     bool _isRevealed = false;
@@ -91,7 +91,7 @@ public partial class CardScript : MonoBehaviour
         }
         return false;
     }
-    
+
     void Awake()
     {
         _backgroundButton = GameObject.Find("GODSkillsWindow").GetComponent<Button>();
@@ -134,7 +134,7 @@ public partial class CardScript : MonoBehaviour
     {
         _godSkills[skillLevel - 1].GetComponentInChildren<Text>().text = skillDescription;
     }
-    
+
     void Resize(float x, float y)
     {
         this.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
@@ -206,38 +206,38 @@ public partial class CardScript : MonoBehaviour
     }
 
     #region BUTTONS
-        public void OnClick_SetCardToNormalMode()
+    public void OnClick_SetCardToNormalMode()
+    {
+        StartCoroutine(BackToNormalSize());
+    }
+    public void OnClickSelectCard()
+    {
+        OnClick_ChangeAllCardsToUnfocusedMode();
+        OnClick_ChangeCardToSelectedMode();
+    }
+    public void OnClick_ChangeAllCardsToUnfocusedMode()
+    {
+        foreach (CardScript card in Karty)
         {
-            StartCoroutine(BackToNormalSize());
+            card.OnClick_ChangeCardToUnfocusedMode();
         }
-        public void OnClickSelectCard()
+    }
+    public void OnClick_ChangeCardToSelectedMode()
+    {
+        Currentstatus = status.selected;
+        StartCoroutine(SetCardAsSelectedMode());
+    }
+    public void OnClick_SpinCard()
+    {
+        if (!IsCurrentSpinning)
         {
-            OnClick_ChangeAllCardsToUnfocusedMode();
-            OnClick_ChangeCardToSelectedMode();
+            StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
         }
-        public void OnClick_ChangeAllCardsToUnfocusedMode()
-        {
-            foreach (CardScript card in Karty)
-            {
-                card.OnClick_ChangeCardToUnfocusedMode();
-            }
-        }
-        public void OnClick_ChangeCardToSelectedMode()
-        {
-            Currentstatus = status.selected;
-            StartCoroutine(SetCardAsSelectedMode());
-        }
-        public void OnClick_SpinCard()
-        {
-            if (!IsCurrentSpinning)
-            {
-                StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
-            }
-        }
-        public void OnClick_ChangeCardToUnfocusedMode()
-        {
-            Currentstatus = status.unfocused;
-            StartCoroutine(SetCardAsUnfocusedMode());
-        }
+    }
+    public void OnClick_ChangeCardToUnfocusedMode()
+    {
+        Currentstatus = status.unfocused;
+        StartCoroutine(SetCardAsUnfocusedMode());
+    }
     #endregion
 }
