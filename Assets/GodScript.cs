@@ -6,6 +6,8 @@ public class GodScript : MonoBehaviour
 {
     God _godData;
     CardScript _card;
+    [SerializeField] Skill _skill;
+
     [SerializeField] Sprite _godTotemImage;
 
     public Sprite GodTotemMainImage
@@ -45,17 +47,34 @@ public class GodScript : MonoBehaviour
 
         List<string> skillsDescriptionList = godData.GenerateListOFSkillsDescription();
 
+        AttachSkill(_godData.Index);
+       
         for (int i = 0; i < 3; i++)
         {
             _card.SetSkillDescription(skillLevel, skillsDescriptionList[i]);
+            
+           if(_skill != null){
+                _card.AttachSkillsFunctionToButtons(skillLevel,_skill);
+           } 
             skillLevel++;
         }
     }
+    
     void DefaultEmptyGodConfiguration()
     {
         this.name = "unnamed_god";
         this.GodTotemMainImage = _card.DefaultEmptyImage;
     }
 
-    
+    [ContextMenu("Attach God's Skill")]
+    void AttachSkill(int ID)
+    {
+        _skill = Skill.GetGodSkillByID(ID);
+        if(_skill != null){
+            Debug.LogWarning("SUKCES! Moj skill to: "+_skill.GetType().Name,this);
+        }
+        else{
+            Debug.LogWarning("skill nie zostal znaleziony",this);
+        }
+    }
 }

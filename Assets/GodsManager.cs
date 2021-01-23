@@ -33,6 +33,16 @@ public class GodsManager : MonoBehaviour
     void Start()
     {
         PopulateContainerWithGodTokens(_listOfAvailableGodsTotems);
+        // poppulate god spells scripts
+        foreach(God god in _listOfAvailableGodsTotems)
+        {
+            switch (god.name)
+            {
+                case "Bragi":
+                    new BragiSkill();
+                break;
+            }
+        }
         ListOfAllCards = this.GetComponentsInChildren<CardScript>().ToList();
     }
 

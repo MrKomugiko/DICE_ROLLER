@@ -134,6 +134,10 @@ public partial class CardScript : MonoBehaviour
     {
         _godSkills[skillLevel - 1].GetComponentInChildren<Text>().text = skillDescription;
     }
+    public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
+    {
+        Debug.Log($"następuje do przypisania skilla (Skill){skill.GetType().Name} dla poziomu {skillLevel}",this);   
+    }
 
     void Resize(float x, float y)
     {
