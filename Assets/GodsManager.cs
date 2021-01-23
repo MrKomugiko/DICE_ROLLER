@@ -33,16 +33,7 @@ public class GodsManager : MonoBehaviour
     void Start()
     {
         PopulateContainerWithGodTokens(_listOfAvailableGodsTotems);
-        // poppulate god spells scripts
-        foreach(God god in _listOfAvailableGodsTotems)
-        {
-            switch (god.name)
-            {
-                case "Bragi":
-                    new BragiSkill();
-                break;
-            }
-        }
+
         ListOfAllCards = this.GetComponentsInChildren<CardScript>().ToList();
     }
 
@@ -55,8 +46,7 @@ public class GodsManager : MonoBehaviour
             godCard.SelfConfigure(godTotems[randomGodsTokenIndexes[index]]);
             index++;
         }
-        
-        print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
+        // print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
     }
 
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
@@ -73,5 +63,18 @@ public class GodsManager : MonoBehaviour
         } while (randomNumbers.Count < 3);
 
         return randomNumbers;
+    }
+
+
+
+
+
+
+
+
+
+    public static void AndroidDebug(string text)
+    {
+        GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text += text+"\n";
     }
 }

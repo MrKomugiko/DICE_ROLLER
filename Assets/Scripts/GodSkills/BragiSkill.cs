@@ -15,11 +15,13 @@ public class BragiSkill : Skill
         Debug.Log("Jestem skillem bragiego");
 
         Debug.Log("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
+        GodsManager.AndroidDebug("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
     }
 
     public override void UseSkill(int skillLevel)
     {
-        Debug.Log("Skill Użyty dla boga"+ GodName+" i posiomu "+skillLevel);
-        // TU COS SIE BEDZIE DZIAĆ :D
+        base.UseSkill(skillLevel);
+        Debug.Log("Skill Użyty dla boga "+ GodName+" "+skillLevel);
+                // TU COS SIE BEDZIE DZIAĆ :D
     }
-}
+}   

@@ -54,8 +54,9 @@ public class GodScript : MonoBehaviour
             _card.SetSkillDescription(skillLevel, skillsDescriptionList[i]);
             
            if(_skill != null){
+                print(_skill.SkillName+$"[lvl {skillLevel}] dodany");
                 _card.AttachSkillsFunctionToButtons(skillLevel,_skill);
-           } 
+           }
             skillLevel++;
         }
     }
@@ -66,15 +67,31 @@ public class GodScript : MonoBehaviour
         this.GodTotemMainImage = _card.DefaultEmptyImage;
     }
 
-    [ContextMenu("Attach God's Skill")]
     void AttachSkill(int ID)
     {
+        print("ATTACH SKILL DLA BOGA ID: "+ID);
+        GodsManager.AndroidDebug("ATTACH SKILL DLA BOGA ID: "+ID);
+        
         _skill = Skill.GetGodSkillByID(ID);
         if(_skill != null){
-            Debug.LogWarning("SUKCES! Moj skill to: "+_skill.GetType().Name,this);
+            Debug.LogWarning("SUKCES! Moj skill script to  "+_skill.GetType().Name +" o nazwie: "+_skill.SkillName,this);
+            GodsManager.AndroidDebug("SUKCES! Moj skill script to  "+_skill.GetType().Name +" o nazwie: "+_skill.SkillName);
         }
         else{
             Debug.LogWarning("skill nie zostal znaleziony",this);
+            GodsManager.AndroidDebug("skill nie zostal znaleziony");
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
 }
+

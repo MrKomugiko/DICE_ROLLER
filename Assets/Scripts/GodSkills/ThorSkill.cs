@@ -6,20 +6,21 @@ public class ThorSkill : Skill
 {
     public ThorSkill()
     {
-        ID = 2;
-        GodName = "Bragi";
-        SkillName = "Bragi's Verve";
+        ID = 15;
+        GodName = "Thor";
+        SkillName = "Thor's Strike";
 
         ListOfSkills.Add(this);
 
-        Debug.Log("Jestem skillem bragiego");
+        Debug.Log("Jestem skillem Thora");
 
         Debug.Log("utworzono nowy skill aktualna liczba to " + ListOfSkills.Count);
     }
 
     public override void UseSkill(int skillLevel)
     {
-        Debug.Log("Skill Użyty dla boga" + GodName + " i posiomu " + skillLevel);
+        base.UseSkill(skillLevel);
+        Debug.Log("Bóg" + GodName + " uzywa skilla " + skillLevel+" posiomu!.");
         // TU COS SIE BEDZIE DZIAĆ :D
     }
 }

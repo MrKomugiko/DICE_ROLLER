@@ -17,7 +17,7 @@ public partial class CardScript : MonoBehaviour
     bool NewColorChangingInPRocess = false;
     bool _isCurrentSpinning = false;
     bool _isRevealed = false;
-    status _currentstatus = status.standard;
+   [SerializeField] status _currentstatus = status.standard;
     public Sprite DefaultEmptyImage { get => _defaultEmptyImage; }
     List<CardScript> Karty { get => _godsManager.ListOfAllCards; }
 
@@ -92,6 +92,10 @@ public partial class CardScript : MonoBehaviour
         return false;
     }
 
+void Start()
+{
+    BackToNormalSize();
+}
     void Awake()
     {
         _backgroundButton = GameObject.Find("GODSkillsWindow").GetComponent<Button>();
@@ -136,7 +140,7 @@ public partial class CardScript : MonoBehaviour
     }
     public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
     {
-        Debug.Log($"następuje do przypisania skilla (Skill){skill.GetType().Name} dla poziomu {skillLevel}",this);   
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.UseSkill(skillLevel));
     }
 
     void Resize(float x, float y)
