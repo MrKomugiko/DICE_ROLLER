@@ -22,17 +22,13 @@ public class IdunSkill : Skill
  
     public IdunSkill(God godData, string ownerName)
     {
-              OwnerName = ownerName;
+        OwnerName = ownerName;
         God = godData;
         ID = 9;
         GodName = "Idun";
         SkillName = "Idun's Rejuvenation";
         
         ListOfSkills.Add(this);
-     
-        Debug.Log("Jestem skillem "+God.name+".");
-
-        // Debug.Log("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
     }
     
 }

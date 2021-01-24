@@ -16,9 +16,7 @@ public class God : ScriptableObject
     public string Description;
     public string SkillDescriptionTemplate;
 
-
     public int LevelCost, Leve2Cost, Leve3Cost;
-
     public int Level1SkillValue, Level2SkillValue, Level3SkillValue;
 
     public Dictionary<int, int> DictOfSkillsWithValues()

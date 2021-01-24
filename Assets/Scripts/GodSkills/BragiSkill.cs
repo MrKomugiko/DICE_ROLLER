@@ -31,8 +31,5 @@ public class BragiSkill : Skill
         ListOfSkills.Add(this);
      
         Debug.Log("Jestem skillem "+God.name+". Posiada mnie gracz: "+ownerName);
-
-        // Debug.Log("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
-        // GodsManager.AndroidDebug("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
     }
 }   

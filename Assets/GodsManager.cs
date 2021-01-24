@@ -6,32 +6,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class GodsManager : MonoBehaviour
 {
+    GameManager GM_Script;
     [SerializeField] Text _currentGoldText;
-    [SerializeField] public string ownerName {get; private set;}
+    [SerializeField] public string ownerName { get; private set; }
     [SerializeField] List<God> _listOfAvailableGodsTotems;
     [SerializeField] List<GodScript> _godCardsInContainer;
     [SerializeField] List<CardScript> _listOfAllCards;
-    
+    [SerializeField] private int _amountOfGoldDeponedForSkills;
 
     public int CurrentGold { get => Convert.ToInt32(_currentGoldText.text); }
+    int AmountOfGoldDeponedForSkills { get => _amountOfGoldDeponedForSkills; set => _amountOfGoldDeponedForSkills = value; }
 
-    public List<CardScript> ListOfAllCards { 
-        get => _listOfAllCards; 
-        set 
-        { 
+    public List<CardScript> ListOfAllCards
+    {
+        get => _listOfAllCards;
+        set
+        {
             _listOfAllCards = value;
-            print("liczba kart: "+value.Count); 
+            print("liczba kart: " + value.Count);
         }
     }
 
-    public static List<string> Logs { get => logs; set => logs = value; }
-    public static int LoggerLineCounter { get => loggerLineCounter; set => loggerLineCounter = value; }
-
     void Awake()
-    { 
+    {   
+        GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         ownerName = transform.parent.gameObject.name;
         _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
     }
@@ -42,114 +44,54 @@ public class GodsManager : MonoBehaviour
 
         ListOfAllCards = this.GetComponentsInChildren<CardScript>().ToList();
     }
-
     void PopulateContainerWithGodTokens(List<God> godTotems)
     {
         List<int> randomGodsTokenIndexes = GenerateThreeDifferentRandomNumbers(godTotems.Count);
         int index = 0;
-        foreach(GodScript godCard in _godCardsInContainer)
+        foreach (GodScript godCard in _godCardsInContainer)
         {
             godCard.SelfConfigure(godTotems[randomGodsTokenIndexes[index]]);
 
             index++;
         }
-        // print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
     }
-
-        public string playerColorLog => ownerName == "Player1"?"green":"red";
-
     [ContextMenu("Test delegted skill = execute selected skill")]
-    public void TESTSELEGATEDSKILL()
+    public void ExecuteSelectedGodSkill()
     {
-        if(_godCardsInContainer.Where(g=>g._skill.SkillIsSelected == true).FirstOrDefault() == null) 
+        string playerColorLog = ownerName == "Player1" ? "green" : "red";
+
+        if (!AnySkillInOwnedCardsIsSelected)
         {
-            GodsManager.AndroidDebug("Skill is not selected / skill already used",playerColorLog);
+            AndroidLogger.Log("Skill is not selected / skill already used", playerColorLog);
         }
-        foreach (var myGod in _godCardsInContainer.Where(g=>g._skill.SkillIsSelected == true))
+        else
         {
-            GodsManager.AndroidDebug("Now execute selected skill",playerColorLog);
-            GodsManager.AndroidDebug("God : "+myGod._godData.Name,playerColorLog);
-            var lastUsedSkill = myGod._skill;
-            lastUsedSkill.LastSelectedSkillReadyToUse();
+            foreach (var myGod in _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true))
+            {
+                var lastUsedSkill = myGod._skill;
+                lastUsedSkill.LastSelectedSkillReadyToUse();
+                AndroidLogger.Log("Test?");
+   
+                GM_Script.CumulativeGoldStealingCounterP1 = 0;
+                GM_Script.CumulativeGoldStealingCounterP2 = 0;
+            }
         }
     }
-
+    
+    private bool AnySkillInOwnedCardsIsSelected { get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null; }
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
         List<int> randomNumbers = new List<int>();
-        
+
         do
         {
-            int number = RandomNumberGenerator.NumberBetween(0, maxValue-1);
-            if(!randomNumbers.Contains(number))
+            int number = RandomNumberGenerator.NumberBetween(0, maxValue - 1);
+            if (!randomNumbers.Contains(number))
             {
                 randomNumbers.Add(number);
-            }    
+            }
         } while (randomNumbers.Count < 3);
 
         return randomNumbers;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    [SerializeField] static int loggerLineCounter = 0;
-    [SerializeField] static List<string> logs = new List<string>();
-    
-    public static void AndroidDebug(string newLog, string color = "white")
-    {
-        // customowy debugger zeby na andku widzieć konsole :D
-        // 16 lini maksymalnie, potem usuwa sie najstarsza wiadomosc
-        string message = "";
-        LoggerLineCounter ++;
-        
-        if(LoggerLineCounter == 15)
-        {
-            Logs.RemoveAt(0);
-            LoggerLineCounter = 14;
-        } 
-    
-        Logs.Add($"<color=\"{color}\">"+newLog+"</color>");
-
-        foreach(string log in Logs)
-        {
-            message += log + "\n";
-        }
-        print("MESSAGE: "+message);
-        GameObject.Find("ANDROIDLOGGER_TMP").GetComponent<TextMeshProUGUI>().SetText(message);
     }
 }

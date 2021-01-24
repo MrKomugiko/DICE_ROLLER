@@ -102,8 +102,8 @@ public class CombatManager : MonoBehaviour
         }
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
-            GM_Script.cumulativeGoldStealingCounterP1 = 0;
-            GM_Script.cumulativeGoldStealingCounterP2 = 0;
+            GM_Script.CumulativeGoldStealingCounterP1 = 0;
+            GM_Script.CumulativeGoldStealingCounterP2 = 0;
 
             print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
@@ -250,8 +250,8 @@ public class CombatManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        GM_Script.cumulativeGoldStealingCounterP1 = 0;
-        GM_Script.cumulativeGoldStealingCounterP2 = 0;
+        GM_Script.CumulativeGoldStealingCounterP1 = 0;
+        GM_Script.CumulativeGoldStealingCounterP2 = 0;
 
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);

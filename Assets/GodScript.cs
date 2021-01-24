@@ -24,17 +24,13 @@ public class GodScript : MonoBehaviour
         get => _godData;
         set
         {
-            print("przypisanie boga:"+value.Name);
             _godData = value;
         }
     }
-
     void Awake()
     {
-        _card = GetComponent<CardScript>();
-        
+        _card = GetComponent<CardScript>();    
     }
-
     public void SelfConfigure(God godData)
     {   
         ownerName = this.transform.parent.transform.parent.name; // wyjscie z katalogu i wyjscie do nad katalogu playe1 lub player2
@@ -60,30 +56,16 @@ public class GodScript : MonoBehaviour
             skillLevel++;
         }
     }
-
     void AttachSkill(God godData)
     {
-        // print("ATTACH SKILL DLA BOGA ID: "+ID);
-        // GodsManager.AndroidDebug("ATTACH SKILL DLA BOGA ID: "+ID);
         string color = ownerName == "Player1"?"green":"red";
         _skill = Skill.GetGodSkillByID(godData.Index, godData,ownerName);
         if(_skill != null){
-            GodsManager.AndroidDebug("+("+_skill.GetType().Name +")"+_skill.SkillName,color);
+            AndroidLogger.Log("+("+_skill.GetType().Name +")"+_skill.SkillName,color);
         }
         else{
-            GodsManager.AndroidDebug("skill nie zostal znaleziony??",color);
+            AndroidLogger.Log("skill nie zostal znaleziony??",color);
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
 }
 

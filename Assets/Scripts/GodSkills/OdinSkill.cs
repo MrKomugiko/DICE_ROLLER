@@ -31,10 +31,6 @@ public class OdinSkill : Skill
         SkillName = "Odin`s Sacrifice";
 
         ListOfSkills.Add(this);
-
-        Debug.Log("Jestem skillem "+God.name+".");
-
-       // Debug.Log("utworzono nowy skill aktualna liczba to " + ListOfSkills.Count);
     }
 
 }

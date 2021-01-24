@@ -2787,7 +2787,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 737306868}
         m_TargetAssemblyTypeName: GodsManager, Assembly-CSharp
-        m_MethodName: TESTSELEGATEDSKILL
+        m_MethodName: ExecuteSelectedGodSkill
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4079,7 +4079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.4e-14, y: -20}
+  m_AnchoredPosition: {x: -438, y: -20}
   m_SizeDelta: {x: 173.5, y: 762.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1113628093
@@ -4112,7 +4112,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4136,7 +4136,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -5253,7 +5253,6 @@ MonoBehaviour:
   Player1GodSkillWindow: {fileID: 1766886400}
   Player1TurnBlocker: {fileID: 167097285}
   Player1_GoldVault: {fileID: 1238911738}
-  cumulativeGoldStealingCounterP1: 0
   Player1_HPPoints: {fileID: 160803603}
   Player1ActualHPValue: 0
   liczbaPrzelewaniaObrazen_Player1: 0
@@ -5262,7 +5261,7 @@ MonoBehaviour:
   Player2GodSkillWindow: {fileID: 737306865}
   Player2TurnBlocker: {fileID: 1901050491}
   Player2_GoldVault: {fileID: 1245502807}
-  cumulativeGoldStealingCounterP2: 0
+  _temporaryGoldVault_player2: 0
   Player2_HPPoints: {fileID: 640743859}
 --- !u!4 &1301416608
 Transform:
@@ -7867,7 +7866,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1766886403}
         m_TargetAssemblyTypeName: GodsManager, Assembly-CSharp
-        m_MethodName: TESTSELEGATEDSKILL
+        m_MethodName: ExecuteSelectedGodSkill
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
