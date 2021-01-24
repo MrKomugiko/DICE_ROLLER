@@ -7,44 +7,55 @@ using System.Collections.Generic;
 [SerializeField]
 public class Skill
 {
+    public God God { get; set; }
     public int ID { get; set; }
     public string GodName { get; set; }
     public string SkillName { get; set; }
-
-    public static bool IsPopulated = false;
     public static List<Skill> ListOfSkills = new List<Skill>();
  
-    public Skill()
-    { 
-    }
+    public bool IsSkillInUse {  get; set;  }
 
-    public static Skill GetGodSkillByID(int id)
+    public static Skill GetGodSkillByID(int id, God godData)
     {
-        if(ListOfSkills.Count == 0) GenerateGodsSkillScripts();
+        GenerateGodsSkillScripts(godData);
 
         return ListOfSkills.Where(s => s.ID == id).First();
     }
 
-    public virtual void UseSkill(int skillLevel)
+    public virtual void UseSkill(int skillLevel, string castingPlayer)
     {
         Debug.Log($"UZywam skilla  {skillLevel}lvl");
         GodsManager.AndroidDebug("Skill Użyty dla boga"+ GodName+" poziom: "+skillLevel);
+        IsSkillInUse = true;
     }
 
-    static void GenerateGodsSkillScripts()
+    static void GenerateGodsSkillScripts(God godData)
     {
-        if(IsPopulated) return;
-
-        GodsManager.AndroidDebug("Generowanie skryptów skilli dla bogów.");
-        Debug.Log("Generowanie skryptów skilli dla bogów.");
-
-        new BragiSkill();
-        new IdunSkill();
-        new ThorSkill();
+        switch (godData.name)
+        {
+            case "Bragi":
+                new BragiSkill(godData);
+            break; 
+            case "Idun":
+                new IdunSkill(godData);
+            break; 
+            case "Thor":
+                new ThorSkill(godData);
+            break; 
+            case "Odin":
+                new OdinSkill(godData);
+            break; 
+        }
 
         Debug.Log("Aktualna liczbaskilli w pamieci :" + ListOfSkills.Count);
         GodsManager.AndroidDebug("Aktualna liczbaskilli w pamieci :" + ListOfSkills.Count);
+    }
 
+    public bool CheckIfCanBeUsed(int currentGold, int skillCost)
+    {
+        if(currentGold < skillCost) return true;
+
+        return true;
     }
 }
 

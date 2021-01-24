@@ -110,9 +110,9 @@ public class GameManager : MonoBehaviour
 
     #region HEALTH Combat    
     [SerializeField] Text Player1_HPPoints;
-    int Player1ActualHPValue;
-    int liczbaPrzelewaniaObrazen_Player1;
-    int _temporaryIntakeDamage_Player1;
+     [SerializeField]  int Player1ActualHPValue;
+     [SerializeField]  int liczbaPrzelewaniaObrazen_Player1;
+     [SerializeField]  int _temporaryIntakeDamage_Player1;
     public int TemporaryIntakeDamage_Player1
     {
         get
@@ -206,6 +206,10 @@ public class GameManager : MonoBehaviour
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
             if (value != 0)
             {
+                print("value: " +value);
+                
+                print("różnica : " +(TemporaryIntakeDamage_Player2-value).ToString());
+
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
                 liczbaPrzelewaniaObrazen_Player2++;
             }
@@ -335,6 +339,15 @@ public class GameManager : MonoBehaviour
 
                 liczbaPrzelewaniaObrazen_Player1--;
             }
+            else
+            {
+                if(liczbaPrzelewaniaObrazen_Player1 == 0)
+                {
+                    TemporaryIntakeDamage_Player1 = 0;
+                }
+            }
+
+
 
             if (liczbaPrzelewaniaObrazen_Player2 > 0)
             {
@@ -345,6 +358,14 @@ public class GameManager : MonoBehaviour
 
                 liczbaPrzelewaniaObrazen_Player2--;
             }
+            else
+            {
+                if(liczbaPrzelewaniaObrazen_Player2 == 0)
+                {
+                    TemporaryIntakeDamage_Player2 = 0;
+                }
+            }
+
         }
     }
 

@@ -15,15 +15,14 @@ public partial class CardScript : MonoBehaviour
     Button _button;
     Button _backgroundButton;
     bool NewColorChangingInPRocess = false;
-    bool _isCurrentSpinning = false;
-    bool _isRevealed = false;
-   [SerializeField] status _currentstatus = status.standard;
-    public Sprite DefaultEmptyImage { get => _defaultEmptyImage; }
+    [SerializeField]  bool _isCurrentSpinning = false;
+    [SerializeField] bool _isRevealed = false;
+    [SerializeField] status _currentstatus = status.standard;
     List<CardScript> Karty { get => _godsManager.ListOfAllCards; }
 
     [SerializeField] public List<GameObject> _godSkills;
     [SerializeField] Sprite _cardReversImage;
-    [SerializeField] Sprite _defaultEmptyImage;
+    [SerializeField] Sprite _workInProgressImage;
     [SerializeField] GameObject _cardReversDetailsContainer;
     [SerializeField] int _spinningSpeedMultiplifer = 4;
 
@@ -140,7 +139,7 @@ void Start()
     }
     public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
     {
-        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.UseSkill(skillLevel));
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.UseSkill(skillLevel,_godsManager.ownerName));
     }
 
     void Resize(float x, float y)
@@ -159,9 +158,11 @@ void Start()
     }
     IEnumerator SpinAnimation(int speedMultiplifer)
     {
+        if(Currentstatus == status.revealed) Currentstatus = status.selected;
+
         IsCurrentSpinning = true;
 
-        Sprite spriteToSet = IsReverseRevelated ? _godTotem.GodTotemMainImage : _cardReversImage;
+        Sprite spriteToSet = IsReverseRevelated ? _godTotem.GodTotemMainImage : _godTotem.GodObject.CardReverseImage;
 
         for (int i = 0; i < 90; i += speedMultiplifer)
         {
@@ -170,6 +171,7 @@ void Start()
         }
 
         _cardImage.sprite = spriteToSet;
+        
         IsReverseRevelated = !IsReverseRevelated;
 
         for (int i = 90; i > 0; i -= speedMultiplifer)

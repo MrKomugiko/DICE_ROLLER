@@ -6,18 +6,22 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "New God", menuName = "Scriptable Object/God")]
 public class God : ScriptableObject
 {
+    public bool IsGodPlayable = false;
     public int Index;
-    public Sprite Image;
+    public Sprite MainImage;
+    public Sprite WorkInProgressImage;
+    public Sprite CardReverseImage;
     public string Name;
     public string TotemFullName;
     public string Description;
     public string SkillDescriptionTemplate;
 
+
     public int LevelCost, Leve2Cost, Leve3Cost;
 
     public int Level1SkillValue, Level2SkillValue, Level3SkillValue;
 
-    private Dictionary<int, int> DictOfSkillsWithValues()
+    public Dictionary<int, int> DictOfSkillsWithValues()
     {
         Dictionary<int, int> skillsWithValues = new Dictionary<int, int>();
 

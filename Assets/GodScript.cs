@@ -4,10 +4,9 @@ using UnityEngine.UI;
 
 public class GodScript : MonoBehaviour
 {
-    God _godData;
+    public God _godData;
     CardScript _card;
     [SerializeField] Skill _skill;
-
     [SerializeField] Sprite _godTotemImage;
 
     public Sprite GodTotemMainImage
@@ -19,8 +18,7 @@ public class GodScript : MonoBehaviour
             GetComponent<Image>().sprite = value;
         }
     }
-
-     public God GodObject
+    public God GodObject
     {
         get => _godData;
         set
@@ -33,21 +31,20 @@ public class GodScript : MonoBehaviour
     void Awake()
     {
         _card = GetComponent<CardScript>();
-        if(_godData == null) DefaultEmptyGodConfiguration();
     }
 
     public void SelfConfigure(God godData)
     {   
         _godData = godData;
         this.name = godData.Name;
-        this.GodTotemMainImage = godData.Image;
+        this.GodTotemMainImage = godData.IsGodPlayable == true?godData.MainImage:godData.WorkInProgressImage;
         _card.SetDescription($"<size=40><b>{godData.TotemFullName}</b></size>\n<i>{godData.Description}</i>");
 
         int skillLevel = 1;
 
         List<string> skillsDescriptionList = godData.GenerateListOFSkillsDescription();
 
-        AttachSkill(_godData.Index);
+        AttachSkill(_godData);
        
         for (int i = 0; i < 3; i++)
         {
@@ -59,26 +56,19 @@ public class GodScript : MonoBehaviour
            }
             skillLevel++;
         }
-    }
-    
-    void DefaultEmptyGodConfiguration()
-    {
-        this.name = "unnamed_god";
-        this.GodTotemMainImage = _card.DefaultEmptyImage;
+
     }
 
-    void AttachSkill(int ID)
+    void AttachSkill(God godData)
     {
-        print("ATTACH SKILL DLA BOGA ID: "+ID);
-        GodsManager.AndroidDebug("ATTACH SKILL DLA BOGA ID: "+ID);
+        // print("ATTACH SKILL DLA BOGA ID: "+ID);
+        // GodsManager.AndroidDebug("ATTACH SKILL DLA BOGA ID: "+ID);
         
-        _skill = Skill.GetGodSkillByID(ID);
+        _skill = Skill.GetGodSkillByID(godData.Index, godData);
         if(_skill != null){
-            Debug.LogWarning("SUKCES! Moj skill script to  "+_skill.GetType().Name +" o nazwie: "+_skill.SkillName,this);
             GodsManager.AndroidDebug("SUKCES! Moj skill script to  "+_skill.GetType().Name +" o nazwie: "+_skill.SkillName);
         }
         else{
-            Debug.LogWarning("skill nie zostal znaleziony",this);
             GodsManager.AndroidDebug("skill nie zostal znaleziony");
         }
     }

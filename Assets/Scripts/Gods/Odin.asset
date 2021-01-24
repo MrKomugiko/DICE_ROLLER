@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf70cb9a01b2be4ea925428aac7e05c, type: 3}
   m_Name: Odin
   m_EditorClassIdentifier: 
+  IsGodPlayable: 0
   Index: 12
-  Image: {fileID: 21300000, guid: cec48467b89573143b3759aaf562daef, type: 3}
+  MainImage: {fileID: 21300000, guid: b181ebe1aa55a9643b46226066721cef, type: 3}
+  WorkInProgressImage: {fileID: 21300000, guid: e6b801e7c48137643986397d47cb15b7,
+    type: 3}
+  CardReverseImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   Name: Odin
   TotemFullName: Odin's Sacrifice
   Description: After the Resolution phase, sacrifice any number of your health tokens.

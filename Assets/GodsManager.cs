@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class GodsManager : MonoBehaviour
 {
     [SerializeField] Text _currentGoldText;
-    [SerializeField] string _tokensOwnerName;
+    [SerializeField] public string ownerName {get; private set;}
     [SerializeField] List<God> _listOfAvailableGodsTotems;
     [SerializeField] List<GodScript> _godCardsInContainer;
     [SerializeField] List<CardScript> _listOfAllCards;
@@ -25,8 +25,13 @@ public class GodsManager : MonoBehaviour
             print("liczba kart: "+value.Count); 
         }
     }
+
+    public static List<string> Logs { get => logs; set => logs = value; }
+    public static int LoggerLineCounter { get => loggerLineCounter; set => loggerLineCounter = value; }
+
     void Awake()
-    {
+    { 
+        ownerName = transform.parent.gameObject.name;
         _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
     }
 
@@ -44,6 +49,7 @@ public class GodsManager : MonoBehaviour
         foreach(GodScript godCard in _godCardsInContainer)
         {
             godCard.SelfConfigure(godTotems[randomGodsTokenIndexes[index]]);
+
             index++;
         }
         // print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
@@ -73,8 +79,58 @@ public class GodsManager : MonoBehaviour
 
 
 
-    public static void AndroidDebug(string text)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    [SerializeField] static int loggerLineCounter = 0;
+    [SerializeField] static List<string> logs = new List<string>();
+    
+    public static void AndroidDebug(string newLog)
     {
-        GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text += text+"\n";
+        // customowy debugger zeby na andku widzieć konsole :D
+        // 16 lini maksymalnie, potem usuwa sie najstarsza wiadomosc
+        string message = "";
+        LoggerLineCounter ++;
+        
+        if(LoggerLineCounter == 12)
+        {
+            Logs.RemoveAt(0);
+            LoggerLineCounter = 11;
+        } 
+
+        Logs.Add(newLog);
+
+        foreach(string log in Logs)
+        {
+            message += log + "\n";
+        }
+        print("MESSAGE: "+message);
+        GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text = message;
     }
 }
