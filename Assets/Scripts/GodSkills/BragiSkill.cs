@@ -19,8 +19,10 @@ public class BragiSkill : Skill
           12    Gain 4 [Gold] per die
 
     */
-    public BragiSkill(God godData)
+    
+    public BragiSkill(God godData, string ownerName)
     {
+        OwnerName = ownerName;
         God = godData;
         ID = 2;
         GodName = "Bragi";
@@ -28,16 +30,9 @@ public class BragiSkill : Skill
         
         ListOfSkills.Add(this);
      
-      Debug.Log("Jestem skillem "+God.name+".");
+        Debug.Log("Jestem skillem "+God.name+". Posiada mnie gracz: "+ownerName);
 
         // Debug.Log("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
         // GodsManager.AndroidDebug("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
-    }
-
-    public override void SelectSkill(int skillLevel, string castingPlayer)
-    {
-        base.SelectSkill(skillLevel, castingPlayer);
-        Debug.Log("Skill Użyty dla boga "+ GodName+" "+skillLevel);
-                // TU COS SIE BEDZIE DZIAĆ :D
     }
 }   

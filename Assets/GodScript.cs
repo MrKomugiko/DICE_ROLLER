@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class GodScript : MonoBehaviour
 {
+    [SerializeField] public string ownerName;
     public God _godData;
     CardScript _card;
     [SerializeField] public Skill _skill;
@@ -31,10 +32,12 @@ public class GodScript : MonoBehaviour
     void Awake()
     {
         _card = GetComponent<CardScript>();
+        
     }
 
     public void SelfConfigure(God godData)
     {   
+        ownerName = this.transform.parent.transform.parent.name; // wyjscie z katalogu i wyjscie do nad katalogu playe1 lub player2
         _godData = godData;
         this.name = godData.Name;
         this.GodTotemMainImage = godData.IsGodPlayable == true?godData.MainImage:godData.WorkInProgressImage;
@@ -56,20 +59,19 @@ public class GodScript : MonoBehaviour
            }
             skillLevel++;
         }
-
     }
 
     void AttachSkill(God godData)
     {
         // print("ATTACH SKILL DLA BOGA ID: "+ID);
         // GodsManager.AndroidDebug("ATTACH SKILL DLA BOGA ID: "+ID);
-        
-        _skill = Skill.GetGodSkillByID(godData.Index, godData);
+        string color = ownerName == "Player1"?"green":"red";
+        _skill = Skill.GetGodSkillByID(godData.Index, godData,ownerName);
         if(_skill != null){
-            GodsManager.AndroidDebug("SUKCES! Moj skill script to  "+_skill.GetType().Name +" o nazwie: "+_skill.SkillName);
+            GodsManager.AndroidDebug("+("+_skill.GetType().Name +")"+_skill.SkillName,color);
         }
         else{
-            GodsManager.AndroidDebug("skill nie zostal znaleziony");
+            GodsManager.AndroidDebug("skill nie zostal znaleziony??",color);
         }
     }
     

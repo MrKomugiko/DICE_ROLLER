@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 1 
     int Player1_RollingCounter;
+    [SerializeField] GameObject Player1UseSkillTestButton;
     [SerializeField] GameObject Player1GodSkillWindow;
     [SerializeField] GameObject Player1TurnBlocker;
 
@@ -546,6 +547,7 @@ public class GameManager : MonoBehaviour
         {
             case "Player1":
                 Player1GodSkillWindow.SetActive(!Player1GodSkillWindow.gameObject.activeSelf);
+                Player1UseSkillTestButton.SetActive(!Player1UseSkillTestButton.gameObject.activeSelf);
                 break;
 
             case "Player2":

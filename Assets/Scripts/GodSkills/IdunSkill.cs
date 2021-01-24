@@ -19,9 +19,10 @@ public class IdunSkill : Skill
           10    Heal 6 Heath
 
     */
-
-    public IdunSkill(God godData)
+ 
+    public IdunSkill(God godData, string ownerName)
     {
+              OwnerName = ownerName;
         God = godData;
         ID = 9;
         GodName = "Idun";
@@ -34,10 +35,4 @@ public class IdunSkill : Skill
         // Debug.Log("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
     }
     
-    public override void SelectSkill(int skillLevel, string castingPlayer)
-    {
-        base.SelectSkill(skillLevel, castingPlayer);
-        Debug.Log("Skill Użyty dla boga"+ GodName+" i posiomu "+skillLevel);
-        // TU COS SIE BEDZIE DZIAĆ :D
-    }
 }

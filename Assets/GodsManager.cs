@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GodsManager : MonoBehaviour
 {
@@ -55,17 +56,19 @@ public class GodsManager : MonoBehaviour
         // print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
     }
 
+        public string playerColorLog => ownerName == "Player1"?"green":"red";
+
     [ContextMenu("Test delegted skill = execute selected skill")]
     public void TESTSELEGATEDSKILL()
     {
         if(_godCardsInContainer.Where(g=>g._skill.SkillIsSelected == true).FirstOrDefault() == null) 
         {
-            GodsManager.AndroidDebug("Brak wybranego skilla / skill zostal juz uzyty");
+            GodsManager.AndroidDebug("Skill is not selected / skill already used",playerColorLog);
         }
         foreach (var myGod in _godCardsInContainer.Where(g=>g._skill.SkillIsSelected == true))
         {
-            GodsManager.AndroidDebug("wykonanie wczesniej wybranego skilla jeszcze raz");
-            GodsManager.AndroidDebug("bóg : "+myGod._godData.Name);
+            GodsManager.AndroidDebug("Now execute selected skill",playerColorLog);
+            GodsManager.AndroidDebug("God : "+myGod._godData.Name,playerColorLog);
             var lastUsedSkill = myGod._skill;
             lastUsedSkill.LastSelectedSkillReadyToUse();
         }
@@ -127,26 +130,26 @@ public class GodsManager : MonoBehaviour
     [SerializeField] static int loggerLineCounter = 0;
     [SerializeField] static List<string> logs = new List<string>();
     
-    public static void AndroidDebug(string newLog)
+    public static void AndroidDebug(string newLog, string color = "white")
     {
         // customowy debugger zeby na andku widzieć konsole :D
         // 16 lini maksymalnie, potem usuwa sie najstarsza wiadomosc
         string message = "";
         LoggerLineCounter ++;
         
-        if(LoggerLineCounter == 25)
+        if(LoggerLineCounter == 15)
         {
             Logs.RemoveAt(0);
-            LoggerLineCounter = 24;
+            LoggerLineCounter = 14;
         } 
-
-        Logs.Add(newLog);
+    
+        Logs.Add($"<color=\"{color}\">"+newLog+"</color>");
 
         foreach(string log in Logs)
         {
             message += log + "\n";
         }
         print("MESSAGE: "+message);
-        GameObject.Find("ANDROIDLOGGER").GetComponent<Text>().text = message;
+        GameObject.Find("ANDROIDLOGGER_TMP").GetComponent<TextMeshProUGUI>().SetText(message);
     }
 }

@@ -21,8 +21,10 @@ public class OdinSkill : Skill
           10    Gain 5 [Gold] per health token
 
     */
-    public OdinSkill(God godData)
+  
+    public OdinSkill(God godData, string ownerName)
     {
+              OwnerName = ownerName;
         God = godData;
         ID = 12;
         GodName = "Odin";
@@ -35,10 +37,4 @@ public class OdinSkill : Skill
        // Debug.Log("utworzono nowy skill aktualna liczba to " + ListOfSkills.Count);
     }
 
-    public override void SelectSkill(int skillLevel, string castingPlayer)
-    {
-        base.SelectSkill(skillLevel, castingPlayer);
-        Debug.Log("Bóg" + GodName + " uzywa skilla " + skillLevel+" posiomu!.");
-        // TU COS SIE BEDZIE DZIAĆ :D
-    }
 }

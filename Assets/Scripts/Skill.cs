@@ -7,6 +7,7 @@ using System.Collections.Generic;
 [SerializeField]
 public class Skill
 {
+    protected string OwnerName {get;set;}
     public God God { get; set; }
     public int ID { get; set; }
     public string GodName { get; set; }
@@ -26,7 +27,7 @@ public class Skill
             
             if(value)
             {
-                methodToCall = SelectSkill;
+                methodToCall = UseSkill;
                 // zapisanie delegaty ( wybranej metody ktoa uzyje sie pozniej ? ) 
             }
             else
@@ -40,58 +41,61 @@ public class Skill
     {
         if(methodToCall == null)    
         {
-            GodsManager.AndroidDebug("brak wybranego skilla do uzycia");
+            GodsManager.AndroidDebug("Skill not beed selected to use.");
             return;
         }
 
-        GodsManager.AndroidDebug("Wykonanie dla "+selectedSkillLevel+ " level, przez gracza "+selectedCastingPlayer);
+        GodsManager.AndroidDebug("Execute "+SkillName+"["+selectedSkillLevel+ " level], by player  "+selectedCastingPlayer);
         methodToCall(selectedSkillLevel,selectedCastingPlayer);
         SkillIsSelected = false;
     }
 
-    public static Skill GetGodSkillByID(int id, God godData)
+    public static Skill GetGodSkillByID(int id, God godData, string ownerName)
     {
-        GenerateGodsSkillScripts(godData);
+        GenerateGodsSkillScripts(godData,ownerName); 
 
-        return ListOfSkills.Where(s => s.ID == id).First();
+        return ListOfSkills.Where(s => s.ID == id && s.OwnerName == ownerName).First();
     }
 
-    public virtual void SelectSkill(int skillLevel, string castingPlayer)
+    public void SelectSkill(int skillLevel, string castingPlayer)
     {
-        if(SkillIsSelected) 
-        {
-            GodsManager.AndroidDebug("Skill został już wybrany wczesniej");
-            return;
-        }
-
-        selectedSkillLevel = skillLevel;
-        selectedCastingPlayer = castingPlayer;
-        
-        SkillIsSelected = true;
-        Debug.Log($"UZywam skilla  {skillLevel}lvl");
-        GodsManager.AndroidDebug("Skill Użyty przez boga" + GodName + " poziom: " + skillLevel);
+        string color = castingPlayer == "Player1"?"green":"red";
+        if(!SkillIsSelected)
+           {
+            selectedSkillLevel = skillLevel;
+            selectedCastingPlayer = castingPlayer;
+            
+            Debug.Log($"Wybieram skilla  {skillLevel}lvl");
+            GodsManager.AndroidDebug("You choose" + GodName + " skill at level : " + skillLevel,color);
+            SkillIsSelected = true;
+           }
     }
 
-    static void GenerateGodsSkillScripts(God godData)
+    protected virtual void UseSkill(int skillLevel, string castingPlayer)
+    {
+        GodsManager.AndroidDebug("Using skill");
+    }
+
+    static void GenerateGodsSkillScripts(God godData, string ownerName)
     {
         switch (godData.name)
         {
             case "Bragi":
-                new BragiSkill(godData);
+                new BragiSkill(godData,ownerName);
                 break;
             case "Idun":
-                new IdunSkill(godData);
+                new IdunSkill(godData,ownerName);
                 break;
             case "Thor":
-                new ThorSkill(godData);
+                new ThorSkill(godData,ownerName);
                 break;
             case "Odin":
-                new OdinSkill(godData);
+                new OdinSkill(godData,ownerName);
                 break;
         }
 
         Debug.Log("Aktualna liczbaskilli w pamieci :" + ListOfSkills.Count);
-        GodsManager.AndroidDebug("Aktualna liczbaskilli w pamieci :" + ListOfSkills.Count);
+        GodsManager.AndroidDebug("Current avaiable skills in memory :" + ListOfSkills.Count);
     }
     public bool CheckIfCanBeUsed(int currentGold, int skillCost)
     {

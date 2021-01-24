@@ -21,8 +21,10 @@ public class ThorSkill : Skill
           12    deal 8 damage
 
     */
-    public ThorSkill(God godData)
+ 
+    public ThorSkill(God godData, string ownerName)
     {
+              OwnerName = ownerName;
         God = godData;
         ID = 15;
         GodName = "Thor";
@@ -31,17 +33,15 @@ public class ThorSkill : Skill
         ListOfSkills.Add(this);
     }
 
-    public override void SelectSkill(int skillLevel, string castingPlayer)
+    protected override void UseSkill(int skillLevel, string castingPlayer)
     {
-        base.SelectSkill(skillLevel, castingPlayer);
+            GodsManager.AndroidDebug($"{castingPlayer} use [{SkillName}][LVL-{skillLevel}]");
 
-        GodsManager.AndroidDebug($"{castingPlayer} use [{SkillName}][LVL-{skillLevel}]");
+            int damageValue = GetValueForSkillLevel(skillLevel);
 
-        int damageValue = GetValueForSkillLevel(skillLevel);
-
-        DamageOpponent(castingPlayer, damageValue);
+            DamageOpponent(castingPlayer, damageValue);
     }
-
+    
     private void DamageOpponent(string castingPlayer, int damageValue)
     {
 
@@ -56,7 +56,7 @@ public class ThorSkill : Skill
                 GM_Script.TemporaryIntakeDamage_Player1++;
             }
         }
-        GodsManager.AndroidDebug("Zadano " + damageValue.ToString() + " obrażeń.");
+        GodsManager.AndroidDebug("You dealt " + damageValue.ToString() + " damage.");
     }
 
     internal int GetValueForSkillLevel(int skillLevel) 
