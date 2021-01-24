@@ -34,9 +34,9 @@ public class IdunSkill : Skill
         // Debug.Log("utworzono nowy skill aktualna liczba to "+ListOfSkills.Count);
     }
     
-    public override void UseSkill(int skillLevel, string castingPlayer)
+    public override void SelectSkill(int skillLevel, string castingPlayer)
     {
-        base.UseSkill(skillLevel, castingPlayer);
+        base.SelectSkill(skillLevel, castingPlayer);
         Debug.Log("Skill Użyty dla boga"+ GodName+" i posiomu "+skillLevel);
         // TU COS SIE BEDZIE DZIAĆ :D
     }

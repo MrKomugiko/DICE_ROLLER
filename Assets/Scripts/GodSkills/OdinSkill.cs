@@ -35,9 +35,9 @@ public class OdinSkill : Skill
        // Debug.Log("utworzono nowy skill aktualna liczba to " + ListOfSkills.Count);
     }
 
-    public override void UseSkill(int skillLevel, string castingPlayer)
+    public override void SelectSkill(int skillLevel, string castingPlayer)
     {
-        base.UseSkill(skillLevel, castingPlayer);
+        base.SelectSkill(skillLevel, castingPlayer);
         Debug.Log("Bóg" + GodName + " uzywa skilla " + skillLevel+" posiomu!.");
         // TU COS SIE BEDZIE DZIAĆ :D
     }

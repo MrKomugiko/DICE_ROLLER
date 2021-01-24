@@ -55,6 +55,22 @@ public class GodsManager : MonoBehaviour
         // print($"{_tokensOwnerName} | nazwy bogów dodanych do kart:[{_godCardsInContainer[0].GodObject.Name}] [{_godCardsInContainer[1].GodObject.Name}] [{_godCardsInContainer[2].GodObject.Name}] ");
     }
 
+    [ContextMenu("Test delegted skill = execute selected skill")]
+    public void TESTSELEGATEDSKILL()
+    {
+        if(_godCardsInContainer.Where(g=>g._skill.SkillIsSelected == true).FirstOrDefault() == null) 
+        {
+            GodsManager.AndroidDebug("Brak wybranego skilla / skill zostal juz uzyty");
+        }
+        foreach (var myGod in _godCardsInContainer.Where(g=>g._skill.SkillIsSelected == true))
+        {
+            GodsManager.AndroidDebug("wykonanie wczesniej wybranego skilla jeszcze raz");
+            GodsManager.AndroidDebug("bóg : "+myGod._godData.Name);
+            var lastUsedSkill = myGod._skill;
+            lastUsedSkill.LastSelectedSkillReadyToUse();
+        }
+    }
+
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
         List<int> randomNumbers = new List<int>();
@@ -118,10 +134,10 @@ public class GodsManager : MonoBehaviour
         string message = "";
         LoggerLineCounter ++;
         
-        if(LoggerLineCounter == 12)
+        if(LoggerLineCounter == 25)
         {
             Logs.RemoveAt(0);
-            LoggerLineCounter = 11;
+            LoggerLineCounter = 24;
         } 
 
         Logs.Add(newLog);
