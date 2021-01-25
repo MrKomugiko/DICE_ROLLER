@@ -53,7 +53,6 @@ public class Skill
         methodToCall(selectedSkillLevel,selectedCastingPlayer);
         SkillIsSelected = false;
     }
-
     public void SelectSkill(int skillLevel, string castingPlayer)
     {
         string color = castingPlayer == "Player1"?"green":"red";
