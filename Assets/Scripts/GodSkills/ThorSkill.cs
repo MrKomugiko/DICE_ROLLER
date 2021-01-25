@@ -44,7 +44,6 @@ public class ThorSkill : Skill
 
     private void DamageOpponent(string castingPlayer, int damageValue)
     {
-
         for (int i = 0; i < damageValue; i++)
         {
             if (castingPlayer == "Player1")

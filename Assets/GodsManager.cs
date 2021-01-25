@@ -11,10 +11,11 @@ using System.Collections;
 public class GodsManager : MonoBehaviour
 {
     GameManager GM_Script;
+    public List<GodScript> _godCardsInContainer;
+    public List<SelectionController> _selectionControllers;
     [SerializeField] Text _currentGoldText;
     [SerializeField] public string ownerName { get; private set; }
     [SerializeField] List<God> _listOfAvailableGodsTotems;
-    [SerializeField] List<GodScript> _godCardsInContainer;
     [SerializeField] List<CardScript> _listOfAllCards;
     [SerializeField] private int _amountOfGoldDeponedForSkills;
 
@@ -36,6 +37,7 @@ public class GodsManager : MonoBehaviour
         GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         ownerName = transform.parent.gameObject.name;
         _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
+        _selectionControllers = GetComponentsInChildren<SelectionController>().ToList();
     }
 
     void Start()
@@ -68,22 +70,22 @@ public class GodsManager : MonoBehaviour
         {
             foreach (var myGod in _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true))
             {
+                var lastUsedSkill = myGod._skill;
                 if(CheckIfSkillCanBeUsed(myGod._skill,myGod._skill.selectedSkillLevel))
                 {
                     PayGoldForSkill(myGod, myGod.ownerName);
-
-                    var lastUsedSkill = myGod._skill;
                     lastUsedSkill.LastSelectedSkillReadyToUse();
                 }
                 else
                 {
                     AndroidLogger.Log("you dont have enought Gold to cast skill",playerColorLog);
+                    lastUsedSkill.SkillIsSelected = false;
                 }
-
-                myGod._skill.SkillIsSelected = false;
             }
         }
     }
+
+    
 
     private void PayGoldForSkill(GodScript myGod, string godOwner)
     {

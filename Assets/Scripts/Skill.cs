@@ -1,3 +1,5 @@
+using System.Runtime;
+using System.Dynamic;
 using System.CodeDom.Compiler;
 using System.Linq;
 using UnityEngine;
@@ -30,14 +32,19 @@ public class Skill
             if(value)
             {
                 methodToCall = UseSkill;
+
                 // zapisanie delegaty ( wybranej metody ktoa uzyje sie pozniej ? ) 
             }
             else
             {
+                string color = OwnerName == "Player1"?"green":"red";
+                AndroidLogger.Log("Skill used.",color);
                 methodToCall = null;
             }
         }
     }
+
+
     public int selectedSkillLevel; string selectedCastingPlayer;
     public void LastSelectedSkillReadyToUse()
     {
@@ -53,15 +60,37 @@ public class Skill
         methodToCall(selectedSkillLevel,selectedCastingPlayer);
         SkillIsSelected = false;
     }
-    public void SelectSkill(int skillLevel, string castingPlayer)
+    public void TrySelectSkill(int skillLevel, string castingPlayer)
+    { 
+        if(!SelectionController.CheckIfAnyOtherSkillsAlreadySelected(OwnerName))
+        {
+            SelectSkill(skillLevel, castingPlayer);
+        }
+        else
+        {
+            Debug.Log("odznaczanie wczesniejszego skilla");
+            UnSelectAnySelectedSkill();
+
+            Debug.Log("ponowna próba zanzaczenia aktualnie wybranego");
+            SelectSkill(skillLevel, castingPlayer);
+        }
+    }
+
+
+    private void UnSelectAnySelectedSkill()
     {
-        string color = castingPlayer == "Player1"?"green":"red";
-        if(!SkillIsSelected)
+        Skill recentSelectedSkill = SelectionController.GetSelecteSkill(OwnerName);
+        recentSelectedSkill.SkillIsSelected = false;
+    }
+    private void SelectSkill(int skillLevel, string castingPlayer)
+    {
+        string color = castingPlayer == "Player1" ? "green" : "red";
+        if (!SkillIsSelected)
         {
             selectedSkillLevel = skillLevel;
             selectedCastingPlayer = castingPlayer;
 
-            AndroidLogger.Log("You choose" + GodName + " skill at level : " + skillLevel,color);
+            AndroidLogger.Log("You choose" + GodName + " skill at level : " + skillLevel, color);
             SkillIsSelected = true;
         }
     }

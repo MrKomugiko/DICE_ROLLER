@@ -162,7 +162,7 @@ void Start()
     }
     public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
     {
-        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.SelectSkill(skillLevel,_godsManager.ownerName));
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.TrySelectSkill(skillLevel,_godsManager.ownerName));
     }
 
     void Resize(float x, float y)
