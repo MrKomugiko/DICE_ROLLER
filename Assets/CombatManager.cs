@@ -11,7 +11,7 @@ public class CombatManager : MonoBehaviour
 
     [SerializeField] GameObject Player1BattlefieldDiceContainer;
     [SerializeField] GameObject Player2BattlefieldDiceContainer;
-    [SerializeField] int IndexOfCombatAction = 0;
+    [SerializeField] public int IndexOfCombatAction = 0;
     [SerializeField] bool readyToFight;
     [SerializeField] GameManager GM_Script;
 
@@ -36,7 +36,7 @@ public class CombatManager : MonoBehaviour
         }
     }
     void Update()
-    {     
+    {    
         // WHOLE COMBAT ROUTINE (6 steps of combat):
         if (IndexOfCombatAction == 1 && readyToFight)
         {
@@ -102,8 +102,8 @@ public class CombatManager : MonoBehaviour
         }
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
-            GM_Script.cumulativeGoldStealingCounterP1 = 0;
-            GM_Script.cumulativeGoldStealingCounterP2 = 0;
+            GM_Script.CumulativeGoldStealingCounterP1 = 0;
+            GM_Script.CumulativeGoldStealingCounterP2 = 0;
 
             print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
@@ -119,8 +119,7 @@ public class CombatManager : MonoBehaviour
         {
            GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
            IndexOfCombatAction++;
-        }
-        
+        }        
     }
     void WrzucKostkiNaArene(List<GameObject> dices)
     {
@@ -250,8 +249,8 @@ public class CombatManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        GM_Script.cumulativeGoldStealingCounterP1 = 0;
-        GM_Script.cumulativeGoldStealingCounterP2 = 0;
+        GM_Script.CumulativeGoldStealingCounterP1 = 0;
+        GM_Script.CumulativeGoldStealingCounterP2 = 0;
 
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);

@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf70cb9a01b2be4ea925428aac7e05c, type: 3}
   m_Name: Thor
   m_EditorClassIdentifier: 
+  IsGodPlayable: 1
   Index: 15
-  Image: {fileID: 21300000, guid: b13b13490c5825f43858badf4668b929, type: 3}
+  MainImage: {fileID: 21300000, guid: b13b13490c5825f43858badf4668b929, type: 3}
+  WorkInProgressImage: {fileID: 21300000, guid: 9386261ab2d163442a3c1d76d73c8406,
+    type: 3}
+  CardReverseImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
   Name: Thor
   TotemFullName: Thor's Strike
   Description: Deal damage to the opponent after the Resolution phase.

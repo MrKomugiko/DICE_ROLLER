@@ -12,18 +12,18 @@ public partial class CardScript : MonoBehaviour
     Image _cardImage;
     TextMeshProUGUI _cardDescription;
     GodsManager _godsManager;
+    CombatManager _combatManager;
     Button _button;
     Button _backgroundButton;
     bool NewColorChangingInPRocess = false;
-    bool _isCurrentSpinning = false;
-    bool _isRevealed = false;
-    status _currentstatus = status.standard;
-    public Sprite DefaultEmptyImage { get => _defaultEmptyImage; }
+    [SerializeField]  bool _isCurrentSpinning = false;
+    [SerializeField] bool _isRevealed = false;
+    [SerializeField] status _currentstatus = status.standard;
     List<CardScript> Karty { get => _godsManager.ListOfAllCards; }
 
     [SerializeField] public List<GameObject> _godSkills;
     [SerializeField] Sprite _cardReversImage;
-    [SerializeField] Sprite _defaultEmptyImage;
+    [SerializeField] Sprite _workInProgressImage;
     [SerializeField] GameObject _cardReversDetailsContainer;
     [SerializeField] int _spinningSpeedMultiplifer = 4;
 
@@ -92,8 +92,13 @@ public partial class CardScript : MonoBehaviour
         return false;
     }
 
+void Start()
+{
+    BackToNormalSize();
+}
     void Awake()
     {
+        _combatManager = GameObject.Find("FightZone").GetComponent<CombatManager>();
         _backgroundButton = GameObject.Find("GODSkillsWindow").GetComponent<Button>();
         _godsManager = this.GetComponentInParent<GodsManager>();
         _button = this.GetComponent<Button>();
@@ -109,10 +114,31 @@ public partial class CardScript : MonoBehaviour
         Currentstatus = Currentstatus;
         _cardDescription = _cardReversDetailsContainer.transform.Find("Description").GetComponent<TextMeshProUGUI>();
     }
+    bool isButtonsBlocked;
     void FixedUpdate()
     {
         if (isAnyCardCurrentlySpinning()) { _backgroundButton.interactable = false; } else { _backgroundButton.interactable = true; }
         AutoFixFlipCardIfIsRevealedInWrongStatus();
+
+        if(_combatManager.IndexOfCombatAction > 0)
+        {
+            // zablokowanie skili na początku walki
+            if(isButtonsBlocked == false)
+            {
+                BlockSkillButtons(true);
+                isButtonsBlocked = true;
+            }
+        }
+        
+        if(_combatManager.IndexOfCombatAction == 0)
+        {
+            // odblokowanie skili po powrocie do etapu rollowania
+            if(isButtonsBlocked == true)
+            {
+                BlockSkillButtons(false);
+                isButtonsBlocked = false;
+            }
+        }
     }
 
     public void AutoFixFlipCardIfIsRevealedInWrongStatus()
@@ -134,6 +160,10 @@ public partial class CardScript : MonoBehaviour
     {
         _godSkills[skillLevel - 1].GetComponentInChildren<Text>().text = skillDescription;
     }
+    public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
+    {
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.SelectSkill(skillLevel,_godsManager.ownerName));
+    }
 
     void Resize(float x, float y)
     {
@@ -151,9 +181,11 @@ public partial class CardScript : MonoBehaviour
     }
     IEnumerator SpinAnimation(int speedMultiplifer)
     {
+        if(Currentstatus == status.revealed) Currentstatus = status.selected;
+
         IsCurrentSpinning = true;
 
-        Sprite spriteToSet = IsReverseRevelated ? _godTotem.GodTotemMainImage : _cardReversImage;
+        Sprite spriteToSet = IsReverseRevelated ? _godTotem.GodTotemMainImage : _godTotem.GodObject.CardReverseImage;
 
         for (int i = 0; i < 90; i += speedMultiplifer)
         {
@@ -162,6 +194,7 @@ public partial class CardScript : MonoBehaviour
         }
 
         _cardImage.sprite = spriteToSet;
+        
         IsReverseRevelated = !IsReverseRevelated;
 
         for (int i = 90; i > 0; i -= speedMultiplifer)
@@ -206,6 +239,14 @@ public partial class CardScript : MonoBehaviour
     }
 
     #region BUTTONS
+    public void BlockSkillButtons(bool value)
+    {
+        AndroidLogger.Log("Combat started, skill buttons is now Dissabled");
+        foreach (var skillButton in _godSkills)
+        {
+            skillButton.GetComponent<Button>().interactable = !value;
+        }
+    }
     public void OnClick_SetCardToNormalMode()
     {
         StartCoroutine(BackToNormalSize());

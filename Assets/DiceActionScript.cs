@@ -163,8 +163,11 @@ public class DiceActionScript : MonoBehaviour
         }
         #endregion
     }
-    void TakeDamage()
+
+    [ContextMenu("Zadaj obrazenia")]
+    public void TakeDamage()
     {
+        print("take damage");
         string parentName = this.transform.parent.name.ToString();
 
         GameManager HealthVault = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
@@ -173,10 +176,12 @@ public class DiceActionScript : MonoBehaviour
         {
             case "Player1Dices_Fight_DiceHolder":
                 HealthVault.TemporaryIntakeDamage_Player2 += 1;
+                print("take damage to player 2");
                 break;
 
             case "Player2Dices_Fight_DiceHolder":
                 HealthVault.TemporaryIntakeDamage_Player1 += 1;
+                print("take damage to player 1");
                 break;
         }
     } 
