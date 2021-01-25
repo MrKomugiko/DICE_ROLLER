@@ -32,7 +32,7 @@ public class GodsManager : MonoBehaviour
     }
 
     void Awake()
-    {   
+    {
         GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         ownerName = transform.parent.gameObject.name;
         _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
@@ -68,16 +68,50 @@ public class GodsManager : MonoBehaviour
         {
             foreach (var myGod in _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true))
             {
-                var lastUsedSkill = myGod._skill;
-                lastUsedSkill.LastSelectedSkillReadyToUse();
-                AndroidLogger.Log("Test?");
-   
-                GM_Script.CumulativeGoldStealingCounterP1 = 0;
-                GM_Script.CumulativeGoldStealingCounterP2 = 0;
+                if(CheckIfSkillCanBeUsed(myGod._skill,myGod._skill.selectedSkillLevel))
+                {
+                    PayGoldForSkill(myGod, myGod.ownerName);
+
+                    var lastUsedSkill = myGod._skill;
+                    lastUsedSkill.LastSelectedSkillReadyToUse();
+                }
+                else
+                {
+                    AndroidLogger.Log("you dont have enought Gold to cast skill",playerColorLog);
+                }
+
+                myGod._skill.SkillIsSelected = false;
             }
         }
     }
-    
+
+    private void PayGoldForSkill(GodScript myGod, string godOwner)
+    {
+        var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
+        var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+        switch (godOwner)
+        {
+            case "Player1":
+                for (int i = 0; i < myGod._skill.GetGoldCostForSkillLevel(myGod._skill.selectedSkillLevel); i++)
+                {
+                    GM_Script.TemporaryGoldVault_player1--;
+                    p1coin.color = Color.red;
+                }
+                break;
+
+            case "Player2":
+                for (int i = 0; i < myGod._skill.GetGoldCostForSkillLevel(myGod._skill.selectedSkillLevel); i++)
+                {
+                    GM_Script.TemporaryGoldVault_player2--;
+                    p2coin.color = Color.red;
+                }
+                break;
+        }
+
+        GM_Script.CumulativeGoldStealingCounterP1 = 0;
+        GM_Script.CumulativeGoldStealingCounterP2 = 0;
+    }
+
     private bool AnySkillInOwnedCardsIsSelected { get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null; }
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
@@ -93,5 +127,16 @@ public class GodsManager : MonoBehaviour
         } while (randomNumbers.Count < 3);
 
         return randomNumbers;
+    }
+    public bool CheckIfSkillCanBeUsed(Skill skill, int level)
+    {
+        if (skill.GetGoldCostForSkillLevel(level) > CurrentGold ) return false;
+
+        return true;
+    }
+
+    public void BlockGodButtonsIfCombatStarted()
+    {
+
     }
 }

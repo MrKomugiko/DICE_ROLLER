@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 
                 GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
                 GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
+
             }
         }
     }

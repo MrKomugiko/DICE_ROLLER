@@ -56,7 +56,7 @@ public class GodScript : MonoBehaviour
             skillLevel++;
         }
     }
-    void AttachSkill(God godData)
+   void AttachSkill(God godData)
     {
         string color = ownerName == "Player1"?"green":"red";
         _skill = Skill.GetGodSkillByID(godData.Index, godData,ownerName);

@@ -12,6 +12,7 @@ public partial class CardScript : MonoBehaviour
     Image _cardImage;
     TextMeshProUGUI _cardDescription;
     GodsManager _godsManager;
+    CombatManager _combatManager;
     Button _button;
     Button _backgroundButton;
     bool NewColorChangingInPRocess = false;
@@ -97,6 +98,7 @@ void Start()
 }
     void Awake()
     {
+        _combatManager = GameObject.Find("FightZone").GetComponent<CombatManager>();
         _backgroundButton = GameObject.Find("GODSkillsWindow").GetComponent<Button>();
         _godsManager = this.GetComponentInParent<GodsManager>();
         _button = this.GetComponent<Button>();
@@ -112,10 +114,31 @@ void Start()
         Currentstatus = Currentstatus;
         _cardDescription = _cardReversDetailsContainer.transform.Find("Description").GetComponent<TextMeshProUGUI>();
     }
+    bool isButtonsBlocked;
     void FixedUpdate()
     {
         if (isAnyCardCurrentlySpinning()) { _backgroundButton.interactable = false; } else { _backgroundButton.interactable = true; }
         AutoFixFlipCardIfIsRevealedInWrongStatus();
+
+        if(_combatManager.IndexOfCombatAction > 0)
+        {
+            // zablokowanie skili na początku walki
+            if(isButtonsBlocked == false)
+            {
+                BlockSkillButtons(true);
+                isButtonsBlocked = true;
+            }
+        }
+        
+        if(_combatManager.IndexOfCombatAction == 0)
+        {
+            // odblokowanie skili po powrocie do etapu rollowania
+            if(isButtonsBlocked == true)
+            {
+                BlockSkillButtons(false);
+                isButtonsBlocked = false;
+            }
+        }
     }
 
     public void AutoFixFlipCardIfIsRevealedInWrongStatus()
@@ -216,6 +239,14 @@ void Start()
     }
 
     #region BUTTONS
+    public void BlockSkillButtons(bool value)
+    {
+        AndroidLogger.Log("Combat started, skill buttons is now Dissabled");
+        foreach (var skillButton in _godSkills)
+        {
+            skillButton.GetComponent<Button>().interactable = !value;
+        }
+    }
     public void OnClick_SetCardToNormalMode()
     {
         StartCoroutine(BackToNormalSize());

@@ -38,43 +38,20 @@ public class Skill
             }
         }
     }
-    int selectedSkillLevel; string selectedCastingPlayer;
+    public int selectedSkillLevel; string selectedCastingPlayer;
     public void LastSelectedSkillReadyToUse()
     {
+        string color = OwnerName == "Player1"?"green":"red";
         if(methodToCall == null)    
         {
             AndroidLogger.Log("Skill not beed selected to use.");
             return;
         }
 
-        AndroidLogger.Log("Execute "+SkillName+"["+selectedSkillLevel+ " level], by player  "+selectedCastingPlayer);
-        // TODO: tutaj walniemy sprawdanie golda
-
-        // odejmowanie wymaganego golda graczowi któy rzuca skill
-        var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-        var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-        switch (OwnerName)
-        {
-            case "Player1":
-                for (int i = 0; i < GetGoldCostForSkillLevel(selectedSkillLevel); i++)
-                {
-                    GM_Script.TemporaryGoldVault_player1--;
-                    p1coin.color = Color.red;
-                }
-                break;
-            
-            case "Player2":
-                for (int i = 0; i < GetGoldCostForSkillLevel(selectedSkillLevel); i++)
-                {
-                    GM_Script.TemporaryGoldVault_player2--;
-                    p2coin.color = Color.red;
-                }
-                break;
-        }
+        AndroidLogger.Log("Execute "+SkillName+"["+selectedSkillLevel+ " level], by player  "+selectedCastingPlayer,color);
 
         methodToCall(selectedSkillLevel,selectedCastingPlayer);
         SkillIsSelected = false;
-
     }
 
     public void SelectSkill(int skillLevel, string castingPlayer)
@@ -120,12 +97,6 @@ public class Skill
 
         Debug.Log("Aktualna liczbaskilli w pamieci :" + ListOfSkills.Count);
         AndroidLogger.Log("Current avaiable skills in memory :" + ListOfSkills.Count);
-    }
-    public bool CheckIfCanBeUsed(int currentGold, int skillCost)
-    {
-        if (currentGold < skillCost) return true;
-
-        return true;
     }
     public int GetValueForSkillLevel(int skillLevel)
     {

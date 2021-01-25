@@ -11,7 +11,7 @@ public class CombatManager : MonoBehaviour
 
     [SerializeField] GameObject Player1BattlefieldDiceContainer;
     [SerializeField] GameObject Player2BattlefieldDiceContainer;
-    [SerializeField] int IndexOfCombatAction = 0;
+    [SerializeField] public int IndexOfCombatAction = 0;
     [SerializeField] bool readyToFight;
     [SerializeField] GameManager GM_Script;
 
@@ -36,7 +36,7 @@ public class CombatManager : MonoBehaviour
         }
     }
     void Update()
-    {     
+    {    
         // WHOLE COMBAT ROUTINE (6 steps of combat):
         if (IndexOfCombatAction == 1 && readyToFight)
         {
@@ -119,8 +119,7 @@ public class CombatManager : MonoBehaviour
         {
            GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
            IndexOfCombatAction++;
-        }
-        
+        }        
     }
     void WrzucKostkiNaArene(List<GameObject> dices)
     {
