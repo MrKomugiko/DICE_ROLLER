@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf70cb9a01b2be4ea925428aac7e05c, type: 3}
+  m_Name: Idun
+  m_EditorClassIdentifier: 
+  IsGodPlayable: 0
+  Index: 9
+  MainImage: {fileID: 21300000, guid: 8c110f3619f386b4e9f0958a009b8b18, type: 3}
+  WorkInProgressImage: {fileID: 21300000, guid: 43fd9fd00233da24bb8c6977df9c7967,
+    type: 3}
+  CardReverseImage: {fileID: 21300000, guid: a880e9270ad8afc43b1d64bbe5eba830, type: 3}
+  Name: Idun
+  TotemFullName: Idun's Rejuvenation
+  Description: Heal Health after the Resolution phase.
+  SkillDescriptionTemplate: '[ Y Gold ] Heal X Health'
+  LevelCost: 4
+  Leve2Cost: 7
+  Leve3Cost: 10
+  Level1SkillValue: 2
+  Level2SkillValue: 4
+  Level3SkillValue: 6

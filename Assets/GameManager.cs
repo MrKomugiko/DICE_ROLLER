@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
 
                 GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
                 GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
+
             }
         }
     }
@@ -60,18 +61,30 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 1 
     int Player1_RollingCounter;
+    [SerializeField] GameObject Player1UseSkillTestButton;
+    [SerializeField] GameObject Player1GodSkillWindow;
     [SerializeField] GameObject Player1TurnBlocker;
 
     #region GOLD Blessed + Steal
     [SerializeField] Text Player1_GoldVault;
-    public int cumulativeGoldStealingCounterP1;
+    private int _cumulativeGoldStealingCounterP1;
+    public int CumulativeGoldStealingCounterP1 { get => _cumulativeGoldStealingCounterP1; set => _cumulativeGoldStealingCounterP1 = value; }
+
     int _currentGold1;
     public int CurrentGold1
     {
         get => _currentGold1;
         set => _currentGold1 = value;
     }
-    int liczbaPrzelewowGolda_Player1;
+    int _liczbaPrzelewowGolda_Player1;
+    public int LiczbaPrzelewowGolda_Player1 
+    { 
+        get => _liczbaPrzelewowGolda_Player1; 
+        set 
+        {
+            _liczbaPrzelewowGolda_Player1 = value; 
+        }
+    }
     int _temporaryGoldVault_player1;
     public int TemporaryGoldVault_player1
     {
@@ -87,9 +100,9 @@ public class GameManager : MonoBehaviour
                 // DODAWANIE GOLDA
                 if (value != 0)
                 {
-                    cumulativeGoldStealingCounterP1++;
-                    p1coin.SetText("+" + cumulativeGoldStealingCounterP1.ToString());
-                    liczbaPrzelewowGolda_Player1++;
+                    CumulativeGoldStealingCounterP1++;
+                    p1coin.SetText("+" + CumulativeGoldStealingCounterP1.ToString());
+                    LiczbaPrzelewowGolda_Player1++;
                 }
             }
             if (value < 0)
@@ -97,9 +110,9 @@ public class GameManager : MonoBehaviour
                 // ODEJMOWANIE GOLDA
                 if (value != 0)
                 {
-                    cumulativeGoldStealingCounterP1--;
-                    p1coin.SetText(cumulativeGoldStealingCounterP1.ToString());
-                    liczbaPrzelewowGolda_Player1--;
+                    CumulativeGoldStealingCounterP1--;
+                    p1coin.SetText(CumulativeGoldStealingCounterP1.ToString());
+                    LiczbaPrzelewowGolda_Player1--;
                 }
             }
             _temporaryGoldVault_player1 = value;
@@ -109,9 +122,9 @@ public class GameManager : MonoBehaviour
 
     #region HEALTH Combat    
     [SerializeField] Text Player1_HPPoints;
-    int Player1ActualHPValue;
-    int liczbaPrzelewaniaObrazen_Player1;
-    int _temporaryIntakeDamage_Player1;
+    [SerializeField] int Player1ActualHPValue;
+    [SerializeField] int liczbaPrzelewaniaObrazen_Player1;
+    [SerializeField] int _temporaryIntakeDamage_Player1;
     public int TemporaryIntakeDamage_Player1
     {
         get
@@ -140,19 +153,30 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 2 
     int Player2_RollingCounter;
+    [SerializeField] GameObject Player2UseSkillTestButton;
+    [SerializeField] GameObject Player2GodSkillWindow;
     [SerializeField] GameObject Player2TurnBlocker;
 
     #region GOLD Blessed + Steal
     [SerializeField] Text Player2_GoldVault;
-    public int cumulativeGoldStealingCounterP2;
+    private int _cumulativeGoldStealingCounterP2;
     int _currentGold2;
     public int CurrentGold2
     {
         get => _currentGold2;
         set => _currentGold2 = value;
     }
-    int liczbaPrzelewowGolda_Player2;
-    int _temporaryGoldVault_player2;
+    int _liczbaPrzelewowGolda_Player2;
+    public int LiczbaPrzelewowGolda_Player2 
+    { 
+        get => _liczbaPrzelewowGolda_Player2; 
+        set 
+        {
+            _liczbaPrzelewowGolda_Player2 = value; 
+            
+        }
+    }
+    [SerializeField] int _temporaryGoldVault_player2;
     public int TemporaryGoldVault_player2
     {
         get
@@ -167,9 +191,9 @@ public class GameManager : MonoBehaviour
                 // DODAWANIE GOLDA
                 if (value != 0)
                 {
-                    cumulativeGoldStealingCounterP2++;
-                    p2coin.SetText("+" + cumulativeGoldStealingCounterP2.ToString());
-                    liczbaPrzelewowGolda_Player2++;
+                    CumulativeGoldStealingCounterP2++;
+                    p2coin.SetText("+" + CumulativeGoldStealingCounterP2.ToString());
+                    LiczbaPrzelewowGolda_Player2++;
                 }
             }
             if (value < 0)
@@ -177,11 +201,12 @@ public class GameManager : MonoBehaviour
                 // ODEJMOWANIE GOLDA
                 if (value != 0)
                 {
-                    cumulativeGoldStealingCounterP2--;
-                    p2coin.SetText(cumulativeGoldStealingCounterP2.ToString());
-                    liczbaPrzelewowGolda_Player2--;
+                    CumulativeGoldStealingCounterP2--;
+                    p2coin.SetText(CumulativeGoldStealingCounterP2.ToString());
+                    LiczbaPrzelewowGolda_Player2--;
                 }
             }
+
             _temporaryGoldVault_player2 = value;
         }
     }
@@ -204,6 +229,10 @@ public class GameManager : MonoBehaviour
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
             if (value != 0)
             {
+                print("value: " + value);
+
+                print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
+
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
                 liczbaPrzelewaniaObrazen_Player2++;
             }
@@ -214,6 +243,9 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    public int CumulativeGoldStealingCounterP2 { get => _cumulativeGoldStealingCounterP2; set => _cumulativeGoldStealingCounterP2 = value; }
+
     #endregion
 
     #endregion
@@ -247,13 +279,6 @@ public class GameManager : MonoBehaviour
         TransferDamageToPlayers(ref time2, interpolationPeriod);
     }
 
-    /// <summary> 
-    ///     Przelewanie golda z wczesniej naliczonych wartości tymczasowych do konta graczy z "animacją"
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="timePassedInGame"> ref => wraca zaktualizowaną wartość ( zeruje ) czas który upłynął w sekundach</param>
-    ///     <param name ="timeDelayinSecons"> wartość opóźnienia między wykonywaniem iteracji</param>
-    /// </remarks>
     private void TransferGoldToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
@@ -264,27 +289,27 @@ public class GameManager : MonoBehaviour
             //---------------------------------------------------------------------------------------------------------------------------
 
 
-            if (liczbaPrzelewowGolda_Player1 > 0)
+            if (LiczbaPrzelewowGolda_Player1 > 0)
             {
                 // DODAWANIE GOLDA
                 CurrentGold1++;
                 Player1_GoldVault.text = CurrentGold1.ToString();
-                liczbaPrzelewowGolda_Player1--;
+                LiczbaPrzelewowGolda_Player1--;
             }
-            else if (liczbaPrzelewowGolda_Player1 < 0)
+            else if (LiczbaPrzelewowGolda_Player1 < 0)
             {
                 // ODEJMOWANIE GOLDA
                 CurrentGold1--;
                 Player1_GoldVault.text = CurrentGold1.ToString();
-                liczbaPrzelewowGolda_Player1++;
+                LiczbaPrzelewowGolda_Player1++;
             }
-            else if (liczbaPrzelewowGolda_Player1 == 0)
+            else if (LiczbaPrzelewowGolda_Player1 == 0)
             {
                 // ZEROWANIE WARTOSCI TYMCZASOWYCH
                 TemporaryGoldVault_player1 = 0;
-                liczbaPrzelewowGolda_Player1 = 0;
+                LiczbaPrzelewowGolda_Player1 = 0;
 
-                if (cumulativeGoldStealingCounterP1 == 0)
+                if (CumulativeGoldStealingCounterP1 == 0)
                 {
                     var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
                     p1coin.SetText("");
@@ -292,28 +317,28 @@ public class GameManager : MonoBehaviour
             }
             //---------------------------------------------------------------------------------------------------------------------------
 
-            if (liczbaPrzelewowGolda_Player2 > 0)
+            if (LiczbaPrzelewowGolda_Player2 > 0)
             {
                 // DODAWANIE GOLDA
                 CurrentGold2++;
                 Player2_GoldVault.text = CurrentGold2.ToString();
-                liczbaPrzelewowGolda_Player2--;
+                LiczbaPrzelewowGolda_Player2--;
             }
-            else if (liczbaPrzelewowGolda_Player2 < 0)
+            else if (LiczbaPrzelewowGolda_Player2 < 0)
             {
                 // ODEJMOWANIE GOLDA
                 CurrentGold2 = Convert.ToInt32(Player2_GoldVault.text);
                 CurrentGold2--;
                 Player2_GoldVault.text = CurrentGold2.ToString();
-                liczbaPrzelewowGolda_Player2++;
+                LiczbaPrzelewowGolda_Player2++;
             }
-            else if (liczbaPrzelewowGolda_Player2 == 0)
+            else if (LiczbaPrzelewowGolda_Player2 == 0)
             {
                 // ZEROWANIE WARTOSCI TYMCZASOWYCH
                 TemporaryGoldVault_player2 = 0;
-                liczbaPrzelewowGolda_Player2 = 0;
+                LiczbaPrzelewowGolda_Player2 = 0;
 
-                if (cumulativeGoldStealingCounterP2 == 0)
+                if (CumulativeGoldStealingCounterP2 == 0)
                 {
                     var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
                     p2coin.SetText("");
@@ -322,13 +347,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     przenoszenie nazbieranych obrażeń naliczonych w wartości tymczasowych do konta graczy z "animacją" 
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="timePassedInGame"> ref => wraca zaktualizowaną wartość ( zeruje ) czas który upłynął w sekundach</param>
-    ///     <param name ="timeDelayinSecons"> wartość opóźnienia między wykonywaniem iteracji</param>
-    /// </remarks>
     private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
@@ -347,6 +365,15 @@ public class GameManager : MonoBehaviour
 
                 liczbaPrzelewaniaObrazen_Player1--;
             }
+            else
+            {
+                if (liczbaPrzelewaniaObrazen_Player1 == 0)
+                {
+                    TemporaryIntakeDamage_Player1 = 0;
+                }
+            }
+
+
 
             if (liczbaPrzelewaniaObrazen_Player2 > 0)
             {
@@ -357,16 +384,17 @@ public class GameManager : MonoBehaviour
 
                 liczbaPrzelewaniaObrazen_Player2--;
             }
+            else
+            {
+                if (liczbaPrzelewaniaObrazen_Player2 == 0)
+                {
+                    TemporaryIntakeDamage_Player2 = 0;
+                }
+            }
+
         }
     }
 
-    /// <summary> 
-    /// ustalenie na podstawie numeru tury, czy ejst to ostatnie automatyczne losowanie
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="rollingTurnNumber">aktualna tura rozgrywki</param>
-    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
-    /// </remarks>
     void ManageOrderingRollButtonsAndActivateLastRollingTurn(int rollingTurnNumber, string player)
     {
         if (rollingTurnNumber >= 3.0)
@@ -385,9 +413,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Oddanie tury przeciwnikowi, oraz przyciemnienie swojej częsci ekranu
-    /// </summary>
     void ChangePlayersTurn()
     {
         TurnNumber += 0.5f;
@@ -414,27 +439,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Zmiana kolejności wyświetlania się przycisków roll i endTurn
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
-    /// </remarks>
     void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
     }
 
-    /// <summary> 
-    ///     Metoda odpowiedzialna za kończenie tury 
-    ///     <list type="bullet">
-    ///         <item>Oddanie ruchu przeciwnikowi</item>
-    ///         <item>Zablokowanie kości dodanych na arene</item>
-    ///     </list>
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="playerName">identyfikator gracza (Player1 albo Player2)</param>
-    /// </remarks>
     public void EndYoursTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(1);
@@ -469,14 +478,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary> 
-    ///     Ustawienie trybu potyczki
-    ///     <list type="bullet">
-    ///         <item>zmiana układu i miejsca kości</item>
-    ///         <item>ukrycie paneli blokujących gracza</item>
-    ///         <item>Zainicjowanie wykonania funkcji zbierającej złoto z kości</item>
-    ///     </list>
-    /// </summary>
     void ChangeUIToBattleMode()
     {
         if (IsBattleModeTurnOn == false)
@@ -563,10 +564,23 @@ public class GameManager : MonoBehaviour
             GameObject.Find("ANDROID_TEST_STARTCOMBATROUTINE").GetComponent<Button>().interactable = false;
         }
     }
+  
+    public void OnClick_OpenGodSkillsWindow(string playerName)
+    {
+        switch (playerName)
+        {
+            case "Player1":
+                Player1GodSkillWindow.SetActive(!Player1GodSkillWindow.gameObject.activeSelf);
+                Player1UseSkillTestButton.SetActive(!Player1UseSkillTestButton.gameObject.activeSelf);
+                break;
 
-    /// <summary> 
-    ///     Testowa metoda wyzwalająca ponowne zebranie "GodFavor" z pola bitwy
-    /// </summary>
+            case "Player2":
+                Player2GodSkillWindow.SetActive(!Player2GodSkillWindow.gameObject.activeSelf);
+                Player2UseSkillTestButton.SetActive(!Player2UseSkillTestButton.gameObject.activeSelf);
+                break;
+        }
+    }
+   
     public void ANDROID_AgainAddGold()
     {
         List<DiceActionScript> blessedDP1 = GameObject.Find("Player1Dices")
@@ -590,4 +604,5 @@ public class GameManager : MonoBehaviour
             dice.AddGoldFromBlessedItems = true;
         }
     }
+
 }

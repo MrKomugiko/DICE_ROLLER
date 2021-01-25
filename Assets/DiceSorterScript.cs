@@ -40,7 +40,7 @@ public class DiceSorterScript : MonoBehaviour
     {
         foreach (KeyValuePair<int, int> posortowanapozycja in listaNowychIndexowKosci)
         {
-            print($"[{posortowanapozycja.Key}][{posortowanapozycja.Value}]");
+         //   print($"[{posortowanapozycja.Key}][{posortowanapozycja.Value}]");
         }
 
         // wyciągnięcie kontenera z obiektów
@@ -53,7 +53,7 @@ public class DiceSorterScript : MonoBehaviour
                 if (kosc.GetComponent<DiceRollScript>().DiceNumber == poprawnapozycja.Key)
                 {
                     kosc.transform.SetSiblingIndex(poprawnapozycja.Value + 1);
-                    print(kosc.transform.name + "diceNumber = " + poprawnapozycja.Key + " Została przeniesiona na pozycje " + (poprawnapozycja.Value + 1));
+                   // print(kosc.transform.name + "diceNumber = " + poprawnapozycja.Key + " Została przeniesiona na pozycje " + (poprawnapozycja.Value + 1));
                 }
             }
         }
