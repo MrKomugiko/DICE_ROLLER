@@ -19,8 +19,11 @@ public class GodsManager : MonoBehaviour
     [SerializeField] List<CardScript> _listOfAllCards;
     [SerializeField] private int _amountOfGoldDeponedForSkills;
 
-    public int CurrentGold { get => Convert.ToInt32(_currentGoldText.text); }
-    int AmountOfGoldDeponedForSkills { get => _amountOfGoldDeponedForSkills; set => _amountOfGoldDeponedForSkills = value; }
+    public int CurrentGold 
+    { 
+        get => Convert.ToInt32(_currentGoldText.text); 
+
+    }
 
     public List<CardScript> ListOfAllCards
     {
@@ -87,6 +90,38 @@ public class GodsManager : MonoBehaviour
 
     
 
+    public void CollorDissabledSkills()
+    {
+        foreach (var god in  _godCardsInContainer )
+        { 
+            if(CheckIfSkillCanBeUsed(god._skill,1) == false ) ChangeSkillButtonToDissabled(god, level:1);
+            if(CheckIfSkillCanBeUsed(god._skill,2) == false ) ChangeSkillButtonToDissabled(god, level:2);
+            if(CheckIfSkillCanBeUsed(god._skill,3) == false ) ChangeSkillButtonToDissabled(god, level:3);
+        }
+    }
+
+    private void ChangeSkillButtonToDissabled(GodScript godScript, int level)
+    {
+       // print("zmiana koloru na CZERWONY"+ godScript._skill.GodName +" | "+godScript._skill.SkillName+ " | "+ level);
+        GameObject skillButton = null;
+        switch (level)
+        {
+            case 1:
+                skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 1").transform.gameObject;
+                break;
+
+            case 2:
+                skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 2").transform.gameObject;
+                break;
+
+            case 3:
+                skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 3").transform.gameObject;
+                break;
+        }
+        skillButton.GetComponent<Image>().color = new Color32(255,0,0,128);
+        skillButton.GetComponentInChildren<Text>().color = Color.red;
+    }
+
     private void PayGoldForSkill(GodScript myGod, string godOwner)
     {
         var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
@@ -112,8 +147,8 @@ public class GodsManager : MonoBehaviour
 
         GM_Script.CumulativeGoldStealingCounterP1 = 0;
         GM_Script.CumulativeGoldStealingCounterP2 = 0;
+        CollorDissabledSkills();
     }
-
     private bool AnySkillInOwnedCardsIsSelected { get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null; }
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
@@ -135,10 +170,5 @@ public class GodsManager : MonoBehaviour
         if (skill.GetGoldCostForSkillLevel(level) > CurrentGold ) return false;
 
         return true;
-    }
-
-    public void BlockGodButtonsIfCombatStarted()
-    {
-
     }
 }

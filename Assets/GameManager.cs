@@ -61,8 +61,9 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 1 
     int Player1_RollingCounter;
+     GodsManager Player1GodsManagerScript;
     [SerializeField] GameObject Player1UseSkillTestButton;
-    [SerializeField] GameObject Player1GodSkillWindow;
+    [SerializeField] public GameObject Player1GodSkillWindow;
     [SerializeField] GameObject Player1TurnBlocker;
 
     #region GOLD Blessed + Steal
@@ -153,8 +154,9 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 2 
     int Player2_RollingCounter;
+    [SerializeField] GodsManager Player2GodsManagerScript;
     [SerializeField] GameObject Player2UseSkillTestButton;
-    [SerializeField] GameObject Player2GodSkillWindow;
+    [SerializeField] public GameObject Player2GodSkillWindow;
     [SerializeField] GameObject Player2TurnBlocker;
 
     #region GOLD Blessed + Steal
@@ -266,6 +268,10 @@ public class GameManager : MonoBehaviour
         Player1_RollingCounter = 0;
         Player2_RollingCounter = 0;
         ChangePlayersTurn();
+
+       Player1GodsManagerScript = Player1GodSkillWindow.GetComponent<GodsManager>();
+       Player2GodsManagerScript = Player2GodSkillWindow.GetComponent<GodsManager>();
+
     }
     void Update()
     {
@@ -295,6 +301,9 @@ public class GameManager : MonoBehaviour
                 CurrentGold1++;
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1--;
+                Player1GodsManagerScript.CollorDissabledSkills();
+                Player2GodsManagerScript.CollorDissabledSkills();
+
             }
             else if (LiczbaPrzelewowGolda_Player1 < 0)
             {
@@ -302,6 +311,9 @@ public class GameManager : MonoBehaviour
                 CurrentGold1--;
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1++;
+                Player1GodsManagerScript.CollorDissabledSkills();
+                Player2GodsManagerScript.CollorDissabledSkills();
+
             }
             else if (LiczbaPrzelewowGolda_Player1 == 0)
             {
@@ -315,6 +327,8 @@ public class GameManager : MonoBehaviour
                     p1coin.SetText("");
                 }
             }
+
+            Player1GodSkillWindow.GetComponent<GodsManager>().CollorDissabledSkills();
             //---------------------------------------------------------------------------------------------------------------------------
 
             if (LiczbaPrzelewowGolda_Player2 > 0)

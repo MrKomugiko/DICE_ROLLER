@@ -32,7 +32,11 @@ public partial class CardScript : MonoBehaviour
         get => _isRevealed;
         set
         {
-            if (value) { Currentstatus = status.revealed; }
+            if (value) 
+            {
+                Currentstatus = status.revealed; 
+                ColorSkillButtonsDeppendOfGold();
+            }
             _isRevealed = value;
             _cardReversDetailsContainer.SetActive(value);
         }
@@ -92,7 +96,7 @@ public partial class CardScript : MonoBehaviour
         return false;
     }
 
-void Start()
+    void Start()
 {
     BackToNormalSize();
 }
@@ -115,8 +119,21 @@ void Start()
         _cardDescription = _cardReversDetailsContainer.transform.Find("Description").GetComponent<TextMeshProUGUI>();
     }
     bool isButtonsBlocked;
+    float time = 0;
+    [SerializeField] float SpeedOfRefreshingButtonCollors = 1f;
     void FixedUpdate()
     {
+        time += Time.deltaTime;
+
+        if(IsReverseRevelated)
+        {
+            if (time >= this.SpeedOfRefreshingButtonCollors)
+            {
+                time = time - SpeedOfRefreshingButtonCollors;
+                ColorSkillButtonsDeppendOfGold();
+            }
+        }
+
         if (isAnyCardCurrentlySpinning()) { _backgroundButton.interactable = false; } else { _backgroundButton.interactable = true; }
         AutoFixFlipCardIfIsRevealedInWrongStatus();
 
@@ -141,6 +158,15 @@ void Start()
         }
     }
 
+    [SerializeField] public bool ColloringInPRogress = false;
+    public void ColorSkillButtonsDeppendOfGold()
+    {       
+            print("start colloring)");
+            _godsManager.CollorDissabledSkills();
+            print("done,now wait 1s za nastepna iteracja");
+    }
+
+
     public void AutoFixFlipCardIfIsRevealedInWrongStatus()
     {
         if (IsReverseRevelated)
@@ -163,7 +189,10 @@ void Start()
     public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
     {
         _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.TrySelectSkill(skillLevel,_godsManager.ownerName));
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> ColorSkillButtonsDeppendOfGold());
     }
+
+    
 
     void Resize(float x, float y)
     {
@@ -210,8 +239,8 @@ void Start()
         switch (Currentstatus)
         {
             case status.revealed:
-                yield return StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
                 Resize(327.4f, 537.3f);
+                yield return StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
                 Currentstatus = status.standard;
                 break;
 
@@ -237,6 +266,7 @@ void Start()
         Resize(270.0f, 443.16f);
         yield return StartCoroutine(ChangeColor(new Color32(75, 75, 75, 255)));
     }
+
 
     #region BUTTONS
     public void BlockSkillButtons(bool value)

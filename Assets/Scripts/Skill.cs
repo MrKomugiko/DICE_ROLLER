@@ -32,13 +32,10 @@ public class Skill
             if(value)
             {
                 methodToCall = UseSkill;
-
-                // zapisanie delegaty ( wybranej metody ktoa uzyje sie pozniej ? ) 
             }
             else
             {
-                string color = OwnerName == "Player1"?"green":"red";
-                AndroidLogger.Log("Skill used.",color);
+//                string color = OwnerName == "Player1"?"green":"red";
                 methodToCall = null;
             }
         }
@@ -61,14 +58,22 @@ public class Skill
         SkillIsSelected = false;
     }
     public void TrySelectSkill(int skillLevel, string castingPlayer)
-    { 
+    {
+        
         if(!SelectionController.CheckIfAnyOtherSkillsAlreadySelected(OwnerName))
         {
             SelectSkill(skillLevel, castingPlayer);
         }
         else
         {
-            Debug.Log("odznaczanie wczesniejszego skilla");
+            if(CheckIfItsDoubleSelectPreviousSkill(skillLevel, castingPlayer))
+            {
+                Debug.Log("anulowanie wyboru skilla - przez ponownejego wybranie");
+                UnSelectAnySelectedSkill();
+                return;
+            }
+
+            Debug.Log("Odznaczenie innego skila");
             UnSelectAnySelectedSkill();
 
             Debug.Log("ponowna próba zanzaczenia aktualnie wybranego");
@@ -76,28 +81,39 @@ public class Skill
         }
     }
 
+    private bool CheckIfItsDoubleSelectPreviousSkill(int skillLevel, string castingPlayer)
+    {
+        Skill recentSelectedSkill = SelectionController.GetSelectedSkill(OwnerName);
+        if(this == recentSelectedSkill)
+        {
+            Debug.Log("Yes its an atempt to cancel previous selected skill");
+            return true;
+        }
+        return false;
+    }
 
     private void UnSelectAnySelectedSkill()
     {
-        Skill recentSelectedSkill = SelectionController.GetSelecteSkill(OwnerName);
+        Skill recentSelectedSkill = SelectionController.GetSelectedSkill(OwnerName);
+        SelectionController.UnselectControllerWhoContainSkill(recentSelectedSkill, OwnerName);
         recentSelectedSkill.SkillIsSelected = false;
     }
     private void SelectSkill(int skillLevel, string castingPlayer)
     {
         string color = castingPlayer == "Player1" ? "green" : "red";
         if (!SkillIsSelected)
-        {
-            selectedSkillLevel = skillLevel;
-            selectedCastingPlayer = castingPlayer;
+        {        
+                selectedSkillLevel = skillLevel;
+                selectedCastingPlayer = castingPlayer;
 
-            AndroidLogger.Log("You choose" + GodName + " skill at level : " + skillLevel, color);
-            SkillIsSelected = true;
+                AndroidLogger.Log("You choose" + GodName + " skill at level : " + skillLevel, color);
+                SkillIsSelected = true;
         }
     }
 
     protected virtual void UseSkill(int skillLevel, string castingPlayer)
     {
-        AndroidLogger.Log("Using skill");
+        AndroidLogger.Log("no skill to use ;d");
     }
     public static Skill GetGodSkillByID(int id, God godData, string ownerName)
     {
