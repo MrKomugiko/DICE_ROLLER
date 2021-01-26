@@ -212,6 +212,8 @@ public class GameManager : MonoBehaviour
             _temporaryGoldVault_player2 = value;
         }
     }
+
+
     #endregion
 
     #region HEALTH Combat
@@ -285,11 +287,24 @@ public class GameManager : MonoBehaviour
         TransferDamageToPlayers(ref time2, interpolationPeriod);
     }
 
+    internal static int GetPlayerGoldValue(string player)
+    {
+        GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();;
+        switch (player)
+        {
+            case "Player1":
+                return GM.CurrentGold1;
+
+            case "Player2":
+                return GM.CurrentGold2;
+        }
+
+        throw new Exception("Incorrect 'player' name");
+    }
     private void TransferGoldToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
-
             // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
             //---------------------------------------------------------------------------------------------------------------------------

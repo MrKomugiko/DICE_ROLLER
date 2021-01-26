@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -270,5 +271,6 @@ public class CombatManager : MonoBehaviour
     public void ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL()
     {
         GM_Script.ChangeUIToRollingMode();
+        IndexOfCombatAction = 0;
     }
 }

@@ -1,12 +1,10 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using DiceRoller_Console;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 
 public class GodsManager : MonoBehaviour
 {
@@ -14,14 +12,14 @@ public class GodsManager : MonoBehaviour
     public List<GodScript> _godCardsInContainer;
     public List<SelectionController> _selectionControllers;
     [SerializeField] Text _currentGoldText;
-    [SerializeField] public string ownerName { get; private set; }
     [SerializeField] List<God> _listOfAvailableGodsTotems;
     [SerializeField] List<CardScript> _listOfAllCards;
     [SerializeField] private int _amountOfGoldDeponedForSkills;
+    [SerializeField] public string ownerName { get; private set; }
 
-    public int CurrentGold 
-    { 
-        get => Convert.ToInt32(_currentGoldText.text); 
+    public int CurrentGold
+    {
+        get => Convert.ToInt32(_currentGoldText.text);
 
     }
 
@@ -34,7 +32,10 @@ public class GodsManager : MonoBehaviour
             print("liczba kart: " + value.Count);
         }
     }
-
+    private bool AnySkillInOwnedCardsIsSelected
+    {
+        get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null;
+    }
     void Awake()
     {
         GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -74,14 +75,14 @@ public class GodsManager : MonoBehaviour
             foreach (var myGod in _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true))
             {
                 var lastUsedSkill = myGod._skill;
-                if(CheckIfSkillCanBeUsed(myGod._skill,myGod._skill.selectedSkillLevel))
+                if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, myGod._skill, myGod._skill.selectedSkillLevel))
                 {
                     PayGoldForSkill(myGod, myGod.ownerName);
                     lastUsedSkill.LastSelectedSkillReadyToUse();
                 }
                 else
                 {
-                    AndroidLogger.Log("you dont have enought Gold to cast skill",playerColorLog);
+                    AndroidLogger.Log("you dont have enought Gold to cast skill", playerColorLog);
                     lastUsedSkill.SkillIsSelected = false;
                 }
             }
@@ -89,31 +90,31 @@ public class GodsManager : MonoBehaviour
         CollorDissabledSkills();
     }
 
-    
+
 
     public void CollorDissabledSkills()
     {
-        foreach (var god in  _godCardsInContainer )
-        { 
+        foreach (var god in _godCardsInContainer)
+        {
             //print("colloring for: "+ownerName);
             // wykluczenie zmiany koloru aktualnie zaznaczonego
             int ignoredButtonIndex = 0;
-            if(god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
-            
-            if(CheckIfSkillCanBeUsed(god._skill,1) == false  && ignoredButtonIndex !=1) 
-            ChangeSkillButtonToDissabled(god, level:1);
+            if (god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
 
-            if(CheckIfSkillCanBeUsed(god._skill,2) == false && ignoredButtonIndex !=2) 
-            ChangeSkillButtonToDissabled(god, level:2);
+            if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, 1) == false && ignoredButtonIndex != 1)
+                ChangeSkillButtonToDissabled(god, level: 1);
 
-            if(CheckIfSkillCanBeUsed(god._skill,3) == false && ignoredButtonIndex !=3) 
-            ChangeSkillButtonToDissabled(god, level:3);
+            if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, 2) == false && ignoredButtonIndex != 2)
+                ChangeSkillButtonToDissabled(god, level: 2);
+
+            if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, 3) == false && ignoredButtonIndex != 3)
+                ChangeSkillButtonToDissabled(god, level: 3);
         }
     }
 
     private void ChangeSkillButtonToDissabled(GodScript godScript, int level)
     {
-       // print("zmiana koloru na CZERWONY"+ godScript._skill.GodName +" | "+godScript._skill.SkillName+ " | "+ level);
+        // print("zmiana koloru na CZERWONY"+ godScript._skill.GodName +" | "+godScript._skill.SkillName+ " | "+ level);
         GameObject skillButton = null;
         switch (level)
         {
@@ -129,7 +130,7 @@ public class GodsManager : MonoBehaviour
                 skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 3").transform.gameObject;
                 break;
         }
-        skillButton.GetComponent<Image>().color = new Color32(255,0,0,128);
+        skillButton.GetComponent<Image>().color = new Color32(255, 0, 0, 128);
         skillButton.GetComponentInChildren<Text>().color = Color.red;
     }
 
@@ -160,7 +161,7 @@ public class GodsManager : MonoBehaviour
         GM_Script.CumulativeGoldStealingCounterP2 = 0;
         CollorDissabledSkills();
     }
-    private bool AnySkillInOwnedCardsIsSelected { get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null; }
+
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
         List<int> randomNumbers = new List<int>();
@@ -175,11 +176,5 @@ public class GodsManager : MonoBehaviour
         } while (randomNumbers.Count < 3);
 
         return randomNumbers;
-    }
-    public bool CheckIfSkillCanBeUsed(Skill skill, int level)
-    {
-        if (skill.GetGoldCostForSkillLevel(level) > CurrentGold ) return false;
-
-        return true;
     }
 }

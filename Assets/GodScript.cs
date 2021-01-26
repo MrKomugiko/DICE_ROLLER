@@ -29,14 +29,14 @@ public class GodScript : MonoBehaviour
     }
     void Awake()
     {
-        _card = GetComponent<CardScript>();    
+        _card = GetComponent<CardScript>();
     }
     public void SelfConfigure(God godData)
-    {   
+    {
         ownerName = this.transform.parent.transform.parent.name; // wyjscie z katalogu i wyjscie do nad katalogu playe1 lub player2
         _godData = godData;
         this.name = godData.Name;
-        this.GodTotemMainImage = godData.IsGodPlayable == true?godData.MainImage:godData.WorkInProgressImage;
+        this.GodTotemMainImage = godData.IsGodPlayable == true ? godData.MainImage : godData.WorkInProgressImage;
         _card.SetDescription($"<size=40><b>{godData.TotemFullName}</b></size>\n<i>{godData.Description}</i>");
 
         int skillLevel = 1;
@@ -44,27 +44,32 @@ public class GodScript : MonoBehaviour
         List<string> skillsDescriptionList = godData.GenerateListOFSkillsDescription();
 
         AttachSkill(_godData);
-       
+
         for (int i = 0; i < 3; i++)
         {
             _card.SetSkillDescription(skillLevel, skillsDescriptionList[i]);
-            
-           if(_skill != null){
-                print(_skill.SkillName+$"[lvl {skillLevel}] dodany");
-                _card.AttachSkillsFunctionToButtons(skillLevel,_skill);
-           }
+
+            if (_skill != null)
+            {
+                print(_skill.SkillName + $"[lvl {skillLevel}] dodany");
+                _card.AttachSkillsFunctionToButtons(skillLevel, _skill);
+            }
             skillLevel++;
         }
     }
     void AttachSkill(God godData)
     {
-        string color = ownerName == "Player1"?"green":"red";
-        _skill = Skill.GetGodSkillByID(godData.Index, godData,ownerName);
-        if(_skill != null){
-            AndroidLogger.Log("+("+_skill.GetType().Name +")"+_skill.SkillName,color);
+        string color = ownerName == "Player1" ? "green" : "red";
+        _skill = Skill.GetGodSkillByID(godData.Index, godData, ownerName);
+        if (_skill != null)
+        {
+
+            AndroidLogger.Log("+(" + _skill.GetType().Name + ")" + _skill.SkillName, color);
         }
-        else{
-            AndroidLogger.Log("skill nie zostal znaleziony??",color);
+
+        else
+        {
+            AndroidLogger.Log("skill nie zostal znaleziony??", color);
         }
     }
 }
