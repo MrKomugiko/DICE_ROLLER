@@ -35,7 +35,7 @@ public partial class CardScript : MonoBehaviour
             if (value) 
             {
                 Currentstatus = status.revealed; 
-                ColorSkillButtonsDeppendOfGold();
+                _godsManager.CollorDissabledSkills();
             }
             _isRevealed = value;
             _cardReversDetailsContainer.SetActive(value);
@@ -120,7 +120,7 @@ public partial class CardScript : MonoBehaviour
     }
     bool isButtonsBlocked;
     float time = 0;
-    [SerializeField] float SpeedOfRefreshingButtonCollors = 1f;
+    [SerializeField] float SpeedOfRefreshingButtonCollors = 0.5f;
     void FixedUpdate()
     {
         time += Time.deltaTime;
@@ -130,7 +130,7 @@ public partial class CardScript : MonoBehaviour
             if (time >= this.SpeedOfRefreshingButtonCollors)
             {
                 time = time - SpeedOfRefreshingButtonCollors;
-                ColorSkillButtonsDeppendOfGold();
+                _godsManager.CollorDissabledSkills();
             }
         }
 
@@ -159,14 +159,6 @@ public partial class CardScript : MonoBehaviour
     }
 
     [SerializeField] public bool ColloringInPRogress = false;
-    public void ColorSkillButtonsDeppendOfGold()
-    {       
-            print("start colloring)");
-            _godsManager.CollorDissabledSkills();
-            print("done,now wait 1s za nastepna iteracja");
-    }
-
-
     public void AutoFixFlipCardIfIsRevealedInWrongStatus()
     {
         if (IsReverseRevelated)
@@ -188,8 +180,7 @@ public partial class CardScript : MonoBehaviour
     }
     public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
     {
-        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.TrySelectSkill(skillLevel,_godsManager.ownerName));
-        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> ColorSkillButtonsDeppendOfGold());
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.TrySelectSkill(skillLevel,_godsManager.ownerName,skill.God));
     }
 
     

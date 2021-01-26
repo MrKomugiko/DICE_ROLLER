@@ -1041,6 +1041,8 @@ MonoBehaviour:
   God_Script: {fileID: 0}
   Card_Script: {fileID: 0}
   _isSkillSelected: 0
+  DEBUG_Border_Player1: {fileID: 0}
+  DEBUG_Border_Player2: {fileID: 0}
 --- !u!224 &261573847 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,
@@ -1386,6 +1388,8 @@ MonoBehaviour:
   God_Script: {fileID: 0}
   Card_Script: {fileID: 0}
   _isSkillSelected: 0
+  DEBUG_Border_Player1: {fileID: 0}
+  DEBUG_Border_Player2: {fileID: 0}
 --- !u!224 &403017628 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,
@@ -3195,6 +3199,8 @@ MonoBehaviour:
   God_Script: {fileID: 0}
   Card_Script: {fileID: 0}
   _isSkillSelected: 0
+  DEBUG_Border_Player1: {fileID: 0}
+  DEBUG_Border_Player2: {fileID: 0}
 --- !u!1 &796658087
 GameObject:
   m_ObjectHideFlags: 0
@@ -3595,6 +3601,8 @@ MonoBehaviour:
   God_Script: {fileID: 0}
   Card_Script: {fileID: 0}
   _isSkillSelected: 0
+  DEBUG_Border_Player1: {fileID: 0}
+  DEBUG_Border_Player2: {fileID: 0}
 --- !u!1 &964748992
 GameObject:
   m_ObjectHideFlags: 0
@@ -5422,7 +5430,7 @@ MonoBehaviour:
   Player1ActualHPValue: 0
   liczbaPrzelewaniaObrazen_Player1: 0
   _temporaryIntakeDamage_Player1: 0
-  Player2GodsManagerScript: {fileID: 0}
+  Player2GodsManagerScript: {fileID: 737306868}
   Player2UseSkillTestButton: {fileID: 617528854}
   Player2GodSkillWindow: {fileID: 737306865}
   Player2TurnBlocker: {fileID: 1901050491}
@@ -6103,6 +6111,8 @@ MonoBehaviour:
   God_Script: {fileID: 0}
   Card_Script: {fileID: 0}
   _isSkillSelected: 0
+  DEBUG_Border_Player1: {fileID: 0}
+  DEBUG_Border_Player2: {fileID: 0}
 --- !u!224 &1705049852 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,
@@ -6756,6 +6766,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d2bc4f06ce496e746be39911ae1559d0,
         type: 3}
+    - target: {fileID: 2138301620827075100, guid: b2ea669c322a5d34685f51e74a91957e,
+        type: 3}
+      propertyPath: SpeedOfRefreshingButtonCollors
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2138301620827075102, guid: b2ea669c322a5d34685f51e74a91957e,
         type: 3}
       propertyPath: m_Color.b
@@ -6807,6 +6822,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d2bc4f06ce496e746be39911ae1559d0,
         type: 3}
+    - target: {fileID: 2138301621266815448, guid: b2ea669c322a5d34685f51e74a91957e,
+        type: 3}
+      propertyPath: SpeedOfRefreshingButtonCollors
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2138301621867371429, guid: b2ea669c322a5d34685f51e74a91957e,
         type: 3}
       propertyPath: m_Color.b
@@ -6858,6 +6878,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d2bc4f06ce496e746be39911ae1559d0,
         type: 3}
+    - target: {fileID: 2138301621867371435, guid: b2ea669c322a5d34685f51e74a91957e,
+        type: 3}
+      propertyPath: SpeedOfRefreshingButtonCollors
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2809140452913309016, guid: b2ea669c322a5d34685f51e74a91957e,
         type: 3}
       propertyPath: m_Color.a
@@ -7323,6 +7348,8 @@ MonoBehaviour:
   God_Script: {fileID: 0}
   Card_Script: {fileID: 0}
   _isSkillSelected: 0
+  DEBUG_Border_Player1: {fileID: 0}
+  DEBUG_Border_Player2: {fileID: 0}
 --- !u!1001 &1911483354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9135,6 +9162,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d2bc4f06ce496e746be39911ae1559d0,
         type: 3}
+    - target: {fileID: 2138301620827075100, guid: b2ea669c322a5d34685f51e74a91957e,
+        type: 3}
+      propertyPath: SpeedOfRefreshingButtonCollors
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2138301620827075102, guid: b2ea669c322a5d34685f51e74a91957e,
         type: 3}
       propertyPath: m_Color.b
@@ -9186,6 +9218,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d2bc4f06ce496e746be39911ae1559d0,
         type: 3}
+    - target: {fileID: 2138301621266815448, guid: b2ea669c322a5d34685f51e74a91957e,
+        type: 3}
+      propertyPath: SpeedOfRefreshingButtonCollors
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2138301621771605634, guid: b2ea669c322a5d34685f51e74a91957e,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -9272,6 +9309,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: d2bc4f06ce496e746be39911ae1559d0,
         type: 3}
+    - target: {fileID: 2138301621867371435, guid: b2ea669c322a5d34685f51e74a91957e,
+        type: 3}
+      propertyPath: SpeedOfRefreshingButtonCollors
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2809140452913309016, guid: b2ea669c322a5d34685f51e74a91957e,
         type: 3}
       propertyPath: m_Color.a

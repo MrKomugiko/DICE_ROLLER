@@ -57,57 +57,82 @@ public class Skill
         methodToCall(selectedSkillLevel,selectedCastingPlayer);
         SkillIsSelected = false;
     }
-    public void TrySelectSkill(int skillLevel, string castingPlayer)
+    public void TrySelectSkill(int skillLevel, string castingPlayer, God god)
     {
         
-        if(!SelectionController.CheckIfAnyOtherSkillsAlreadySelected(OwnerName))
+        if(!SelectionController.CheckIfAnyOtherSkillsAlreadySelected(castingPlayer))
         {
-            SelectSkill(skillLevel, castingPlayer);
+            SelectSkill(skillLevel, castingPlayer,god);
         }
         else
         {
-            if(CheckIfItsDoubleSelectPreviousSkill(skillLevel, castingPlayer))
+            if(CheckIfItsDoubleSelectPreviousSkill(skillLevel, castingPlayer, god))
             {
-                Debug.Log("anulowanie wyboru skilla - przez ponownejego wybranie");
+                Debug.Log("anulowanie wyboru skilla - przez ponownejego jego wybranie");
                 UnSelectAnySelectedSkill();
                 return;
             }
 
-            Debug.Log("Odznaczenie innego skila");
             UnSelectAnySelectedSkill();
 
-            Debug.Log("ponowna próba zanzaczenia aktualnie wybranego");
-            SelectSkill(skillLevel, castingPlayer);
+            SelectSkill(skillLevel, castingPlayer,god);
         }
     }
 
-    private bool CheckIfItsDoubleSelectPreviousSkill(int skillLevel, string castingPlayer)
+    private bool CheckIfItsDoubleSelectPreviousSkill(int newSelectedskillLevel, string castingPlayer, God newSelectedGod)
     {
-        Skill recentSelectedSkill = SelectionController.GetSelectedSkill(OwnerName);
-        if(this == recentSelectedSkill)
+        Skill recentSelectedSkill = SelectionController.GetSelectedSkill(castingPlayer);
+        
+        int recentSelectedSkillLevel = recentSelectedSkill.selectedSkillLevel;
+        God recentSelectedGod = recentSelectedSkill.God;;
+        
+        
+        if(recentSelectedSkillLevel == newSelectedskillLevel)
         {
-            Debug.Log("Yes its an atempt to cancel previous selected skill");
-            return true;
+            if(recentSelectedGod == newSelectedGod)
+            {
+                Debug.Log("Zmiana skilla tego samego Boga");
+                return true;
+            }
         }
+        if(recentSelectedGod != newSelectedGod)
+        {
+            Debug.Log("Wybranie skilla od innego Boga");
+            return false;
+        }
+
         return false;
     }
 
     private void UnSelectAnySelectedSkill()
     {
+        Debug.Log("unselect any selected skill before");
         Skill recentSelectedSkill = SelectionController.GetSelectedSkill(OwnerName);
         SelectionController.UnselectControllerWhoContainSkill(recentSelectedSkill, OwnerName);
         recentSelectedSkill.SkillIsSelected = false;
+        
+        Debug.Log($"[{recentSelectedSkill.OwnerName}]\t[{recentSelectedSkill.GodName}]\t[{recentSelectedSkill.selectedSkillLevel}]\t[OLD]");
+       
+        if(OwnerName == "Player1"){
+            Debug.Log("unselect p1");
+        GM_Script.Player1GodSkillWindow.GetComponent<GodsManager>().CollorDissabledSkills();
+        } 
+        if(OwnerName == "Player2") 
+        {
+            Debug.Log("unselect p2");
+            GM_Script.Player2GodSkillWindow.GetComponent<GodsManager>().CollorDissabledSkills();
+        }
     }
-    private void SelectSkill(int skillLevel, string castingPlayer)
+    private void SelectSkill(int skillLevel, string castingPlayer, God god)
     {
-        string color = castingPlayer == "Player1" ? "green" : "red";
         if (!SkillIsSelected)
         {        
                 selectedSkillLevel = skillLevel;
                 selectedCastingPlayer = castingPlayer;
 
-                AndroidLogger.Log("You choose" + GodName + " skill at level : " + skillLevel, color);
                 SkillIsSelected = true;
+
+                Debug.Log($"[{castingPlayer}]\t[ {GodName} ]\t[ {selectedSkillLevel} lvl.]\t[NEW SELECT]");
         }
     }
 

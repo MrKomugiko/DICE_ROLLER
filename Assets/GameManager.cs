@@ -302,8 +302,6 @@ public class GameManager : MonoBehaviour
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1--;
                 Player1GodsManagerScript.CollorDissabledSkills();
-                Player2GodsManagerScript.CollorDissabledSkills();
-
             }
             else if (LiczbaPrzelewowGolda_Player1 < 0)
             {
@@ -312,8 +310,6 @@ public class GameManager : MonoBehaviour
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1++;
                 Player1GodsManagerScript.CollorDissabledSkills();
-                Player2GodsManagerScript.CollorDissabledSkills();
-
             }
             else if (LiczbaPrzelewowGolda_Player1 == 0)
             {
@@ -328,7 +324,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            Player1GodSkillWindow.GetComponent<GodsManager>().CollorDissabledSkills();
+            
             //---------------------------------------------------------------------------------------------------------------------------
 
             if (LiczbaPrzelewowGolda_Player2 > 0)
@@ -337,6 +333,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold2++;
                 Player2_GoldVault.text = CurrentGold2.ToString();
                 LiczbaPrzelewowGolda_Player2--;
+                Player2GodsManagerScript.CollorDissabledSkills();
             }
             else if (LiczbaPrzelewowGolda_Player2 < 0)
             {
@@ -345,6 +342,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold2--;
                 Player2_GoldVault.text = CurrentGold2.ToString();
                 LiczbaPrzelewowGolda_Player2++;
+                Player2GodsManagerScript.CollorDissabledSkills();
             }
             else if (LiczbaPrzelewowGolda_Player2 == 0)
             {

@@ -86,6 +86,7 @@ public class GodsManager : MonoBehaviour
                 }
             }
         }
+        CollorDissabledSkills();
     }
 
     
@@ -94,9 +95,19 @@ public class GodsManager : MonoBehaviour
     {
         foreach (var god in  _godCardsInContainer )
         { 
-            if(CheckIfSkillCanBeUsed(god._skill,1) == false ) ChangeSkillButtonToDissabled(god, level:1);
-            if(CheckIfSkillCanBeUsed(god._skill,2) == false ) ChangeSkillButtonToDissabled(god, level:2);
-            if(CheckIfSkillCanBeUsed(god._skill,3) == false ) ChangeSkillButtonToDissabled(god, level:3);
+            //print("colloring for: "+ownerName);
+            // wykluczenie zmiany koloru aktualnie zaznaczonego
+            int ignoredButtonIndex = 0;
+            if(god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
+            
+            if(CheckIfSkillCanBeUsed(god._skill,1) == false  && ignoredButtonIndex !=1) 
+            ChangeSkillButtonToDissabled(god, level:1);
+
+            if(CheckIfSkillCanBeUsed(god._skill,2) == false && ignoredButtonIndex !=2) 
+            ChangeSkillButtonToDissabled(god, level:2);
+
+            if(CheckIfSkillCanBeUsed(god._skill,3) == false && ignoredButtonIndex !=3) 
+            ChangeSkillButtonToDissabled(god, level:3);
         }
     }
 
