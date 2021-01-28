@@ -8,6 +8,8 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] public float GameSpeedValueModifier = 1;
+
     #region GENERAL 
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
@@ -277,6 +279,8 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+        Time.timeScale = GameSpeedValueModifier;
+
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter, "Player1");
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
 
@@ -316,7 +320,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold1++;
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1--;
-                Player1GodsManagerScript.CollorDissabledSkills();
+                Player1GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player1 < 0)
             {
@@ -324,7 +328,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold1--;
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1++;
-                Player1GodsManagerScript.CollorDissabledSkills();
+                Player1GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player1 == 0)
             {
@@ -348,7 +352,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold2++;
                 Player2_GoldVault.text = CurrentGold2.ToString();
                 LiczbaPrzelewowGolda_Player2--;
-                Player2GodsManagerScript.CollorDissabledSkills();
+                Player2GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player2 < 0)
             {
@@ -357,7 +361,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold2--;
                 Player2_GoldVault.text = CurrentGold2.ToString();
                 LiczbaPrzelewowGolda_Player2++;
-                Player2GodsManagerScript.CollorDissabledSkills();
+                Player2GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player2 == 0)
             {

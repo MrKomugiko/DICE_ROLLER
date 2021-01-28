@@ -87,12 +87,12 @@ public class GodsManager : MonoBehaviour
                 }
             }
         }
-        CollorDissabledSkills();
+        CollorSkillButtonsIfCanBeUsed();
     }
 
 
 
-    public void CollorDissabledSkills()
+    public void CollorSkillButtonsIfCanBeUsed()
     {
         foreach (var god in _godCardsInContainer)
         {
@@ -101,15 +101,42 @@ public class GodsManager : MonoBehaviour
             int ignoredButtonIndex = 0;
             if (god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
 
-            if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, 1) == false && ignoredButtonIndex != 1)
-                ChangeSkillButtonToDissabled(god, level: 1);
-
-            if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, 2) == false && ignoredButtonIndex != 2)
-                ChangeSkillButtonToDissabled(god, level: 2);
-
-            if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, 3) == false && ignoredButtonIndex != 3)
-                ChangeSkillButtonToDissabled(god, level: 3);
+            for(int level = 1; level <= 3; level++)
+            {
+                if (ignoredButtonIndex != level)
+                {
+                    if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, level) == false)
+                    {
+                        ChangeSkillButtonToDissabled(god, level: level);
+                    }
+                    else
+                    {
+                        ChangeSkillButtonToEnabled(god, level: level);
+                    }
+                }
+            }
         }
+    }
+
+    private void ChangeSkillButtonToEnabled(GodScript godScript, int level)
+    {
+        GameObject skillButton = null;
+        switch (level)
+        {
+            case 1:
+                skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 1").transform.gameObject;
+                break;
+
+            case 2:
+                skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 2").transform.gameObject;
+                break;
+
+            case 3:
+                skillButton = godScript.transform.Find("RewersContent").transform.Find("Skill Level 3").transform.gameObject;
+                break;
+        }
+        skillButton.GetComponent<Image>().color = new Color32(255, 255, 255, 128);
+        skillButton.GetComponentInChildren<Text>().color = Color.white;;
     }
 
     private void ChangeSkillButtonToDissabled(GodScript godScript, int level)
@@ -159,7 +186,7 @@ public class GodsManager : MonoBehaviour
 
         GM_Script.CumulativeGoldStealingCounterP1 = 0;
         GM_Script.CumulativeGoldStealingCounterP2 = 0;
-        CollorDissabledSkills();
+        CollorSkillButtonsIfCanBeUsed();
     }
 
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)

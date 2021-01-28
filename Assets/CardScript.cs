@@ -35,7 +35,7 @@ public partial class CardScript : MonoBehaviour
             if (value) 
             {
                 Currentstatus = status.revealed; 
-                _godsManager.CollorDissabledSkills();
+                _godsManager.CollorSkillButtonsIfCanBeUsed();
             }
             _isRevealed = value;
             _cardReversDetailsContainer.SetActive(value);
@@ -130,7 +130,7 @@ public partial class CardScript : MonoBehaviour
             if (time >= this.SpeedOfRefreshingButtonCollors)
             {
                 time = time - SpeedOfRefreshingButtonCollors;
-                _godsManager.CollorDissabledSkills();
+                _godsManager.CollorSkillButtonsIfCanBeUsed();
             }
         }
 
@@ -165,8 +165,8 @@ public partial class CardScript : MonoBehaviour
         {
             if (Karty.Where(k => k.Currentstatus == status.selected || k.Currentstatus == status.standard).FirstOrDefault() != null)
             {
+             //   this.Currentstatus = status.unfocused;
                 OnClick_SpinCard();
-                this.Currentstatus = status.unfocused;
             }
         }
     }
@@ -210,7 +210,7 @@ public partial class CardScript : MonoBehaviour
         for (int i = 0; i < 90; i += speedMultiplifer)
         {
             _transform.Rotate(new Vector3(0f, speedMultiplifer, 0f), Space.Self);
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrame();
         }
 
         _cardImage.sprite = spriteToSet;
@@ -220,7 +220,7 @@ public partial class CardScript : MonoBehaviour
         for (int i = 90; i > 0; i -= speedMultiplifer)
         {
             _transform.Rotate(new Vector3(0f, -speedMultiplifer, 0f), Space.Self);
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrame();
         }
 
         IsCurrentSpinning = false;

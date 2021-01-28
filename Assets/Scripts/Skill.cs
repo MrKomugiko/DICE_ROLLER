@@ -110,12 +110,12 @@ public class Skill
         if (OwnerName == "Player1")
         {
             Debug.Log("unselect p1");
-            GM_Script.Player1GodSkillWindow.GetComponent<GodsManager>().CollorDissabledSkills();
+            GM_Script.Player1GodSkillWindow.GetComponent<GodsManager>().CollorSkillButtonsIfCanBeUsed();
         }
         if (OwnerName == "Player2")
         {
             Debug.Log("unselect p2");
-            GM_Script.Player2GodSkillWindow.GetComponent<GodsManager>().CollorDissabledSkills();
+            GM_Script.Player2GodSkillWindow.GetComponent<GodsManager>().CollorSkillButtonsIfCanBeUsed();
         }
     }
     void SelectSkill(int skillLevel, string castingPlayer, God god)
