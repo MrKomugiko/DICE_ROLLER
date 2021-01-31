@@ -21,7 +21,7 @@ public class SelectionController : MonoBehaviour
 
     int loggerCounter = 1;
     [SerializeField] public string _infoAboutCurrentActiveSkill;
-     string InfoAbutCurrentActiveSkill 
+    string InfoAbutCurrentActiveSkill 
     { 
         get 
         {
@@ -33,7 +33,6 @@ public class SelectionController : MonoBehaviour
             if(value == String.Empty) loggerCounter = 1;
             if(loggerCounter >0)
             {
-                AndroidLogger.Log(value);
                 loggerCounter--;
             }
         }
@@ -178,25 +177,10 @@ public class SelectionController : MonoBehaviour
         }
 
     }
-    public GameObject FindLocalisationOfButtonSelectedSkill(Skill skill)
-    {
-        int skillLevel = skill.selectedSkillLevel;
-        switch (skillLevel)
-        {
-            case 1:
-                return this.transform.Find("RewersContent").transform.Find("Skill Level 1").transform.gameObject;
-
-            case 2:
-                return this.transform.Find("RewersContent").transform.Find("Skill Level 2").transform.gameObject;
-
-            case 3:
-                return this.transform.Find("RewersContent").transform.Find("Skill Level 3").transform.gameObject;
-        }
-
-        return null;
-    }
-
-    [SerializeField] static GameObject LastActivatedBorder = null;
+    public GameObject FindLocalisationOfButtonSelectedSkill(Skill skill) => 
+        this.transform.Find("RewersContent")
+            .transform.Find($"Skill Level {skill.selectedSkillLevel}")
+            .transform.gameObject;
     static GameObject LastActivatedBorder_Player1 = null;
     static GameObject LastActivatedBorder_Player2 = null;
 
@@ -223,17 +207,14 @@ public class SelectionController : MonoBehaviour
     }
     static public bool CheckIfAnyOtherSkillsAlreadySelected(string skillOwner)
     {
-        var selectorControllers = GameObject.Find(skillOwner).GetComponentInChildren<GodsManager>()._selectionControllers;
+        var selectorControllers = GameObject.Find(skillOwner)
+            .GetComponentInChildren<GodsManager>().
+            _selectionControllers;
 
-        if (selectorControllers.Where(s => s.IsSkillSelected).Any())
-        {
-            print("Inny skill jest już zaznaczony");
+        if (selectorControllers.Where(s => s.IsSkillSelected).Any()) 
             return true;
-        }
-        else
-        {
-            return false;
-        }
+        
+        return false;
     }
     static public Skill GetSelectedSkill(string skillOwner)
     {

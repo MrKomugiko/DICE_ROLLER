@@ -3108,7 +3108,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 737306870}
         m_TargetAssemblyTypeName: GodsManager, Assembly-CSharp
-        m_MethodName: ExecuteSelectedGodSkill
+        m_MethodName: OnClick_ExecuteSelectedGodSkill
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3374,13 +3374,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _godCardsInContainer: []
   _selectionControllers: []
-  _currentGoldText: {fileID: 1245502807}
   _listOfAvailableGodsTotems:
   - {fileID: 11400000, guid: e7bf7d22d6e2ccd459f3645a7199c391, type: 2}
   - {fileID: 11400000, guid: 7bdd2f040492fba4b975bc2687741ee4, type: 2}
   - {fileID: 11400000, guid: 05cfee2aa1d29a042b8a666ddef13934, type: 2}
   _listOfAllCards: []
-  _amountOfGoldDeponedForSkills: 0
 --- !u!114 &737306871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8847,7 +8845,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2138301621760617542}
         m_TargetAssemblyTypeName: GodsManager, Assembly-CSharp
-        m_MethodName: ExecuteSelectedGodSkill
+        m_MethodName: OnClick_ExecuteSelectedGodSkill
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9582,13 +9580,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _godCardsInContainer: []
   _selectionControllers: []
-  _currentGoldText: {fileID: 1238911738}
   _listOfAvailableGodsTotems:
   - {fileID: 11400000, guid: 7bdd2f040492fba4b975bc2687741ee4, type: 2}
   - {fileID: 11400000, guid: 05cfee2aa1d29a042b8a666ddef13934, type: 2}
   - {fileID: 11400000, guid: e7bf7d22d6e2ccd459f3645a7199c391, type: 2}
   _listOfAllCards: []
-  _amountOfGoldDeponedForSkills: 0
 --- !u!114 &2138301621760617543
 MonoBehaviour:
   m_ObjectHideFlags: 0

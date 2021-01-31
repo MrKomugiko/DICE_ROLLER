@@ -32,16 +32,14 @@ public class ThorSkill : Skill
 
         ListOfSkills.Add(this);
     }
-
     protected override void UseSkill(int skillLevel, string castingPlayer)
     {
-        AndroidLogger.Log($"{castingPlayer} use [{SkillName}][LVL-{skillLevel}]");
+        AndroidLogger.Log($"{castingPlayer} use [{SkillName}][LVL-{skillLevel}]",AndroidLogger.GetPlayerLogColor(castingPlayer));
 
         int damageValue = GetValueForSkillLevel(skillLevel);
 
         DamageOpponent(castingPlayer, damageValue);
     }
-
     private void DamageOpponent(string castingPlayer, int damageValue)
     {
         for (int i = 0; i < damageValue; i++)
@@ -55,6 +53,6 @@ public class ThorSkill : Skill
                 GM_Script.TemporaryIntakeDamage_Player1++;
             }
         }
-        AndroidLogger.Log("You dealt " + damageValue.ToString() + " damage.");
+        AndroidLogger.Log("You dealt " + damageValue.ToString() + " damage.",AndroidLogger.GetPlayerLogColor(castingPlayer));
     }
 }

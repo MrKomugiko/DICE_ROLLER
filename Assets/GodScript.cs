@@ -6,10 +6,9 @@ public class GodScript : MonoBehaviour
 {
     [SerializeField] public string ownerName;
     public God _godData;
-   public CardScript _card;
+    public CardScript _card;
     [SerializeField] public Skill _skill;
     [SerializeField] Sprite _godTotemImage;
-
     public Sprite GodTotemMainImage
     {
         get => _godTotemImage;
@@ -27,6 +26,7 @@ public class GodScript : MonoBehaviour
             _godData = value;
         }
     }
+    
     void Awake()
     {
         _card = GetComponent<CardScript>();
@@ -59,18 +59,7 @@ public class GodScript : MonoBehaviour
     }
     void AttachSkill(God godData)
     {
-        string color = ownerName == "Player1" ? "green" : "red";
-        _skill = Skill.GetGodSkillByID(godData.Index, godData, ownerName);
-        if (_skill != null)
-        {
-
-            AndroidLogger.Log("+(" + _skill.GetType().Name + ")" + _skill.SkillName, color);
-        }
-
-        else
-        {
-            AndroidLogger.Log("skill nie zostal znaleziony??", color);
-        }
+        _skill = Skill.GetGodSkillByGodID(godData.Index, godData, ownerName);
     }
 }
 
