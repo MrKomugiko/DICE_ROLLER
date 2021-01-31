@@ -8,7 +8,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] public float GameSpeedValueModifier = 1;
+    [SerializeField] public static float GameSpeedValueModifier = 4;
 
     #region GENERAL 
     [SerializeField] GameObject BattleField;

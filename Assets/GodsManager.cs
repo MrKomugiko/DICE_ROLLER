@@ -94,7 +94,7 @@ public class GodsManager : MonoBehaviour
 
     public void CollorSkillButtonsIfCanBeUsed()
     {
-        foreach (var god in _godCardsInContainer)
+        foreach (var god in _godCardsInContainer.Where(g=>g._card.IsReverseRevelated))
         {
             //print("colloring for: "+ownerName);
             // wykluczenie zmiany koloru aktualnie zaznaczonego

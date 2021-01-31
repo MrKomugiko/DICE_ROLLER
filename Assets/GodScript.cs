@@ -6,7 +6,7 @@ public class GodScript : MonoBehaviour
 {
     [SerializeField] public string ownerName;
     public God _godData;
-    CardScript _card;
+   public CardScript _card;
     [SerializeField] public Skill _skill;
     [SerializeField] Sprite _godTotemImage;
 

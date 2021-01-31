@@ -1,3 +1,4 @@
+using System.Net;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ public partial class CardScript : MonoBehaviour
     Button _button;
     Button _backgroundButton;
     bool NewColorChangingInPRocess = false;
-    [SerializeField]  bool _isCurrentSpinning = false;
+    [SerializeField] bool _isCurrentSpinning = false;
     [SerializeField] bool _isRevealed = false;
     [SerializeField] status _currentstatus = status.standard;
     List<CardScript> Karty { get => _godsManager.ListOfAllCards; }
@@ -25,20 +26,20 @@ public partial class CardScript : MonoBehaviour
     [SerializeField] Sprite _cardReversImage;
     [SerializeField] Sprite _workInProgressImage;
     [SerializeField] GameObject _cardReversDetailsContainer;
-    [SerializeField] int _spinningSpeedMultiplifer = 4;
+    [SerializeField] int _spinningSpeedMultiplifer = 10;
 
+    public static bool FirstRun = true;
     public bool IsReverseRevelated
     {
         get => _isRevealed;
         set
         {
-            if (value) 
-            {
-                Currentstatus = status.revealed; 
-                _godsManager.CollorSkillButtonsIfCanBeUsed();
-            }
             _isRevealed = value;
-            _cardReversDetailsContainer.SetActive(value);
+            if (value)
+            {
+                  _cardReversDetailsContainer.transform.localScale = new Vector3(1,1,1);
+                Currentstatus = status.revealed;
+            }
         }
     }
     private status Currentstatus
@@ -47,25 +48,26 @@ public partial class CardScript : MonoBehaviour
         set
         {
             _currentstatus = value;
+            _button.onClick.RemoveAllListeners();
             switch (value)
             {
                 case status.unfocused:
-                    _button.onClick.RemoveAllListeners();
+                 _cardReversDetailsContainer.transform.localScale = new Vector3(0,0,0);
                     _button.onClick.AddListener(() => OnClickSelectCard());
                     break;
 
                 case status.standard:
-                    _button.onClick.RemoveAllListeners();
+                 _cardReversDetailsContainer.transform.localScale = new Vector3(0,0,0);
                     _button.onClick.AddListener(() => OnClickSelectCard());
                     break;
 
                 case status.selected:
-                    _button.onClick.RemoveAllListeners();
+                 _cardReversDetailsContainer.transform.localScale = new Vector3(0,0,0);
                     _button.onClick.AddListener(() => OnClick_SpinCard());
                     break;
 
                 case status.revealed:
-                    _button.onClick.RemoveAllListeners();
+                 _cardReversDetailsContainer.transform.localScale = new Vector3(1,1,1);
                     _button.onClick.AddListener(() => OnClick_SpinCard());
                     break;
             }
@@ -97,9 +99,17 @@ public partial class CardScript : MonoBehaviour
     }
 
     void Start()
-{
-    BackToNormalSize();
-}
+    {
+            _cardReversDetailsContainer.transform.localScale = new Vector3(0,0,0);
+
+        // if(CardScript.FirstRun == true) 
+        // {
+        //     CardScript.FirstRun = false;
+        //     OnClick_SpinCard(first:true);
+            
+        // }   
+        BackToNormalSize();
+    }
     void Awake()
     {
         _combatManager = GameObject.Find("FightZone").GetComponent<CombatManager>();
@@ -125,7 +135,7 @@ public partial class CardScript : MonoBehaviour
     {
         time += Time.deltaTime;
 
-        if(IsReverseRevelated)
+        if (IsReverseRevelated)
         {
             if (time >= this.SpeedOfRefreshingButtonCollors)
             {
@@ -134,23 +144,30 @@ public partial class CardScript : MonoBehaviour
             }
         }
 
-        if (isAnyCardCurrentlySpinning()) { _backgroundButton.interactable = false; } else { _backgroundButton.interactable = true; }
+        if (isAnyCardCurrentlySpinning())
+        {
+            _backgroundButton.interactable = false;
+        }
+        else
+        {
+            _backgroundButton.interactable = true;
+        }
         AutoFixFlipCardIfIsRevealedInWrongStatus();
 
-        if(_combatManager.IndexOfCombatAction > 0)
+        if (_combatManager.IndexOfCombatAction > 0)
         {
             // zablokowanie skili na początku walki
-            if(isButtonsBlocked == false)
+            if (isButtonsBlocked == false)
             {
                 BlockSkillButtons(true);
                 isButtonsBlocked = true;
             }
         }
-        
-        if(_combatManager.IndexOfCombatAction == 0)
+
+        if (_combatManager.IndexOfCombatAction == 0)
         {
             // odblokowanie skili po powrocie do etapu rollowania
-            if(isButtonsBlocked == true)
+            if (isButtonsBlocked == true)
             {
                 BlockSkillButtons(false);
                 isButtonsBlocked = false;
@@ -165,7 +182,7 @@ public partial class CardScript : MonoBehaviour
         {
             if (Karty.Where(k => k.Currentstatus == status.selected || k.Currentstatus == status.standard).FirstOrDefault() != null)
             {
-             //   this.Currentstatus = status.unfocused;
+                //   this.Currentstatus = status.unfocused;
                 OnClick_SpinCard();
             }
         }
@@ -180,13 +197,17 @@ public partial class CardScript : MonoBehaviour
     }
     public void AttachSkillsFunctionToButtons(int skillLevel, Skill skill)
     {
-        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(()=> skill.TrySelectSkill(skillLevel,_godsManager.ownerName,skill.God));
+        _godSkills[skillLevel - 1].GetComponentInChildren<Button>().onClick.AddListener(() => skill.TrySelectSkill(skillLevel, _godsManager.ownerName, skill.God));
     }
-
-    
 
     void Resize(float x, float y)
     {
+        if(x == 270.0f && y == 443.16f && IsReverseRevelated)
+        {
+            // unfocused sizes
+            // podczas kecnia sie zmniejszy sie zawartosc karty
+             _cardReversDetailsContainer.transform.localScale = new Vector3(0.9f,0.55f,1);
+        }
         this.GetComponent<RectTransform>().sizeDelta = new Vector2(x, y);
     }
     IEnumerator ChangeColor(Color32 color)
@@ -201,51 +222,56 @@ public partial class CardScript : MonoBehaviour
     }
     IEnumerator SpinAnimation(int speedMultiplifer)
     {
-        if(Currentstatus == status.revealed) Currentstatus = status.selected;
-
         IsCurrentSpinning = true;
-
-        Sprite spriteToSet = IsReverseRevelated ? _godTotem.GodTotemMainImage : _godTotem.GodObject.CardReverseImage;
-
+        if (Currentstatus == status.revealed) 
+        {
+            Currentstatus = status.selected;
+        }
+        
         for (int i = 0; i < 90; i += speedMultiplifer)
         {
+            if(IsReverseRevelated && Currentstatus == status.selected) _cardReversDetailsContainer.transform.localScale = new Vector3(1,1,1);
             _transform.Rotate(new Vector3(0f, speedMultiplifer, 0f), Space.Self);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.01f);
         }
 
-        _cardImage.sprite = spriteToSet;
-        
         IsReverseRevelated = !IsReverseRevelated;
+        ChangeCardSprite(IsReverseRevelated);
+        _cardReversDetailsContainer.SetActive(IsReverseRevelated); 
 
         for (int i = 90; i > 0; i -= speedMultiplifer)
         {
             _transform.Rotate(new Vector3(0f, -speedMultiplifer, 0f), Space.Self);
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForSeconds(0.01f);
         }
 
         IsCurrentSpinning = false;
     }
+
+    void ChangeCardSprite(bool isCardRevealed)
+    {
+        Sprite spriteToSet = IsReverseRevelated ?_godTotem.GodObject.CardReverseImage: _godTotem.GodTotemMainImage;
+        _cardImage.sprite = spriteToSet;
+    }
+
     IEnumerator BackToNormalSize()
     {
+        Resize(327.4f, 537.3f);
         switch (Currentstatus)
         {
             case status.revealed:
-                Resize(327.4f, 537.3f);
+                _cardReversDetailsContainer.transform.localScale = new Vector3(0.9f,0.55f,1);
                 yield return StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
-                Currentstatus = status.standard;
                 break;
 
             case status.selected:
-                Resize(327.4f, 537.3f);
-                Currentstatus = status.standard;
                 break;
 
-            case status.unfocused:
-                Resize(327.4f, 537.3f);
+            case status.unfocused: 
                 yield return StartCoroutine(ChangeColor(new Color32(255, 255, 255, 255)));
-                Currentstatus = status.standard;
                 break;
         }
+        Currentstatus = status.standard;
     }
     IEnumerator SetCardAsSelectedMode()
     {
@@ -268,6 +294,7 @@ public partial class CardScript : MonoBehaviour
             skillButton.GetComponent<Button>().interactable = !value;
         }
     }
+    [ContextMenu("back to normal size")]
     public void OnClick_SetCardToNormalMode()
     {
         StartCoroutine(BackToNormalSize());
@@ -283,18 +310,17 @@ public partial class CardScript : MonoBehaviour
         {
             card.OnClick_ChangeCardToUnfocusedMode();
         }
+
     }
     public void OnClick_ChangeCardToSelectedMode()
     {
         Currentstatus = status.selected;
         StartCoroutine(SetCardAsSelectedMode());
     }
+    [ContextMenu("Spin a Card")]
     public void OnClick_SpinCard()
     {
-        if (!IsCurrentSpinning)
-        {
-            StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
-        }
+        if (!IsCurrentSpinning) StartCoroutine(SpinAnimation(_spinningSpeedMultiplifer));
     }
     public void OnClick_ChangeCardToUnfocusedMode()
     {
