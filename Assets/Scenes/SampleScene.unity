@@ -3689,7 +3689,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 50
 --- !u!222 &640743860
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6967,6 +6967,7 @@ MonoBehaviour:
   Player1GodSkillWindow: {fileID: 2138301621760617537}
   Player1TurnBlocker: {fileID: 167097285}
   Player1_GoldVault: {fileID: 1238911738}
+  _cumulativeGoldStealingCounterP1: 0
   Player1_HPPoints: {fileID: 160803603}
   Player1ActualHPValue: 0
   liczbaPrzelewaniaObrazen_Player1: 0
@@ -6977,6 +6978,7 @@ MonoBehaviour:
   Player2GodSkillWindow: {fileID: 737306865}
   Player2TurnBlocker: {fileID: 1901050491}
   Player2_GoldVault: {fileID: 1245502807}
+  _cumulativeGoldStealingCounterP2: 0
   _temporaryGoldVault_player2: 0
   Player2_HPPoints: {fileID: 640743859}
 --- !u!4 &1301416608

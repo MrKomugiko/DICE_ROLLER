@@ -741,6 +741,8 @@ public class GameManager : MonoBehaviour
         GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>().SetText("");
         GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>().SetText("");
 
+        GameObject.Find("FightZone").GetComponent<CombatManager>().IndexOfCombatAction = 0;
+
         ChangeUIToRollingMode();  
         IsGameEnded = false;
 
