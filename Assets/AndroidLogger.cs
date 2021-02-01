@@ -6,6 +6,7 @@ public static class AndroidLogger
 {
     static int LoggerLineCounter = 0;
     static List<string> Logs = new List<string>();
+    static int messageMaxSize = 15;
     
     public static void Log(string newLog, string color = "white")
     {
@@ -13,10 +14,10 @@ public static class AndroidLogger
     
         LoggerLineCounter ++;
         
-        if(LoggerLineCounter == 15)
+        if(LoggerLineCounter == messageMaxSize)
         {
             Logs.RemoveAt(0);
-            LoggerLineCounter = 14;
+            LoggerLineCounter = messageMaxSize-1;
         }
          
         Logs.Add($"<color=\"{color}\">"+newLog+"</color>");
@@ -28,4 +29,6 @@ public static class AndroidLogger
         
         GameObject.Find("ANDROIDLOGGER_TMP").GetComponent<TextMeshProUGUI>().SetText(message);
     }
+
+    public static string GetPlayerLogColor(string playerName) => playerName == "Player1" ? "green" : "red";
 }

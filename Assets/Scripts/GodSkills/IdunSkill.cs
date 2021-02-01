@@ -19,7 +19,7 @@ public class IdunSkill : Skill
           10    Heal 6 Heath
 
     */
- 
+
     public IdunSkill(God godData, string ownerName)
     {
         OwnerName = ownerName;
@@ -27,8 +27,30 @@ public class IdunSkill : Skill
         ID = 9;
         GodName = "Idun";
         SkillName = "Idun's Rejuvenation";
-        
+
         ListOfSkills.Add(this);
     }
-    
+    protected override void UseSkill(int skillLevel, string castingPlayer)
+    {
+        base.UseSkill(skillLevel,castingPlayer);
+        
+        int healValue = GetValueForSkillLevel(skillLevel);
+
+        HealCaster(castingPlayer, healValue);
+    }
+    private void HealCaster(string castingPlayer, int healValue)
+    {
+        for (int i = 0; i < healValue; i++)
+        {
+            if (castingPlayer == "Player1")
+            {
+                GM_Script.TemporaryIntakeDamage_Player1--;
+            }
+            else
+            {
+                GM_Script.TemporaryIntakeDamage_Player2--;
+            }
+        }
+        AndroidLogger.Log("You healed for " + healValue.ToString() + " health points.", AndroidLogger.GetPlayerLogColor(castingPlayer));
+    }
 }

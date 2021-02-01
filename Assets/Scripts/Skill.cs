@@ -1,36 +1,30 @@
-using System.CodeDom.Compiler;
 using System.Linq;
 using UnityEngine;
-using System;
 using System.Collections.Generic;
-using TMPro;
-using System.Collections;
 
 [SerializeField]
 public class Skill
 {
-    protected string OwnerName {get;set;}
+    static public List<Skill> ListOfSkills = new List<Skill>();
+    public TestDelegate methodToCall;
+    public int selectedSkillLevel;
+    string selectedCastingPlayer;
+    bool _skillIsSelected;
+    protected GameManager GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
     public God God { get; set; }
     public int ID { get; set; }
     public string GodName { get; set; }
     public string SkillName { get; set; }
-    public static List<Skill> ListOfSkills = new List<Skill>();
-    internal GameManager GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
+    public bool SkillIsSelected
+    {
+        get => _skillIsSelected;
+        set
+        {
+            _skillIsSelected = value;
 
-    public delegate void TestDelegate(int skillLevel, string castingPlayer);
-    public TestDelegate methodToCall;
-    private bool _skillIsSelected;
-    public bool SkillIsSelected 
-    { 
-        get => _skillIsSelected; 
-        set 
-        { 
-            _skillIsSelected = value; 
-            
-            if(value)
+            if (value)
             {
                 methodToCall = UseSkill;
-                // zapisanie delegaty ( wybranej metody ktoa uzyje sie pozniej ? ) 
             }
             else
             {
@@ -38,65 +32,98 @@ public class Skill
             }
         }
     }
-    public int selectedSkillLevel; string selectedCastingPlayer;
+
+    protected string OwnerName { get; set; }
+    public delegate void TestDelegate(int skillLevel, string castingPlayer);
+  
+  public string logColor => AndroidLogger.GetPlayerLogColor(OwnerName);
     public void LastSelectedSkillReadyToUse()
     {
-        string color = OwnerName == "Player1"?"green":"red";
-        if(methodToCall == null)    
+        if (methodToCall == null)
         {
-            AndroidLogger.Log("Skill not beed selected to use.");
+            AndroidLogger.Log("Skill not beed selected to use.",logColor);
             return;
         }
 
-        AndroidLogger.Log("Execute "+SkillName+"["+selectedSkillLevel+ " level], by player  "+selectedCastingPlayer,color);
+        AndroidLogger.Log("Execute " + SkillName + "[" + selectedSkillLevel + " level], by player  " + selectedCastingPlayer, logColor);
 
-        methodToCall(selectedSkillLevel,selectedCastingPlayer);
+        methodToCall(selectedSkillLevel, selectedCastingPlayer);
         SkillIsSelected = false;
     }
-
-    public void SelectSkill(int skillLevel, string castingPlayer)
+    public void TrySelectSkill(int skillLevel, string castingPlayer, God god)
     {
-        string color = castingPlayer == "Player1"?"green":"red";
-        if(!SkillIsSelected)
+        if (!SelectionController.CheckIfAnyOtherSkillsAlreadySelected(castingPlayer))
+        {
+            SelectSkill(skillLevel, castingPlayer, god);
+        }
+        else
+        {
+            if (CheckIfItsDoubleSelectPreviousSkill(skillLevel, castingPlayer, god))
+            {
+                Debug.Log("anulowanie wyboru skilla - przez ponownejego jego wybranie");
+                UnSelectAnySelectedSkill();
+                return;
+            }
+
+            UnSelectAnySelectedSkill();
+
+            SelectSkill(skillLevel, castingPlayer, god);
+        }
+    }
+    protected virtual void UseSkill(int skillLevel, string castingPlayer)
+    {
+        AndroidLogger.Log($"{castingPlayer} use [<color=\"white\">{GodName}</color>] [<color=\"white\">{SkillName}</color>] [<color=\"white\">{skillLevel} lvl</color>]",AndroidLogger.GetPlayerLogColor(castingPlayer));
+    }
+    bool CheckIfItsDoubleSelectPreviousSkill(int newSelectedskillLevel, string castingPlayer, God newSelectedGod)
+    {
+        Skill recentSelectedSkill = SelectionController.GetSelectedSkill(castingPlayer);
+
+        int recentSelectedSkillLevel = recentSelectedSkill.selectedSkillLevel;
+        God recentSelectedGod = recentSelectedSkill.God; ;
+
+
+        if (recentSelectedSkillLevel == newSelectedskillLevel)
+        {
+            if (recentSelectedGod == newSelectedGod)
+            {
+                Debug.Log("Zmiana skilla tego samego Boga");
+                return true;
+            }
+        }
+        if (recentSelectedGod != newSelectedGod)
+        {
+            Debug.Log("Wybranie skilla od innego Boga");
+            return false;
+        }
+
+        return false;
+    }
+    void UnSelectAnySelectedSkill()
+    {
+        Skill recentSelectedSkill = SelectionController.GetSelectedSkill(OwnerName);
+        SelectionController.UnselectControllerWhoContainSkill(recentSelectedSkill, OwnerName);
+        recentSelectedSkill.SkillIsSelected = false;
+
+        if (OwnerName == "Player1")
+        {
+            GM_Script.Player1GodSkillWindow.GetComponent<GodsManager>().CollorSkillButtonsIfCanBeUsed();
+        }
+        if (OwnerName == "Player2")
+        {
+            GM_Script.Player2GodSkillWindow.GetComponent<GodsManager>().CollorSkillButtonsIfCanBeUsed();
+        }
+    }
+    void SelectSkill(int skillLevel, string castingPlayer, God god)
+    {
+        if (!SkillIsSelected)
         {
             selectedSkillLevel = skillLevel;
             selectedCastingPlayer = castingPlayer;
 
-            AndroidLogger.Log("You choose" + GodName + " skill at level : " + skillLevel,color);
             SkillIsSelected = true;
+
+            AndroidLogger.Log($"[{castingPlayer}] [<color=\"white\">{GodName}</color>] [<color=\"white\">{selectedSkillLevel} lvl.</color>] [selected]",logColor);
         }
-    }
-
-    protected virtual void UseSkill(int skillLevel, string castingPlayer)
-    {
-        AndroidLogger.Log("Using skill");
-    }
-    public static Skill GetGodSkillByID(int id, God godData, string ownerName)
-    {
-        GenerateGodsSkillScripts(godData,ownerName); 
-
-        return ListOfSkills.Where(s => s.ID == id && s.OwnerName == ownerName).First();
-    } 
-    static void GenerateGodsSkillScripts(God godData, string ownerName)
-    {
-        switch (godData.name)
-        {
-            case "Bragi":
-                new BragiSkill(godData,ownerName);
-                break;
-            case "Idun":
-                new IdunSkill(godData,ownerName);
-                break;
-            case "Thor":
-                new ThorSkill(godData,ownerName);
-                break;
-            case "Odin":
-                new OdinSkill(godData,ownerName);
-                break;
-        }
-
-        Debug.Log("Aktualna liczbaskilli w pamieci :" + ListOfSkills.Count);
-        AndroidLogger.Log("Current avaiable skills in memory :" + ListOfSkills.Count);
     }
     public int GetValueForSkillLevel(int skillLevel)
     {
@@ -139,6 +166,38 @@ public class Skill
         }
 
         return skillCost;
+    }
+    
+    static public Skill GetGodSkillByGodID(int id, God godData, string ownerName)
+    {
+        GenerateGodsSkillScripts(godData, ownerName);
+
+        return ListOfSkills.Where(s => s.ID == id && s.OwnerName == ownerName).First();
+    }
+    static public void GenerateGodsSkillScripts(God godData, string ownerName)
+    {
+        switch (godData.name)
+        {
+            case "Bragi":
+                new BragiSkill(godData, ownerName);
+                break;
+            case "Idun":
+                new IdunSkill(godData, ownerName);
+                break;
+            case "Thor":
+                new ThorSkill(godData, ownerName);
+                break;
+            case "Odin":
+                new OdinSkill(godData, ownerName);
+                break;
+        }
+    }
+    static public bool CheckIfPlayerHaveEnoughtGoldToUseSkill(string player, Skill skill, int level)
+    {
+        int currentPlayerGold = GameManager.GetPlayerGoldValue(player);
+        if (skill.GetGoldCostForSkillLevel(level) > currentPlayerGold) return false;
+
+        return true;
     }
 }
 

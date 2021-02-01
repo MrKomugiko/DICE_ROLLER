@@ -21,7 +21,6 @@ public class ThorSkill : Skill
           12    deal 8 damage
 
     */
-
     public ThorSkill(God godData, string ownerName)
     {
         OwnerName = ownerName;
@@ -32,19 +31,16 @@ public class ThorSkill : Skill
 
         ListOfSkills.Add(this);
     }
-
     protected override void UseSkill(int skillLevel, string castingPlayer)
     {
-        AndroidLogger.Log($"{castingPlayer} use [{SkillName}][LVL-{skillLevel}]");
+        base.UseSkill(skillLevel,castingPlayer);
 
         int damageValue = GetValueForSkillLevel(skillLevel);
 
         DamageOpponent(castingPlayer, damageValue);
     }
-
     private void DamageOpponent(string castingPlayer, int damageValue)
     {
-
         for (int i = 0; i < damageValue; i++)
         {
             if (castingPlayer == "Player1")
@@ -56,6 +52,6 @@ public class ThorSkill : Skill
                 GM_Script.TemporaryIntakeDamage_Player1++;
             }
         }
-        AndroidLogger.Log("You dealt " + damageValue.ToString() + " damage.");
+        AndroidLogger.Log("You dealt " + damageValue.ToString() + " damage.",AndroidLogger.GetPlayerLogColor(castingPlayer));
     }
 }

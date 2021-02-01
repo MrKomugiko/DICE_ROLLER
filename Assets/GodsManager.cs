@@ -1,49 +1,47 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using DiceRoller_Console;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections;
 
 public class GodsManager : MonoBehaviour
 {
     GameManager GM_Script;
-    [SerializeField] Text _currentGoldText;
-    [SerializeField] public string ownerName { get; private set; }
+    public List<GodScript> _godCardsInContainer;
+    public List<SelectionController> _selectionControllers;
     [SerializeField] List<God> _listOfAvailableGodsTotems;
-    [SerializeField] List<GodScript> _godCardsInContainer;
     [SerializeField] List<CardScript> _listOfAllCards;
-    [SerializeField] private int _amountOfGoldDeponedForSkills;
-
-    public int CurrentGold { get => Convert.ToInt32(_currentGoldText.text); }
-    int AmountOfGoldDeponedForSkills { get => _amountOfGoldDeponedForSkills; set => _amountOfGoldDeponedForSkills = value; }
-
+    [SerializeField] public string ownerName 
+    { 
+        get; 
+        private set; 
+    }
     public List<CardScript> ListOfAllCards
     {
         get => _listOfAllCards;
-        set
-        {
-            _listOfAllCards = value;
-            print("liczba kart: " + value.Count);
-        }
+        set => _listOfAllCards = value;
     }
-
+    private bool AnySkillInOwnedCardsIsSelected
+    {
+        get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null;
+    }
+    
     void Awake()
     {
         GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         ownerName = transform.parent.gameObject.name;
         _godCardsInContainer = GetComponentsInChildren<GodScript>().ToList();
+        _selectionControllers = GetComponentsInChildren<SelectionController>().ToList();
     }
-
     void Start()
     {
         PopulateContainerWithGodTokens(_listOfAvailableGodsTotems);
 
         ListOfAllCards = this.GetComponentsInChildren<CardScript>().ToList();
     }
+    
     void PopulateContainerWithGodTokens(List<God> godTotems)
     {
         List<int> randomGodsTokenIndexes = GenerateThreeDifferentRandomNumbers(godTotems.Count);
@@ -55,68 +53,91 @@ public class GodsManager : MonoBehaviour
             index++;
         }
     }
-    [ContextMenu("Test delegted skill = execute selected skill")]
-    public void ExecuteSelectedGodSkill()
+    [ContextMenu("Execute selected skill")] public void OnClick_ExecuteSelectedGodSkill()
     {
-        string playerColorLog = ownerName == "Player1" ? "green" : "red";
-
         if (!AnySkillInOwnedCardsIsSelected)
         {
-            AndroidLogger.Log("Skill is not selected / skill already used", playerColorLog);
+            AndroidLogger.Log("Skill is not selected / skill already used",AndroidLogger.GetPlayerLogColor(ownerName));
         }
         else
         {
             foreach (var myGod in _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true))
             {
-                if(CheckIfSkillCanBeUsed(myGod._skill,myGod._skill.selectedSkillLevel))
+                var lastUsedSkill = myGod._skill;
+                if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, myGod._skill, myGod._skill.selectedSkillLevel))
                 {
                     PayGoldForSkill(myGod, myGod.ownerName);
-
-                    var lastUsedSkill = myGod._skill;
                     lastUsedSkill.LastSelectedSkillReadyToUse();
                 }
                 else
                 {
-                    AndroidLogger.Log("you dont have enought Gold to cast skill",playerColorLog);
+                    AndroidLogger.Log("you dont have enought Gold to cast skill", AndroidLogger.GetPlayerLogColor(ownerName));
+                    lastUsedSkill.SkillIsSelected = false;
                 }
+            }
+        }
+        CollorSkillButtonsIfCanBeUsed();
+    }
+    public void CollorSkillButtonsIfCanBeUsed()
+    {
+        foreach (var god in _godCardsInContainer.Where(g=>g._card.IsReverseRevelated))
+        {
+            int ignoredButtonIndex = 0;
+            if (god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
 
-                myGod._skill.SkillIsSelected = false;
+            for(int level = 1; level <= 3; level++)
+            {
+                if (ignoredButtonIndex != level)
+                {
+                    if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, level) == false)
+                    {
+                        ChangeSkillButtonToDissabled(god, level: level);
+                    }
+                    else
+                    {
+                        ChangeSkillButtonToEnabled(god, level: level);
+                    }
+                }
             }
         }
     }
+    private void ChangeSkillButtonToEnabled(GodScript godScript, int level)
+    {
+        GameObject skillButton = godScript.transform.Find("RewersContent")
+            .transform.Find($"Skill Level {level}")
+            .transform.gameObject;
 
+        skillButton.GetComponent<Image>().color = new Color32(255, 255, 255, 128);
+        skillButton.GetComponentInChildren<Text>().color = Color.white;;
+    }
+    private void ChangeSkillButtonToDissabled(GodScript godScript, int level)
+    {
+        GameObject skillButton = godScript.transform.Find("RewersContent")
+            .transform.Find($"Skill Level {level}")
+            .transform.gameObject;
+
+        skillButton.GetComponent<Image>().color = new Color32(255, 0, 0, 128);
+        skillButton.GetComponentInChildren<Text>().color = Color.red;
+    }
     private void PayGoldForSkill(GodScript myGod, string godOwner)
     {
-        var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-        var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-        switch (godOwner)
-        {
-            case "Player1":
-                for (int i = 0; i < myGod._skill.GetGoldCostForSkillLevel(myGod._skill.selectedSkillLevel); i++)
-                {
-                    GM_Script.TemporaryGoldVault_player1--;
-                    p1coin.color = Color.red;
-                }
-                break;
+        var coinText = godOwner == "Player1"?GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>():GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
 
-            case "Player2":
-                for (int i = 0; i < myGod._skill.GetGoldCostForSkillLevel(myGod._skill.selectedSkillLevel); i++)
-                {
-                    GM_Script.TemporaryGoldVault_player2--;
-                    p2coin.color = Color.red;
-                }
-                break;
+        for (int i = 0; i < myGod._skill.GetGoldCostForSkillLevel(myGod._skill.selectedSkillLevel); i++)
+        {
+            if(godOwner == "Player1") GM_Script.TemporaryGoldVault_player1--;
+            if(godOwner == "Player2") GM_Script.TemporaryGoldVault_player2--;
+            coinText.color = Color.red;
         }
 
         GM_Script.CumulativeGoldStealingCounterP1 = 0;
         GM_Script.CumulativeGoldStealingCounterP2 = 0;
+        
+        CollorSkillButtonsIfCanBeUsed();
     }
-
-    private bool AnySkillInOwnedCardsIsSelected { get => _godCardsInContainer.Where(g => g._skill.SkillIsSelected == true).FirstOrDefault() != null; }
     private List<int> GenerateThreeDifferentRandomNumbers(int maxValue)
     {
         List<int> randomNumbers = new List<int>();
-
         do
         {
             int number = RandomNumberGenerator.NumberBetween(0, maxValue - 1);
@@ -127,16 +148,5 @@ public class GodsManager : MonoBehaviour
         } while (randomNumbers.Count < 3);
 
         return randomNumbers;
-    }
-    public bool CheckIfSkillCanBeUsed(Skill skill, int level)
-    {
-        if (skill.GetGoldCostForSkillLevel(level) > CurrentGold ) return false;
-
-        return true;
-    }
-
-    public void BlockGodButtonsIfCombatStarted()
-    {
-
     }
 }

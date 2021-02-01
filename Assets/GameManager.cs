@@ -8,7 +8,10 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] public static float GameSpeedValueModifier = 4;
+
     #region GENERAL 
+    [SerializeField] GameObject EndGameResultWindows;
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] float interpolationPeriod = .5f;
@@ -61,8 +64,9 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 1 
     int Player1_RollingCounter;
+    GodsManager Player1GodsManagerScript;
     [SerializeField] GameObject Player1UseSkillTestButton;
-    [SerializeField] GameObject Player1GodSkillWindow;
+    [SerializeField] public GameObject Player1GodSkillWindow;
     [SerializeField] GameObject Player1TurnBlocker;
 
     #region GOLD Blessed + Steal
@@ -74,7 +78,10 @@ public class GameManager : MonoBehaviour
     public int CurrentGold1
     {
         get => _currentGold1;
-        set => _currentGold1 = value;
+        set
+        {
+         _currentGold1 = value;
+        }
     }
     int _liczbaPrzelewowGolda_Player1;
     public int LiczbaPrzelewowGolda_Player1 
@@ -134,13 +141,31 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player1 = value;
+            if(Player1ActualHPValue <= 0)
+            {
+                AndroidLogger.Log("Player 2 WIN!");
+                ShowEndGameResultWindow(winner:"PLayer2");
+            }
             var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
-            if (value != 0)
+            if (value > 0)
             {
                 p1hp.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
+                p1hp.color = Color.red;
                 liczbaPrzelewaniaObrazen_Player1++;
+
             }
 
+            if (value < 0)
+            {
+                print("value: " + value);
+
+                print("różnica : " + (TemporaryIntakeDamage_Player1 - value).ToString());
+
+                p1hp.SetText("+" + _temporaryIntakeDamage_Player1.ToString());
+                p1hp.color = Color.green;
+                liczbaPrzelewaniaObrazen_Player1--;
+            }
+            
             if (value == 0)
             {
                 p1hp.SetText("");
@@ -153,8 +178,9 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 2 
     int Player2_RollingCounter;
+    [SerializeField] GodsManager Player2GodsManagerScript;
     [SerializeField] GameObject Player2UseSkillTestButton;
-    [SerializeField] GameObject Player2GodSkillWindow;
+    [SerializeField] public GameObject Player2GodSkillWindow;
     [SerializeField] GameObject Player2TurnBlocker;
 
     #region GOLD Blessed + Steal
@@ -164,8 +190,26 @@ public class GameManager : MonoBehaviour
     public int CurrentGold2
     {
         get => _currentGold2;
-        set => _currentGold2 = value;
+        set {
+            _currentGold2 = value;
+        }
     }
+
+    private void ShowEndGameResultWindow(string winner)
+    {
+        // dla gracza 2 ( na dole ) po wygranej wyskoczy info o zwycistwie
+        // w pzypadku wygranej gracza 1 , wyskoczy info o przegranej do gracza 2
+
+        if(winner == "Player2")
+        {
+            EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(true);
+        }
+        else
+        {
+            EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(true);
+        }
+    }
+
     int _liczbaPrzelewowGolda_Player2;
     public int LiczbaPrzelewowGolda_Player2 
     { 
@@ -173,7 +217,6 @@ public class GameManager : MonoBehaviour
         set 
         {
             _liczbaPrzelewowGolda_Player2 = value; 
-            
         }
     }
     [SerializeField] int _temporaryGoldVault_player2;
@@ -210,6 +253,8 @@ public class GameManager : MonoBehaviour
             _temporaryGoldVault_player2 = value;
         }
     }
+
+
     #endregion
 
     #region HEALTH Combat
@@ -226,15 +271,33 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player2 = value;
+            if(Player2ActualHPValue <= 0)
+            {
+                AndroidLogger.Log("Player 1 WIN!");
+                ShowEndGameResultWindow(winner:"Player1");
+            }
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
-            if (value != 0)
+            if (value > 0)
             {
                 print("value: " + value);
 
                 print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
 
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
+                p2hp.color = Color.red;
                 liczbaPrzelewaniaObrazen_Player2++;
+
+            }
+
+            if (value < 0)
+            {
+                print("value: " + value);
+
+                print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
+
+                p2hp.SetText("+" + _temporaryIntakeDamage_Player2.ToString());
+                p2hp.color = Color.green;
+                liczbaPrzelewaniaObrazen_Player2--;
             }
 
             if (value == 0)
@@ -266,9 +329,15 @@ public class GameManager : MonoBehaviour
         Player1_RollingCounter = 0;
         Player2_RollingCounter = 0;
         ChangePlayersTurn();
+
+       Player1GodsManagerScript = Player1GodSkillWindow.GetComponent<GodsManager>();
+       Player2GodsManagerScript = Player2GodSkillWindow.GetComponent<GodsManager>();
+
     }
     void Update()
     {
+        Time.timeScale = GameSpeedValueModifier;
+
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player1_RollingCounter, "Player1");
         ManageOrderingRollButtonsAndActivateLastRollingTurn(Player2_RollingCounter, "Player2");
 
@@ -279,11 +348,24 @@ public class GameManager : MonoBehaviour
         TransferDamageToPlayers(ref time2, interpolationPeriod);
     }
 
+    internal static int GetPlayerGoldValue(string player)
+    {
+        GameManager GM = GameObject.Find("GameManager").GetComponent<GameManager>();;
+        switch (player)
+        {
+            case "Player1":
+                return GM.CurrentGold1;
+
+            case "Player2":
+                return GM.CurrentGold2;
+        }
+
+        throw new Exception("Incorrect 'player' name");
+    }
     private void TransferGoldToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
-
             // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
             //---------------------------------------------------------------------------------------------------------------------------
@@ -295,6 +377,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold1++;
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1--;
+                Player1GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player1 < 0)
             {
@@ -302,6 +385,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold1--;
                 Player1_GoldVault.text = CurrentGold1.ToString();
                 LiczbaPrzelewowGolda_Player1++;
+                Player1GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player1 == 0)
             {
@@ -315,6 +399,8 @@ public class GameManager : MonoBehaviour
                     p1coin.SetText("");
                 }
             }
+
+            
             //---------------------------------------------------------------------------------------------------------------------------
 
             if (LiczbaPrzelewowGolda_Player2 > 0)
@@ -323,6 +409,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold2++;
                 Player2_GoldVault.text = CurrentGold2.ToString();
                 LiczbaPrzelewowGolda_Player2--;
+                Player2GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player2 < 0)
             {
@@ -331,6 +418,7 @@ public class GameManager : MonoBehaviour
                 CurrentGold2--;
                 Player2_GoldVault.text = CurrentGold2.ToString();
                 LiczbaPrzelewowGolda_Player2++;
+                Player2GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda_Player2 == 0)
             {
@@ -351,6 +439,7 @@ public class GameManager : MonoBehaviour
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
+          
             Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
             Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
 
@@ -359,11 +448,21 @@ public class GameManager : MonoBehaviour
 
             if (liczbaPrzelewaniaObrazen_Player1 > 0)
             {
+                // DAMAGING
                 int p1Currenthp = Player1ActualHPValue;
                 int p1NewHpValue = p1Currenthp - 1;
                 Player1_HPPoints.text = (p1NewHpValue.ToString());
 
                 liczbaPrzelewaniaObrazen_Player1--;
+            }
+            else if (liczbaPrzelewaniaObrazen_Player1 < 0)
+            {
+                // HEALING
+                int p1Currenthp = Player1ActualHPValue;
+                int p1NewHpValue = p1Currenthp + 1;
+                Player1_HPPoints.text = (p1NewHpValue.ToString());
+
+                liczbaPrzelewaniaObrazen_Player1++;
             }
             else
             {
@@ -383,6 +482,15 @@ public class GameManager : MonoBehaviour
                 Player2_HPPoints.text = (p2NewHpValue.ToString());
 
                 liczbaPrzelewaniaObrazen_Player2--;
+            }
+            else if (liczbaPrzelewaniaObrazen_Player2 < 0)
+            {
+                // HEALING
+                int p2Currenthp = Player2ActualHPValue;
+                int p2NewHpValue = p2Currenthp + 1;
+                Player2_HPPoints.text = (p2NewHpValue.ToString());
+
+                liczbaPrzelewaniaObrazen_Player2++;
             }
             else
             {
@@ -605,4 +713,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OnClick_PlayAgain()
+    {
+        //TODO: rozkminic inaczej i dodac przejscie do menu tez do nowej gry
+       Player1_HPPoints.text = "10";
+       Player2_HPPoints.text = "10";
+
+       Player1_GoldVault.text = "0";
+       Player2_GoldVault.text = "0";
+
+        ChangeUIToRollingMode();  
+
+        EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(false);
+        EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(false);
+
+        //TODO: dodac reset aktywnego skilla.
+
+        //TODO: przerolowanie bogów.
+    }
 }
