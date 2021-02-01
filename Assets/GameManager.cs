@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public static float GameSpeedValueModifier = 4;
 
     #region GENERAL 
+    [SerializeField] GameObject EndGameResultWindows;
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] float interpolationPeriod = .5f;
@@ -63,7 +64,7 @@ public class GameManager : MonoBehaviour
 
     #region PLAYER 1 
     int Player1_RollingCounter;
-     GodsManager Player1GodsManagerScript;
+    GodsManager Player1GodsManagerScript;
     [SerializeField] GameObject Player1UseSkillTestButton;
     [SerializeField] public GameObject Player1GodSkillWindow;
     [SerializeField] GameObject Player1TurnBlocker;
@@ -77,7 +78,10 @@ public class GameManager : MonoBehaviour
     public int CurrentGold1
     {
         get => _currentGold1;
-        set => _currentGold1 = value;
+        set
+        {
+         _currentGold1 = value;
+        }
     }
     int _liczbaPrzelewowGolda_Player1;
     public int LiczbaPrzelewowGolda_Player1 
@@ -137,12 +141,18 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player1 = value;
+            if(Player1ActualHPValue <= 0)
+            {
+                AndroidLogger.Log("Player 2 WIN!");
+                ShowEndGameResultWindow(winner:"PLayer2");
+            }
             var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
             if (value > 0)
             {
                 p1hp.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
                 p1hp.color = Color.red;
                 liczbaPrzelewaniaObrazen_Player1++;
+
             }
 
             if (value < 0)
@@ -180,8 +190,26 @@ public class GameManager : MonoBehaviour
     public int CurrentGold2
     {
         get => _currentGold2;
-        set => _currentGold2 = value;
+        set {
+            _currentGold2 = value;
+        }
     }
+
+    private void ShowEndGameResultWindow(string winner)
+    {
+        // dla gracza 2 ( na dole ) po wygranej wyskoczy info o zwycistwie
+        // w pzypadku wygranej gracza 1 , wyskoczy info o przegranej do gracza 2
+
+        if(winner == "Player2")
+        {
+            EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(true);
+        }
+        else
+        {
+            EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(true);
+        }
+    }
+
     int _liczbaPrzelewowGolda_Player2;
     public int LiczbaPrzelewowGolda_Player2 
     { 
@@ -189,7 +217,6 @@ public class GameManager : MonoBehaviour
         set 
         {
             _liczbaPrzelewowGolda_Player2 = value; 
-            
         }
     }
     [SerializeField] int _temporaryGoldVault_player2;
@@ -244,6 +271,11 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player2 = value;
+            if(Player2ActualHPValue <= 0)
+            {
+                AndroidLogger.Log("Player 1 WIN!");
+                ShowEndGameResultWindow(winner:"Player1");
+            }
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
             if (value > 0)
             {
@@ -254,6 +286,7 @@ public class GameManager : MonoBehaviour
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
                 p2hp.color = Color.red;
                 liczbaPrzelewaniaObrazen_Player2++;
+
             }
 
             if (value < 0)
@@ -680,4 +713,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void OnClick_PlayAgain()
+    {
+        //TODO: rozkminic inaczej i dodac przejscie do menu tez do nowej gry
+       Player1_HPPoints.text = "10";
+       Player2_HPPoints.text = "10";
+
+       Player1_GoldVault.text = "0";
+       Player2_GoldVault.text = "0";
+
+        ChangeUIToRollingMode();  
+
+        EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(false);
+        EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(false);
+
+        //TODO: dodac reset aktywnego skilla.
+
+        //TODO: przerolowanie bogów.
+    }
 }

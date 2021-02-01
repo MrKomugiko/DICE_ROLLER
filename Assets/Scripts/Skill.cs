@@ -112,8 +112,6 @@ public class Skill
         {
             GM_Script.Player2GodSkillWindow.GetComponent<GodsManager>().CollorSkillButtonsIfCanBeUsed();
         }
-
-         //AndroidLogger.Log($"[{OwnerName}][{GodName}][{selectedSkillLevel} lvl.]\t[un-selected]",logColor);
     }
     void SelectSkill(int skillLevel, string castingPlayer, God god)
     {
