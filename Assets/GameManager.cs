@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _cumulativeGoldStealingCounterP1;
     public int CumulativeGoldStealingCounterP1 { get => _cumulativeGoldStealingCounterP1; set => _cumulativeGoldStealingCounterP1 = value; }
 
-    int _currentGold1;
+    [SerializeField] int _currentGold1;
     public int CurrentGold1
     {
         get => _currentGold1;
@@ -193,7 +193,7 @@ public class GameManager : MonoBehaviour
     #region GOLD Blessed + Steal
     [SerializeField] Text Player2_GoldVault;
     [SerializeField] private int _cumulativeGoldStealingCounterP2;
-    int _currentGold2;
+    [SerializeField] int _currentGold2;
     public int CurrentGold2
     {
         get => _currentGold2;
@@ -202,7 +202,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private bool IsGameEnded = false;
+    [SerializeField] private bool _isGameEnded = false;
     private void ShowEndGameResultWindow(string winner)
     {
             EndOfGame = true;
@@ -323,6 +323,7 @@ public class GameManager : MonoBehaviour
     }
 
     public int CumulativeGoldStealingCounterP2 { get => _cumulativeGoldStealingCounterP2; set => _cumulativeGoldStealingCounterP2 = value; }
+    public bool IsGameEnded { get => _isGameEnded; set => _isGameEnded = value; }
 
     #endregion
 
@@ -735,8 +736,8 @@ public class GameManager : MonoBehaviour
         Player1_HPPoints.text = "10";
         Player2_HPPoints.text = "10";
 
-        Player1_GoldVault.text = "0";
-        Player2_GoldVault.text = "0";
+        CurrentGold1 = 0;
+        CurrentGold2 = 0;
 
         GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>().SetText("");
         GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>().SetText("");
