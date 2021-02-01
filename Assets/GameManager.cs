@@ -8,7 +8,7 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] public static float GameSpeedValueModifier = 4;
+    [SerializeField] public static float GameSpeedValueModifier = 50;
 
     #region GENERAL 
     [SerializeField] GameObject EndGameResultWindows;
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     #region GOLD Blessed + Steal
     [SerializeField] Text Player1_GoldVault;
-    private int _cumulativeGoldStealingCounterP1;
+    [SerializeField] private int _cumulativeGoldStealingCounterP1;
     public int CumulativeGoldStealingCounterP1 { get => _cumulativeGoldStealingCounterP1; set => _cumulativeGoldStealingCounterP1 = value; }
 
     int _currentGold1;
@@ -132,6 +132,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int Player1ActualHPValue;
     [SerializeField] int liczbaPrzelewaniaObrazen_Player1;
     [SerializeField] int _temporaryIntakeDamage_Player1;
+    [SerializeField] bool EndOfGame = false;
     public int TemporaryIntakeDamage_Player1
     {
         get
@@ -141,10 +142,16 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player1 = value;
-            if(Player1ActualHPValue <= 0)
+            
+            if(EndOfGame == false)
             {
-                AndroidLogger.Log("Player 2 WIN!");
-                ShowEndGameResultWindow(winner:"PLayer2");
+                if(Player1ActualHPValue <= 0)
+                {
+                    print("Player 1 Actual HP = "+Player1ActualHPValue);
+                    IsGameEnded = true;
+                    ShowEndGameResultWindow(winner:"Player2");
+                    _temporaryIntakeDamage_Player1 = 0;
+                }
             }
             var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
             if (value > 0)
@@ -185,7 +192,7 @@ public class GameManager : MonoBehaviour
 
     #region GOLD Blessed + Steal
     [SerializeField] Text Player2_GoldVault;
-    private int _cumulativeGoldStealingCounterP2;
+    [SerializeField] private int _cumulativeGoldStealingCounterP2;
     int _currentGold2;
     public int CurrentGold2
     {
@@ -195,19 +202,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private bool IsGameEnded = false;
     private void ShowEndGameResultWindow(string winner)
     {
-        // dla gracza 2 ( na dole ) po wygranej wyskoczy info o zwycistwie
-        // w pzypadku wygranej gracza 1 , wyskoczy info o przegranej do gracza 2
+            EndOfGame = true;
+            
+            var CombatMAnager =  GameObject.Find("FightZone").GetComponent<CombatManager>();
+            CombatMAnager.IndexOfCombatAction = 0;
 
-        if(winner == "Player2")
-        {
-            EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(true);
-        }
-        else
-        {
-            EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(true);
-        }
+            if(winner == "Player2")
+            {
+                EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(true);
+            }
+            else
+            {
+                EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(true);
+            }
     }
 
     int _liczbaPrzelewowGolda_Player2;
@@ -271,10 +281,15 @@ public class GameManager : MonoBehaviour
         set
         {
             _temporaryIntakeDamage_Player2 = value;
-            if(Player2ActualHPValue <= 0)
+            if(EndOfGame == false)
             {
-                AndroidLogger.Log("Player 1 WIN!");
-                ShowEndGameResultWindow(winner:"Player1");
+                if(Player2ActualHPValue <= 0)
+                {
+                    print("Player 2 Actual HP = "+Player2ActualHPValue);
+                    IsGameEnded = true;
+                    ShowEndGameResultWindow(winner:"Player1");
+                    _temporaryIntakeDamage_Player2 = 0;
+                }
             }
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
             if (value > 0)
@@ -715,14 +730,19 @@ public class GameManager : MonoBehaviour
 
     public void OnClick_PlayAgain()
     {
-        //TODO: rozkminic inaczej i dodac przejscie do menu tez do nowej gry
-       Player1_HPPoints.text = "10";
-       Player2_HPPoints.text = "10";
+        //TODO: rozkminic inaczej i dodac przejscie do menu tez do nowej gry\
+            
+        Player1_HPPoints.text = "10";
+        Player2_HPPoints.text = "10";
 
-       Player1_GoldVault.text = "0";
-       Player2_GoldVault.text = "0";
+        Player1_GoldVault.text = "0";
+        Player2_GoldVault.text = "0";
+
+        GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>().SetText("");
+        GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>().SetText("");
 
         ChangeUIToRollingMode();  
+        IsGameEnded = false;
 
         EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(false);
         EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(false);
