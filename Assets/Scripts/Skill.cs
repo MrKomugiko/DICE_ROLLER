@@ -72,7 +72,7 @@ public class Skill
     }
     protected virtual void UseSkill(int skillLevel, string castingPlayer)
     {
-        AndroidLogger.Log("no skill to use ;d",logColor);
+        AndroidLogger.Log($"{castingPlayer} use [<color=\"white\">{GodName}</color>] [<color=\"white\">{SkillName}</color>] [<color=\"white\">{skillLevel} lvl</color>]",AndroidLogger.GetPlayerLogColor(castingPlayer));
     }
     bool CheckIfItsDoubleSelectPreviousSkill(int newSelectedskillLevel, string castingPlayer, God newSelectedGod)
     {
@@ -113,7 +113,7 @@ public class Skill
             GM_Script.Player2GodSkillWindow.GetComponent<GodsManager>().CollorSkillButtonsIfCanBeUsed();
         }
 
-         AndroidLogger.Log($"[{OwnerName}][{GodName}][{selectedSkillLevel} lvl.]\t[un-selected]",logColor);
+         //AndroidLogger.Log($"[{OwnerName}][{GodName}][{selectedSkillLevel} lvl.]\t[un-selected]",logColor);
     }
     void SelectSkill(int skillLevel, string castingPlayer, God god)
     {
@@ -124,7 +124,7 @@ public class Skill
 
             SkillIsSelected = true;
 
-            AndroidLogger.Log($"[{castingPlayer}][{GodName}][{selectedSkillLevel} lvl.]\t[current select]",logColor);
+            AndroidLogger.Log($"[{castingPlayer}] [<color=\"white\">{GodName}</color>] [<color=\"white\">{selectedSkillLevel} lvl.</color>] [selected]",logColor);
         }
     }
     public int GetValueForSkillLevel(int skillLevel)

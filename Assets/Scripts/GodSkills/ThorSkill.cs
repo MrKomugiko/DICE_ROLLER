@@ -21,7 +21,6 @@ public class ThorSkill : Skill
           12    deal 8 damage
 
     */
-
     public ThorSkill(God godData, string ownerName)
     {
         OwnerName = ownerName;
@@ -34,7 +33,7 @@ public class ThorSkill : Skill
     }
     protected override void UseSkill(int skillLevel, string castingPlayer)
     {
-        AndroidLogger.Log($"{castingPlayer} use [{SkillName}][LVL-{skillLevel}]",AndroidLogger.GetPlayerLogColor(castingPlayer));
+        base.UseSkill(skillLevel,castingPlayer);
 
         int damageValue = GetValueForSkillLevel(skillLevel);
 

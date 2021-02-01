@@ -138,12 +138,24 @@ public class GameManager : MonoBehaviour
         {
             _temporaryIntakeDamage_Player1 = value;
             var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
-            if (value != 0)
+            if (value > 0)
             {
                 p1hp.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
+                p1hp.color = Color.red;
                 liczbaPrzelewaniaObrazen_Player1++;
             }
 
+            if (value < 0)
+            {
+                print("value: " + value);
+
+                print("różnica : " + (TemporaryIntakeDamage_Player1 - value).ToString());
+
+                p1hp.SetText("+" + _temporaryIntakeDamage_Player1.ToString());
+                p1hp.color = Color.green;
+                liczbaPrzelewaniaObrazen_Player1--;
+            }
+            
             if (value == 0)
             {
                 p1hp.SetText("");
@@ -233,14 +245,26 @@ public class GameManager : MonoBehaviour
         {
             _temporaryIntakeDamage_Player2 = value;
             var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
-            if (value != 0)
+            if (value > 0)
             {
                 print("value: " + value);
 
                 print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
 
                 p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
+                p2hp.color = Color.red;
                 liczbaPrzelewaniaObrazen_Player2++;
+            }
+
+            if (value < 0)
+            {
+                print("value: " + value);
+
+                print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
+
+                p2hp.SetText("+" + _temporaryIntakeDamage_Player2.ToString());
+                p2hp.color = Color.green;
+                liczbaPrzelewaniaObrazen_Player2--;
             }
 
             if (value == 0)
@@ -382,6 +406,7 @@ public class GameManager : MonoBehaviour
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
+          
             Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
             Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
 
@@ -390,11 +415,21 @@ public class GameManager : MonoBehaviour
 
             if (liczbaPrzelewaniaObrazen_Player1 > 0)
             {
+                // DAMAGING
                 int p1Currenthp = Player1ActualHPValue;
                 int p1NewHpValue = p1Currenthp - 1;
                 Player1_HPPoints.text = (p1NewHpValue.ToString());
 
                 liczbaPrzelewaniaObrazen_Player1--;
+            }
+            else if (liczbaPrzelewaniaObrazen_Player1 < 0)
+            {
+                // HEALING
+                int p1Currenthp = Player1ActualHPValue;
+                int p1NewHpValue = p1Currenthp + 1;
+                Player1_HPPoints.text = (p1NewHpValue.ToString());
+
+                liczbaPrzelewaniaObrazen_Player1++;
             }
             else
             {
@@ -414,6 +449,15 @@ public class GameManager : MonoBehaviour
                 Player2_HPPoints.text = (p2NewHpValue.ToString());
 
                 liczbaPrzelewaniaObrazen_Player2--;
+            }
+            else if (liczbaPrzelewaniaObrazen_Player2 < 0)
+            {
+                // HEALING
+                int p2Currenthp = Player2ActualHPValue;
+                int p2NewHpValue = p2Currenthp + 1;
+                Player2_HPPoints.text = (p2NewHpValue.ToString());
+
+                liczbaPrzelewaniaObrazen_Player2++;
             }
             else
             {
