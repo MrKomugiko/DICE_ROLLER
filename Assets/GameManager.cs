@@ -67,12 +67,10 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-        CombatManager CombatManager_Script = GameObject.Find("FightZone").GetComponent<CombatManager>();
+    public CombatManager CombatManager_Script;
     public void ShowEndGameResultWindow(string winner)
     {
         IsGameEnded = true;
-
-        CombatManager_Script.IndexOfCombatAction = 0;
 
         if (winner == "Player2")
         {
@@ -89,6 +87,8 @@ public class GameManager : MonoBehaviour
         CurrentPlayer = "Player1";
         currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
+
+        CombatManager_Script = GameObject.Find("FightZone").GetComponent<CombatManager>();
 
         ChangePlayersTurn();
     }

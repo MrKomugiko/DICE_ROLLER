@@ -38,6 +38,8 @@ public class CombatManager : MonoBehaviour
     }
     void Update()
     {    
+        if(GM_Script.IsGameEnded == true) IndexOfCombatAction = 0;
+        
         // WHOLE COMBAT ROUTINE (6 steps of combat):
         if (IndexOfCombatAction == 1 && readyToFight)
         {
@@ -305,7 +307,9 @@ public class CombatManager : MonoBehaviour
             ZdejmijKostkiIZmienKolorNaSzary(player1currentFightingDices);
             ZdejmijKostkiIZmienKolorNaSzary(player2currentFightingDices);
 
+            IndexOfCombatAction = 0;
             GM_Script.ChangeUIToRollingMode();
+            
         }
         catch(Exception ex)
         {
