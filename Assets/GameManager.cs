@@ -66,154 +66,13 @@ public class GameManager : MonoBehaviour
     public bool IsGameEnded { get => _isGameEnded; set => _isGameEnded = value; }
 
     #endregion
-    /*
-        // #region PLAYER 1 
-        // int Player1_RollingCounter;
-        // GodsManager Player1GodsManagerScript;
-        // [SerializeField] GameObject Player1UseSkillTestButton;
-        // [SerializeField] public GameObject Player1GodSkillWindow;
-        // [SerializeField] GameObject Player1TurnBlocker;
 
-        // #region GOLD Blessed + Steal
-        // [SerializeField] Text Player1_GoldVault;
-        // [SerializeField] private int _cumulativeGoldStealingCounterP1;
-        // public int CumulativeGoldStealingCounterP1 { get => _cumulativeGoldStealingCounterP1; set => _cumulativeGoldStealingCounterP1 = value; }
-
-        // [SerializeField] int _currentGold1;
-        // public int CurrentGold1
-        // {
-        //     get => _currentGold1;
-        //     set
-        //     {
-        //      _currentGold1 = value;
-        //     }
-        // }
-        // int _liczbaPrzelewowGolda_Player1;
-        // public int LiczbaPrzelewowGolda_Player1 
-        // { 
-        //     get => _liczbaPrzelewowGolda_Player1; 
-        //     set 
-        //     {
-        //         _liczbaPrzelewowGolda_Player1 = value; 
-        //     }
-        // }
-        // int _temporaryGoldVault_player1;
-        // public int TemporaryGoldVault_player1
-        // {
-        //     get
-        //     {
-        //         return _temporaryGoldVault_player1;
-        //     }
-        //     set
-        //     {
-        //         var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-        //         if (value > 0)
-        //         {
-        //             // DODAWANIE GOLDA
-        //             if (value != 0)
-        //             {
-        //                 CumulativeGoldStealingCounterP1++;
-        //                 p1coin.SetText("+" + CumulativeGoldStealingCounterP1.ToString());
-        //                 LiczbaPrzelewowGolda_Player1++;
-        //             }
-        //         }
-        //         if (value < 0)
-        //         {
-        //             // ODEJMOWANIE GOLDA
-        //             if (value != 0)
-        //             {
-        //                 CumulativeGoldStealingCounterP1--;
-        //                 p1coin.SetText(CumulativeGoldStealingCounterP1.ToString());
-        //                 LiczbaPrzelewowGolda_Player1--;
-        //             }
-        //         }
-        //         _temporaryGoldVault_player1 = value;
-        //     }
-        // }
-        // #endregion
-
-        // #region HEALTH Combat    
-        // [SerializeField] Text Player1_HPPoints;
-        // [SerializeField] int Player1ActualHPValue;
-        // [SerializeField] int liczbaPrzelewaniaObrazen_Player1;
-        // [SerializeField] int _temporaryIntakeDamage_Player1;
-        // public int TemporaryIntakeDamage_Player1
-        // {
-        //     get
-        //     {
-        //         return _temporaryIntakeDamage_Player1;
-        //     }
-        //     set
-        //     {
-        //         _temporaryIntakeDamage_Player1 = value;
-
-        //         if(IsGameEnded == false)
-        //         {
-        //             if(Player1ActualHPValue <= 0)
-        //             {
-        //                 print("Player 1 Actual HP = "+Player1ActualHPValue);
-        //                 IsGameEnded = true;
-        //                 ShowEndGameResultWindow(winner:"Player2");
-        //                 _temporaryIntakeDamage_Player1 = 0;
-        //             }
-        //         }
-        //         var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
-        //         if (value > 0)
-        //         {
-        //             p1hp.SetText("-" + _temporaryIntakeDamage_Player1.ToString());
-        //             p1hp.color = Color.red;
-        //             liczbaPrzelewaniaObrazen_Player1++;
-
-        //         }
-
-        //         if (value < 0)
-        //         {
-        //             print("value: " + value);
-
-        //             print("różnica : " + (TemporaryIntakeDamage_Player1 - value).ToString());
-
-        //             p1hp.SetText("+" + _temporaryIntakeDamage_Player1.ToString());
-        //             p1hp.color = Color.green;
-        //             liczbaPrzelewaniaObrazen_Player1--;
-        //         }
-
-        //         if (value == 0)
-        //         {
-        //             p1hp.SetText("");
-        //         }
-        //     }
-        // }
-        // #endregion
-
-        // #endregion
-
-        // #region PLAYER 2 
-        // int Player2_RollingCounter;
-        // [SerializeField] GodsManager Player2GodsManagerScript;
-        // [SerializeField] GameObject Player2UseSkillTestButton;
-        // [SerializeField] public GameObject Player2GodSkillWindow;
-        // [SerializeField] GameObject Player2TurnBlocker;
-
-        // #region GOLD Blessed + Steal
-        // [SerializeField] Text Player2_GoldVault;
-        // [SerializeField] private int _cumulativeGoldStealingCounterP2;
-        // [SerializeField] int _currentGold2;
-        // public int CurrentGold2
-        // {
-        //     get => _currentGold2;
-        //     set {
-        //         _currentGold2 = value;
-        //     }
-      }
-    */
-
-
+        CombatManager CombatManager_Script = GameObject.Find("FightZone").GetComponent<CombatManager>();
     public void ShowEndGameResultWindow(string winner)
     {
         IsGameEnded = true;
 
-        var CombatMAnager = GameObject.Find("FightZone").GetComponent<CombatManager>();
-        CombatMAnager.IndexOfCombatAction = 0;
+        CombatManager_Script.IndexOfCombatAction = 0;
 
         if (winner == "Player2")
         {
@@ -224,135 +83,14 @@ public class GameManager : MonoBehaviour
             EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(true);
         }
     }
-    /*
-        // int _liczbaPrzelewowGolda_Player2;
-        // public int LiczbaPrzelewowGolda_Player2 
-        // { 
-        //     get => _liczbaPrzelewowGolda_Player2; 
-        //     set 
-        //     {
-        //         _liczbaPrzelewowGolda_Player2 = value; 
-        //     }
-        // }
-        // [SerializeField] int _temporaryGoldVault_player2;
-        // public int TemporaryGoldVault_player2
-        // {
-        //     get
-        //     {
-        //         return _temporaryGoldVault_player2;
-        //     }
-        //     set
-        //     {
-        //         var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-        //         if (value > 0)
-        //         {
-        //             // DODAWANIE GOLDA
-        //             if (value != 0)
-        //             {
-        //                 CumulativeGoldStealingCounterP2++;
-        //                 p2coin.SetText("+" + CumulativeGoldStealingCounterP2.ToString());
-        //                 LiczbaPrzelewowGolda_Player2++;
-        //             }
-        //         }
-        //         if (value < 0)
-        //         {
-        //             // ODEJMOWANIE GOLDA
-        //             if (value != 0)
-        //             {
-        //                 CumulativeGoldStealingCounterP2--;
-        //                 p2coin.SetText(CumulativeGoldStealingCounterP2.ToString());
-        //                 LiczbaPrzelewowGolda_Player2--;
-        //             }
-        //         }
-
-        //         _temporaryGoldVault_player2 = value;
-        //     }
-        // }
-
-
-        // #endregion
-
-        // #region HEALTH Combat
-        // [SerializeField] Text Player2_HPPoints;
-        // int Player2ActualHPValue;
-        // int liczbaPrzelewaniaObrazen_Player2;
-        // int _temporaryIntakeDamage_Player2;
-        // public int TemporaryIntakeDamage_Player2
-        // {
-        //     get
-        //     {
-        //         return _temporaryIntakeDamage_Player2;
-        //     }
-        //     set
-        //     {
-        //         _temporaryIntakeDamage_Player2 = value;
-        //         if(IsGameEnded == false)
-        //         {
-        //             if(Player2ActualHPValue <= 0)
-        //             {
-        //                 print("Player 2 Actual HP = "+Player2ActualHPValue);
-        //                 IsGameEnded = true;
-        //                 ShowEndGameResultWindow(winner:"Player1");
-        //                 _temporaryIntakeDamage_Player2 = 0;
-        //             }
-        //         }
-        //         var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
-        //         if (value > 0)
-        //         {
-        //             print("value: " + value);
-
-        //             print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
-
-        //             p2hp.SetText("-" + _temporaryIntakeDamage_Player2.ToString());
-        //             p2hp.color = Color.red;
-        //             liczbaPrzelewaniaObrazen_Player2++;
-
-        //         }
-
-        //         if (value < 0)
-        //         {
-        //             print("value: " + value);
-
-        //             print("różnica : " + (TemporaryIntakeDamage_Player2 - value).ToString());
-
-        //             p2hp.SetText("+" + _temporaryIntakeDamage_Player2.ToString());
-        //             p2hp.color = Color.green;
-        //             liczbaPrzelewaniaObrazen_Player2--;
-        //         }
-
-        //         if (value == 0)
-        //         {
-        //             p2hp.SetText("");
-        //         }
-        //     }
-        // }
-
-        // public int CumulativeGoldStealingCounterP2 { get => _cumulativeGoldStealingCounterP2; set => _cumulativeGoldStealingCounterP2 = value; }
-
-        // #endregion
-    */
-
 
     void Start()
     {
-        // CurrentGold1 = Convert.ToInt32(Player1_GoldVault.text);
-        // CurrentGold2 = Convert.ToInt32(Player2_GoldVault.text);
-
-        // var p1hp = GameObject.Find("HealthTextPlayer1").GetComponent<TextMeshProUGUI>();
-        // p1hp.text = "";
-        // var p2hp = GameObject.Find("HealthTextPlayer2").GetComponent<TextMeshProUGUI>();
-        // p2hp.text = "";
-
         CurrentPlayer = "Player1";
         currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
-        // Player1_RollingCounter = 0;
-        // Player2_RollingCounter = 0;
+
         ChangePlayersTurn();
-
-        //    Player1GodsManagerScript = Player1GodSkillWindow.GetComponent<GodsManager>();
-        //    Player2GodsManagerScript = Player2GodSkillWindow.GetComponent<GodsManager>();
-
     }
     void Update()
     {
@@ -386,151 +124,21 @@ public class GameManager : MonoBehaviour
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
-            // reset czasu do 0 i naliczanie dalej os początku
             timePassedInGame = timePassedInGame - interpolationPeriod;
-            //---------------------------------------------------------------------------------------------------------------------------
 
             Player_1.TransferGold();
             Player_2.TransferGold();
-
-            /*
-            // if (LiczbaPrzelewowGolda_Player1 > 0)
-            // {
-            //     // DODAWANIE GOLDA
-            //     CurrentGold1++;
-            //     Player1_GoldVault.text = CurrentGold1.ToString();
-            //     LiczbaPrzelewowGolda_Player1--;
-            //     Player1GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
-            // }
-            // else if (LiczbaPrzelewowGolda_Player1 < 0)
-            // {
-            //     // ODEJMOWANIE GOLDA
-            //     CurrentGold1--;
-            //     Player1_GoldVault.text = CurrentGold1.ToString();
-            //     LiczbaPrzelewowGolda_Player1++;
-            //     Player1GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
-            // }
-            // else if (LiczbaPrzelewowGolda_Player1 == 0)
-            // {
-            //     // ZEROWANIE WARTOSCI TYMCZASOWYCH
-            //     TemporaryGoldVault_player1 = 0;
-            //     LiczbaPrzelewowGolda_Player1 = 0;
-
-            //     if (CumulativeGoldStealingCounterP1 == 0)
-            //     {
-            //         var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-            //         p1coin.SetText("");
-            //     }
-            // }
-
-            
-            //---------------------------------------------------------------------------------------------------------------------------
-
-            // if (LiczbaPrzelewowGolda_Player2 > 0)
-            // {
-            //     // DODAWANIE GOLDA
-            //     CurrentGold2++;
-            //     Player2_GoldVault.text = CurrentGold2.ToString();
-            //     LiczbaPrzelewowGolda_Player2--;
-            //     Player2GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
-            // }
-            // else if (LiczbaPrzelewowGolda_Player2 < 0)
-            // {
-            //     // ODEJMOWANIE GOLDA
-            //     CurrentGold2 = Convert.ToInt32(Player2_GoldVault.text);
-            //     CurrentGold2--;
-            //     Player2_GoldVault.text = CurrentGold2.ToString();
-            //     LiczbaPrzelewowGolda_Player2++;
-            //     Player2GodsManagerScript.CollorSkillButtonsIfCanBeUsed();
-            // }
-            // else if (LiczbaPrzelewowGolda_Player2 == 0)
-            // {
-            //     // ZEROWANIE WARTOSCI TYMCZASOWYCH
-            //     TemporaryGoldVault_player2 = 0;
-            //     LiczbaPrzelewowGolda_Player2 = 0;
-
-            //     if (CumulativeGoldStealingCounterP2 == 0)
-            //     {
-            //         var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-            //         p2coin.SetText("");
-            //     }
-            //*
-            }
-            */
-
         }
-
     }
 
     private void TransferDamageToPlayers(ref float timePassedInGame, float timeDelayinSecons)
     {
         if (timePassedInGame >= this.interpolationPeriod)
         {
-
             timePassedInGame = timePassedInGame - interpolationPeriod;
 
             Player_1.TransferDamage();
             Player_2.TransferDamage();
-            // Player1ActualHPValue = Convert.ToInt32(Player1_HPPoints.text);
-            // Player2ActualHPValue = Convert.ToInt32(Player2_HPPoints.text);
-
-            // // reset czasu do 0 i naliczanie dalej os początku
-            // timePassedInGame = timePassedInGame - interpolationPeriod;
-
-            // if (liczbaPrzelewaniaObrazen_Player1 > 0)
-            // {
-            //     // DAMAGING
-            //     int p1Currenthp = Player1ActualHPValue;
-            //     int p1NewHpValue = p1Currenthp - 1;
-            //     Player1_HPPoints.text = (p1NewHpValue.ToString());
-
-            //     liczbaPrzelewaniaObrazen_Player1--;
-            // }
-            // else if (liczbaPrzelewaniaObrazen_Player1 < 0)
-            // {
-            //     // HEALING
-            //     int p1Currenthp = Player1ActualHPValue;
-            //     int p1NewHpValue = p1Currenthp + 1;
-            //     Player1_HPPoints.text = (p1NewHpValue.ToString());
-
-            //     liczbaPrzelewaniaObrazen_Player1++;
-            // }
-            // else
-            // {
-            //     if (liczbaPrzelewaniaObrazen_Player1 == 0)
-            //     {
-            //         TemporaryIntakeDamage_Player1 = 0;
-            //     }
-            // }
-
-
-
-            // if (liczbaPrzelewaniaObrazen_Player2 > 0)
-            // {
-            //     int p2Currenthp = Player2ActualHPValue;
-            //     int p2NewHpValue = p2Currenthp - 1;
-
-            //     Player2_HPPoints.text = (p2NewHpValue.ToString());
-
-            //     liczbaPrzelewaniaObrazen_Player2--;
-            // }
-            // else if (liczbaPrzelewaniaObrazen_Player2 < 0)
-            // {
-            //     // HEALING
-            //     int p2Currenthp = Player2ActualHPValue;
-            //     int p2NewHpValue = p2Currenthp + 1;
-            //     Player2_HPPoints.text = (p2NewHpValue.ToString());
-
-            //     liczbaPrzelewaniaObrazen_Player2++;
-            // }
-            // else
-            // {
-            //     if (liczbaPrzelewaniaObrazen_Player2 == 0)
-            //     {
-            //         TemporaryIntakeDamage_Player2 = 0;
-            //     }
-            // }
-
         }
     }
 
@@ -627,7 +235,6 @@ public class GameManager : MonoBehaviour
             var battlefieldRT = BattleField.GetComponent<RectTransform>();
             battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x, battlefieldRT.sizeDelta.y * 3.2f);
 
-            //DONE ukrycie paneli przyciemniajacych - sygnalizowanie ktory gracz ma ture
             Player_1.TurnBlocker.SetActive(false);
             Player_2.TurnBlocker.SetActive(false);
 
@@ -747,7 +354,7 @@ public class GameManager : MonoBehaviour
 
     public void OnClick_PlayAgain()
     {
-        //TODO: rozkminic inaczej i dodac przejscie do menu tez do nowej gry\
+        CombatManager_Script.BackDicesToHand();
 
         Player_1.CurrentHealth_Value = 10;
         Player_2.CurrentHealth_Value = 10;
@@ -757,7 +364,6 @@ public class GameManager : MonoBehaviour
 
         Player_1.coinText_TMP.SetText("");
         Player_2.coinText_TMP.SetText("");
-        // GameObject.Find("FightZone").GetComponent<CombatManager>().IndexOfCombatAction = 0;
 
         ChangeUIToRollingMode();
 

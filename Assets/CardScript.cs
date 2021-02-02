@@ -135,7 +135,8 @@ public partial class CardScript : MonoBehaviour
                 isButtonsBlocked = true;
             }
         }
-        else if (isButtonsBlocked == true)
+        
+        if (isButtonsBlocked == true && _combatManager.IndexOfCombatAction == 0)
         {
             BlockSkillButtons(false);
             isButtonsBlocked = false;
