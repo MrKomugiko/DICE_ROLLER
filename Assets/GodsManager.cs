@@ -125,13 +125,13 @@ public class GodsManager : MonoBehaviour
 
         for (int i = 0; i < myGod._skill.GetGoldCostForSkillLevel(myGod._skill.selectedSkillLevel); i++)
         {
-            if(godOwner == "Player1") GM_Script.TemporaryGoldVault_player1--;
-            if(godOwner == "Player2") GM_Script.TemporaryGoldVault_player2--;
+            if(godOwner == "Player1") GM_Script.Player_1.TemporaryGoldVault--;
+            if(godOwner == "Player2") GM_Script.Player_2.TemporaryGoldVault--;
             coinText.color = Color.red;
         }
 
-        GM_Script.CumulativeGoldStealingCounterP1 = 0;
-        GM_Script.CumulativeGoldStealingCounterP2 = 0;
+        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+        GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
         
         CollorSkillButtonsIfCanBeUsed();
     }

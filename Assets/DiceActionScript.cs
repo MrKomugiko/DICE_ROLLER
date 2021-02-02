@@ -170,17 +170,17 @@ public class DiceActionScript : MonoBehaviour
         print("take damage");
         string parentName = this.transform.parent.name.ToString();
 
-        GameManager HealthVault = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
+        GameManager GameManager_Script = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
 
         switch (parentName)
         {
             case "Player1Dices_Fight_DiceHolder":
-                HealthVault.TemporaryIntakeDamage_Player2 += 1;
+                GameManager_Script.Player_2.TemporaryIntakeDamage += 1;
                 print("take damage to player 2");
                 break;
 
             case "Player2Dices_Fight_DiceHolder":
-                HealthVault.TemporaryIntakeDamage_Player1 += 1;
+                GameManager_Script.Player_1.TemporaryIntakeDamage += 1;
                 print("take damage to player 1");
                 break;
         }
@@ -217,16 +217,15 @@ public class DiceActionScript : MonoBehaviour
         StartCoroutine(ChangeColor(Color.gray));
     }
 
+    public GameManager GameManager_Script => GameObject.Find("GameManager").transform.GetComponent<GameManager>();
     IEnumerator AddGodCoin()
     {
         _addGoldFromBlessedItems = false;
         string parentName = this.transform.parent.name.ToString();
 
-        GameManager goldVaults = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
 
-        var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-        var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
-
+        var coinText_1 = GameManager_Script.Player_1.coinText_TMP;
+        var coinText_2 = GameManager_Script.Player_2.coinText_TMP;
         // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
         for (float i = 0f; i <= 2; i += 0.05f)
         {
@@ -235,13 +234,13 @@ public class DiceActionScript : MonoBehaviour
                 switch (parentName)
                 {
                     case "Player1Dices":
-                        goldVaults.TemporaryGoldVault_player1 += 1;
-                        p1coin.color = Color.yellow;
+                        GameManager_Script.Player_1.TemporaryGoldVault += 1;
+                        coinText_1.color = Color.yellow;
                         break;
 
                     case "Player2Dices":
-                        goldVaults.TemporaryGoldVault_player2 += 1;
-                        p2coin.color = Color.yellow;
+                        GameManager_Script.Player_2.TemporaryGoldVault += 1;
+                        coinText_2.color = Color.yellow;
                         break;
                 }
             }
@@ -252,13 +251,13 @@ public class DiceActionScript : MonoBehaviour
 
         for (float i = 0f; i <= 1; i += 0.05f)
         {
-            if (p1coin.text != "+0")
+            if (coinText_1.text != "+0")
             {
-                p1coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
+                coinText_1.color = Color.Lerp(Color.yellow, Color.clear, (i));
             }
-            if (p2coin.text != "+0")
+            if (coinText_2.text != "+0")
             {
-                p2coin.color = Color.Lerp(Color.yellow, Color.clear, (i));
+                coinText_2.color = Color.Lerp(Color.yellow, Color.clear, (i));
             }
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
             yield return new WaitForSeconds(0.05f);
@@ -269,8 +268,8 @@ public class DiceActionScript : MonoBehaviour
         _stealGoldUsingHandItem = false;
         // szukanie do kogo należy obiekt kości
         string parentName = this.transform.parent.name.ToString(); 
-        var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-        var p2coin = GameObject.Find("CoinTextPlayer2").GetComponent<TextMeshProUGUI>();
+    var coinText_1 = GameManager_Script.Player_1.coinText_TMP;
+        var coinText_2 = GameManager_Script.Player_2.coinText_TMP;
 
         GameManager goldVaults = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
             yield return new WaitForSeconds(0.5f);
@@ -285,21 +284,21 @@ public class DiceActionScript : MonoBehaviour
                     case "Player1Dices_Fight_DiceHolder":
                     // właśicicielem jest gracz 1, ondostanie golda, przeciwnikiem player2 jemu zaboerzemy
                         // właściciel
-                        goldVaults.TemporaryGoldVault_player1 += 1;
-                        p1coin.color = Color.yellow;
+                        GameManager_Script.Player_1.TemporaryGoldVault += 1;
+                        coinText_1.color = Color.yellow;
                         // przeciwnik
-                        goldVaults.TemporaryGoldVault_player2 -= 1;
-                        p2coin.color = Color.red;
+                        GameManager_Script.Player_2.TemporaryGoldVault -= 1;
+                        coinText_2.color = Color.red;
                         break;
 
                     case "Player2Dices_Fight_DiceHolder":
                     // właśicicielem jest gracz 1, ondostanie golda, przeciwnikiem player2 jemu zaboerzemy
                         // właściciel
-                        goldVaults.TemporaryGoldVault_player2 += 1;
-                        p2coin.color = Color.yellow;
+                        GameManager_Script.Player_2.TemporaryGoldVault  += 1;
+                        coinText_2.color = Color.yellow;
                         // przeciwnik
-                        goldVaults.TemporaryGoldVault_player1 -= 1;
-                        p1coin.color = Color.red;
+                        GameManager_Script.Player_1.TemporaryGoldVault  -= 1;
+                        coinText_1.color = Color.red;
                         break;
                 }   
             }

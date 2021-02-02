@@ -191,11 +191,11 @@ public class SelectionController : MonoBehaviour
         switch (ownerName)
         {
             case "Player1":
-                listOfSelectionControllers = GM.Player1GodSkillWindow.GetComponent<GodsManager>()._selectionControllers;
+                listOfSelectionControllers = GM.Player_1.GodSkillWindow.GetComponent<GodsManager>()._selectionControllers;
                 break;
 
             case "Player2":
-                listOfSelectionControllers = GM.Player2GodSkillWindow.GetComponent<GodsManager>()._selectionControllers;
+                listOfSelectionControllers = GM.Player_2.GodSkillWindow.GetComponent<GodsManager>()._selectionControllers;
                 break;
         }
 

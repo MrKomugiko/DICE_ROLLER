@@ -45,11 +45,11 @@ public class ThorSkill : Skill
         {
             if (castingPlayer == "Player1")
             {
-                GM_Script.TemporaryIntakeDamage_Player2++;
+                GM_Script.Player_2.TemporaryIntakeDamage++;
             }
             else
             {
-                GM_Script.TemporaryIntakeDamage_Player1++;
+                GM_Script.Player_1.TemporaryIntakeDamage++;
             }
         }
         AndroidLogger.Log("You dealt " + damageValue.ToString() + " damage.",AndroidLogger.GetPlayerLogColor(castingPlayer));

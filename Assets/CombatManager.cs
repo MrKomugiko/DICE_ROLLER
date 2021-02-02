@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,6 +38,8 @@ public class CombatManager : MonoBehaviour
     }
     void Update()
     {    
+        if(GM_Script.IsGameEnded == true) IndexOfCombatAction = 0;
+        
         // WHOLE COMBAT ROUTINE (6 steps of combat):
         if (IndexOfCombatAction == 1 && readyToFight)
         {
@@ -102,8 +105,8 @@ public class CombatManager : MonoBehaviour
         }
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
-            GM_Script.CumulativeGoldStealingCounterP1 = 0;
-            GM_Script.CumulativeGoldStealingCounterP2 = 0;
+            GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+            GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
 
             print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
@@ -213,8 +216,8 @@ public class CombatManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // wyzorowanie info o otryzmanych obrazeniach
-        GM_Script.TemporaryIntakeDamage_Player1 = 0;
-        GM_Script.TemporaryIntakeDamage_Player2 = 0;
+        GM_Script.Player_1.TemporaryIntakeDamage = 0;
+        GM_Script.Player_2.TemporaryIntakeDamage = 0;
 
         ZdejmijKostkiIZmienKolorNaSzary(attackDices);
         ZdejmijKostkiIZmienKolorNaSzary(deffenceDices);
@@ -226,8 +229,8 @@ public class CombatManager : MonoBehaviour
     }
     IEnumerator Steal(List<GameObject> goldStealingDices, string playerWhoStealingName)
     {
-        int player1Gold = GM_Script.CurrentGold1;
-        int player2Gold = GM_Script.CurrentGold2;
+        int player1Gold = GM_Script.Player_1.CurrentGold_Value;
+        int player2Gold = GM_Script.Player_2.CurrentGold_Value;
 
         int maxOponentAvailableGoldToSteal = playerWhoStealingName == "Player1Dices" ? player2Gold : player1Gold;
 
@@ -249,13 +252,18 @@ public class CombatManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        GM_Script.CumulativeGoldStealingCounterP1 = 0;
-        GM_Script.CumulativeGoldStealingCounterP2 = 0;
+        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+        GM_Script.Player_1.TemporaryGoldVault = 0;
+
+
 
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);
 
 
+        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+        GM_Script.Player_2.TemporaryGoldVault = 0;
+        
 
         IndexOfCombatAction++;
         readyToFight = true;
@@ -269,7 +277,43 @@ public class CombatManager : MonoBehaviour
 
     public void ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL()
     {
-        GM_Script.ChangeUIToRollingMode();
         IndexOfCombatAction = 0;
+        GM_Script.ChangeUIToRollingMode();
+    }
+
+[ContextMenu("Fight is over => CANCEL AND CLEAN")]
+    public void BackDicesToHand()
+    {
+        try
+        {
+            var player1currentFightingDices = new List<GameObject>();
+            var player2currentFightingDices = new List<GameObject>();
+
+            var p1ListActionScripts = Player1ArenaDiceContainer.GetComponentsInChildren<DiceActionScript>().ToList();
+            foreach(var diceScript in p1ListActionScripts)
+            {
+                player1currentFightingDices.Add(diceScript.transform.gameObject);
+            }
+
+            var p2ListActionScripts = Player2ArenaDiceContainer.GetComponentsInChildren<DiceActionScript>().ToList();
+            foreach(var diceScript in p2ListActionScripts)
+            {
+                player2currentFightingDices.Add(diceScript.transform.gameObject);
+            }
+
+            AndroidLogger.Log("Zdjete kostki gracza 1"+player1currentFightingDices.Count.ToString());
+            AndroidLogger.Log("Zdjete kostki gracza 2"+player2currentFightingDices.Count.ToString());
+
+            ZdejmijKostkiIZmienKolorNaSzary(player1currentFightingDices);
+            ZdejmijKostkiIZmienKolorNaSzary(player2currentFightingDices);
+
+            IndexOfCombatAction = 0;
+            GM_Script.ChangeUIToRollingMode();
+            
+        }
+        catch(Exception ex)
+        {
+            print("Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message);
+        }
     }
 }
