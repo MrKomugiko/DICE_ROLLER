@@ -4003,8 +4003,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 16777215
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6404,6 +6404,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74b21ad0bf6b09247b54ce358bba1112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player_1: {fileID: 1301416610}
+  Player_2: {fileID: 1301416609}
+  _isGameEnded: 0
   EndGameResultWindows: {fileID: 1035741908}
   BattleField: {fileID: 965387220}
   DicePrefab: {fileID: 3485725472894925093, guid: 0cc0f974926fbeb45827b9a3cfa9f03a,
@@ -6413,26 +6416,6 @@ MonoBehaviour:
   isBattleModeTurnOn: 0
   CurrentPlayer: 
   currentGamePhase: 
-  Player1UseSkillTestButton: {fileID: 2047720555}
-  Player1GodSkillWindow: {fileID: 2138301621760617537}
-  Player1TurnBlocker: {fileID: 167097285}
-  Player1_GoldVault: {fileID: 1238911738}
-  _cumulativeGoldStealingCounterP1: 0
-  _currentGold1: 0
-  Player1_HPPoints: {fileID: 160803603}
-  Player1ActualHPValue: 0
-  liczbaPrzelewaniaObrazen_Player1: 0
-  _temporaryIntakeDamage_Player1: 0
-  Player2GodsManagerScript: {fileID: 737306870}
-  Player2UseSkillTestButton: {fileID: 617528854}
-  Player2GodSkillWindow: {fileID: 737306865}
-  Player2TurnBlocker: {fileID: 1901050491}
-  Player2_GoldVault: {fileID: 1245502807}
-  _cumulativeGoldStealingCounterP2: 0
-  _currentGold2: 0
-  _isGameEnded: 0
-  _temporaryGoldVault_player2: 0
-  Player2_HPPoints: {fileID: 640743859}
 --- !u!4 &1301416608
 Transform:
   m_ObjectHideFlags: 0
@@ -6459,20 +6442,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebfb9a69a8cc979448c9cbf39cf26fc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHealth_Value: 0
+  _currentGold_Value: 0
   GM: {fileID: 1301416607}
   Name: Player2
   RollingCounter: 0
   GodsManager_Script: {fileID: 737306870}
   UseSkillTestButton: {fileID: 617528854}
   GodSkillWindow: {fileID: 737306865}
-  TurnBlocker: {fileID: 546266581}
-  GoldVault: {fileID: 1245502807}
+  TurnBlocker: {fileID: 1901050491}
+  GoldVault_Text: {fileID: 1245502807}
   _cumulativeGoldStealingCounter: 0
-  coinText: {fileID: 796658089}
-  HPPointsText: {fileID: 640743859}
-  ActualHPValue: 0
+  coinText_TMP: {fileID: 796658089}
+  HPPoints_Text: {fileID: 640743859}
+  HealthText_TMP: {fileID: 238904183}
   liczbaPrzelewaniaObrazen: 0
-  HealthText: {fileID: 238904183}
   _temporaryIntakeDamage: 0
 --- !u!114 &1301416610
 MonoBehaviour:
@@ -6486,6 +6470,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebfb9a69a8cc979448c9cbf39cf26fc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentHealth_Value: 0
+  _currentGold_Value: 0
   GM: {fileID: 1301416607}
   Name: Player1
   RollingCounter: 0
@@ -6493,13 +6479,12 @@ MonoBehaviour:
   UseSkillTestButton: {fileID: 2047720555}
   GodSkillWindow: {fileID: 2138301621760617537}
   TurnBlocker: {fileID: 167097285}
-  GoldVault: {fileID: 1238911738}
+  GoldVault_Text: {fileID: 1238911738}
   _cumulativeGoldStealingCounter: 0
-  coinText: {fileID: 1963451791}
-  HPPointsText: {fileID: 160803603}
-  ActualHPValue: 0
+  coinText_TMP: {fileID: 1963451791}
+  HPPoints_Text: {fileID: 160803603}
+  HealthText_TMP: {fileID: 964748994}
   liczbaPrzelewaniaObrazen: 0
-  HealthText: {fileID: 964748994}
   _temporaryIntakeDamage: 0
 --- !u!224 &1313521715 stripped
 RectTransform:
@@ -8897,8 +8882,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 16777215
-  m_fontColor: {r: 1, g: 1, b: 1, a: 0}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

@@ -226,8 +226,8 @@ public class CombatManager : MonoBehaviour
     }
     IEnumerator Steal(List<GameObject> goldStealingDices, string playerWhoStealingName)
     {
-        int player1Gold = GM_Script.Player_1.CurrentGold;
-        int player2Gold = GM_Script.Player_2.CurrentGold;
+        int player1Gold = GM_Script.Player_1.CurrentGold_Value;
+        int player2Gold = GM_Script.Player_2.CurrentGold_Value;
 
         int maxOponentAvailableGoldToSteal = playerWhoStealingName == "Player1Dices" ? player2Gold : player1Gold;
 

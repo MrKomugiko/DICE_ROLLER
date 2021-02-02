@@ -44,11 +44,11 @@ public class IdunSkill : Skill
         {
             if (castingPlayer == "Player1")
             {
-                GM_Script.TemporaryIntakeDamage_Player1--;
+                GM_Script.Player_1.TemporaryIntakeDamage--;
             }
             else
             {
-                GM_Script.TemporaryIntakeDamage_Player2--;
+                GM_Script.Player_2.TemporaryIntakeDamage--;
             }
         }
         AndroidLogger.Log("You healed for " + healValue.ToString() + " health points.", AndroidLogger.GetPlayerLogColor(castingPlayer));

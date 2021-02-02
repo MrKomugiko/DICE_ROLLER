@@ -7,6 +7,31 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+
+    [SerializeField] private int _currentHealth_Value;
+    public int CurrentHealth_Value
+    {
+        get => _currentHealth_Value;
+        set
+        {
+            HPPoints_Text.text = value.ToString();
+            _currentHealth_Value = Convert.ToInt32(HPPoints_Text.text);
+        }
+    }
+
+    [SerializeField] private int _currentGold_Value;
+    public int CurrentGold_Value
+    {
+        get =>  _currentGold_Value;
+        set
+        {
+            GoldVault_Text.text = value.ToString();
+            _currentGold_Value = Convert.ToInt32(GoldVault_Text.text);
+        }
+    }
+
+//-------------------------------------------------
+
     public GameManager GM;
     public string Name;
     public int RollingCounter;
@@ -16,18 +41,9 @@ public class Player : MonoBehaviour
     public GameObject TurnBlocker;
 
     #region GOLD Blessed + Steal
-      public Text GoldVault;
+      public Text GoldVault_Text;
       public int _cumulativeGoldStealingCounter;
       public int CumulativeGoldStealingCounter { get => _cumulativeGoldStealingCounter; set => _cumulativeGoldStealingCounter = value; }
-      private int _currentGold;
-      public int CurrentGold
-      {
-          get => _currentGold;
-          set
-          {
-          _currentGold = value;
-          }
-      }
       private int _liczbaPrzelewowGolda;
       public int LiczbaPrzelewowGolda 
       { 
@@ -37,7 +53,7 @@ public class Player : MonoBehaviour
               _liczbaPrzelewowGolda = value; 
           }
       }  
-      public TextMeshProUGUI coinText;
+      public TextMeshProUGUI coinText_TMP;
       int _temporaryGoldVault;
       public int TemporaryGoldVault
       {
@@ -53,7 +69,7 @@ public class Player : MonoBehaviour
                   if (value != 0)
                   {
                       CumulativeGoldStealingCounter++;
-                      coinText.SetText("+" + CumulativeGoldStealingCounter.ToString());
+                      coinText_TMP.SetText("+" + CumulativeGoldStealingCounter.ToString());
                       LiczbaPrzelewowGolda++;
                   }
               }
@@ -63,7 +79,7 @@ public class Player : MonoBehaviour
                   if (value != 0)
                   {
                       CumulativeGoldStealingCounter--;
-                      coinText.SetText(CumulativeGoldStealingCounter.ToString());
+                      coinText_TMP.SetText(CumulativeGoldStealingCounter.ToString());
                       LiczbaPrzelewowGolda--;
                   }
               }
@@ -73,11 +89,9 @@ public class Player : MonoBehaviour
     #endregion
 
 #region HEALTH Combat    
-    [SerializeField] Text HPPointsText;
-    [SerializeField] int ActualHPValue;
+    [SerializeField] public Text HPPoints_Text;
+    [SerializeField] public TextMeshProUGUI HealthText_TMP;
     [SerializeField] int liczbaPrzelewaniaObrazen;
-    [SerializeField] private bool IsGameEnded => GM.IsGameEnded; 
-    public TextMeshProUGUI HealthText;
     [SerializeField] int _temporaryIntakeDamage;
     public int TemporaryIntakeDamage
     {
@@ -89,12 +103,11 @@ public class Player : MonoBehaviour
         {
             _temporaryIntakeDamage = value;
             
-            if(IsGameEnded == false)
+            if(GM.IsGameEnded == false)
             {
-                if(ActualHPValue <= 0)
+                if(CurrentHealth_Value <= 0)
                 {
-                    print($"{Name} Actual HP = "+ActualHPValue);
-                    GM.IsGameEnded = true;
+                    print($"{Name} Actual HP = "+CurrentHealth_Value);
                     string winnerName = Name=="Player1"?"Player2":"Player1";
                     GM.ShowEndGameResultWindow(winner:winnerName);
                     _temporaryIntakeDamage = 0;
@@ -102,8 +115,8 @@ public class Player : MonoBehaviour
             }
             if (value > 0)
             {
-                HealthText.SetText("-" + _temporaryIntakeDamage.ToString());
-                HealthText.color = Color.red;
+                HealthText_TMP.SetText("-" + _temporaryIntakeDamage.ToString());
+                HealthText_TMP.color = Color.red;
                 liczbaPrzelewaniaObrazen++;
 
             }
@@ -114,14 +127,14 @@ public class Player : MonoBehaviour
 
                 print("różnica : " + (TemporaryIntakeDamage - value).ToString());
 
-                HealthText.SetText("+" + _temporaryIntakeDamage.ToString());
-                HealthText.color = Color.green;
+                HealthText_TMP.SetText("+" + _temporaryIntakeDamage.ToString());
+                HealthText_TMP.color = Color.green;
                 liczbaPrzelewaniaObrazen--;
             }
             
             if (value == 0)
             {
-                HealthText.SetText("");
+                HealthText_TMP.SetText("");
             }
         }
     }
@@ -131,8 +144,9 @@ public class Player : MonoBehaviour
 
   void Start()
   {
-    CurrentGold = Convert.ToInt32(GoldVault.text);
-    HealthText.text = "";
+    CurrentGold_Value = Convert.ToInt32(GoldVault_Text.text);
+    CurrentHealth_Value = Convert.ToInt32(HPPoints_Text.text);
+    HealthText_TMP.text = "";
 
     RollingCounter = 0;
   }
@@ -141,16 +155,17 @@ public class Player : MonoBehaviour
         if (LiczbaPrzelewowGolda > 0)
             {
                 // DODAWANIE GOLDA
-                CurrentGold++;
-                GoldVault.text = CurrentGold.ToString();
+                CurrentGold_Value++;
+                //CurrentGold++;
+                //GoldVault_Text.text = CurrentGold.ToString();
                 LiczbaPrzelewowGolda--;
                 GodsManager_Script.CollorSkillButtonsIfCanBeUsed();
             }
             else if (LiczbaPrzelewowGolda < 0)
             {
                 // ODEJMOWANIE GOLDA
-                CurrentGold--;
-                GoldVault.text = CurrentGold.ToString();
+                CurrentGold_Value--;;
+              //  GoldVault_Text.text = CurrentGold.ToString();
                 LiczbaPrzelewowGolda++;
                 GodsManager_Script.CollorSkillButtonsIfCanBeUsed();
             }
@@ -162,34 +177,24 @@ public class Player : MonoBehaviour
 
                 if (CumulativeGoldStealingCounter == 0)
                 {
-                    var p1coin = GameObject.Find("CoinTextPlayer1").GetComponent<TextMeshProUGUI>();
-                    p1coin.SetText("");
+                    coinText_TMP.SetText("");
                 }
             }
     }
 
     internal void TransferDamage()
     {
-        
-            ActualHPValue = Convert.ToInt32(HealthText.text);
-
-            // reset czasu do 0 i naliczanie dalej os początku
-           
             if (liczbaPrzelewaniaObrazen > 0)
             {
                 // DAMAGING
-                int Currenthp = ActualHPValue;
-                int p1NewHpValue = Currenthp - 1;
-                HealthText.text = (p1NewHpValue.ToString());
+                CurrentHealth_Value--;
 
                 liczbaPrzelewaniaObrazen--;
             }
             else if (liczbaPrzelewaniaObrazen < 0)
             {
                 // HEALING
-                int Currenthp = ActualHPValue;
-                int p1NewHpValue = Currenthp + 1;
-                HealthText.text = (p1NewHpValue.ToString());
+                CurrentHealth_Value++;
 
                 liczbaPrzelewaniaObrazen++;
             }

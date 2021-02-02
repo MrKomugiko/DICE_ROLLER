@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     #region GENERAL   
     [SerializeField] private bool _isGameEnded = false;
-    [SerializeField] public static float GameSpeedValueModifier = 50;
+    [SerializeField] public static float GameSpeedValueModifier = 5;
     [SerializeField] GameObject EndGameResultWindows;
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
@@ -374,10 +374,10 @@ public class GameManager : MonoBehaviour
         switch (player)
         {
             case "Player1":
-                return GM.Player_1.CurrentGold;
+                return GM.Player_1.CurrentGold_Value;
 
             case "Player2":
-                return GM.Player_2.CurrentGold;
+                return GM.Player_2.CurrentGold_Value;
         }
 
         throw new Exception("Incorrect 'player' name");
@@ -749,21 +749,22 @@ public class GameManager : MonoBehaviour
     {
         //TODO: rozkminic inaczej i dodac przejscie do menu tez do nowej gry\
 
-        Player_1.HealthText.text = "10";
-        Player_1.HealthText.text = "10";
+        Player_1.CurrentHealth_Value = 10;
+        Player_2.CurrentHealth_Value = 10;
 
-        Player_1.CurrentGold = 0;
-        Player_2.CurrentGold = 0;
+        Player_1.CurrentGold_Value = 0;
+        Player_2.CurrentGold_Value = 0;
 
-        Player_1.coinText.SetText("");
-        Player_2.coinText.SetText("");
+        Player_1.coinText_TMP.SetText("");
+        Player_2.coinText_TMP.SetText("");
         // GameObject.Find("FightZone").GetComponent<CombatManager>().IndexOfCombatAction = 0;
 
         ChangeUIToRollingMode();
-        IsGameEnded = false;
 
         EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(false);
         EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(false);
+
+        IsGameEnded = false;
 
         //TODO: dodac reset aktywnego skilla.
 
