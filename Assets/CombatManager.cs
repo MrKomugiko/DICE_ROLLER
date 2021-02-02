@@ -102,8 +102,8 @@ public class CombatManager : MonoBehaviour
         }
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
-            GM_Script.CumulativeGoldStealingCounterP1 = 0;
-            GM_Script.CumulativeGoldStealingCounterP2 = 0;
+            GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+            GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
 
             print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
@@ -213,8 +213,8 @@ public class CombatManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         // wyzorowanie info o otryzmanych obrazeniach
-        GM_Script.TemporaryIntakeDamage_Player1 = 0;
-        GM_Script.TemporaryIntakeDamage_Player2 = 0;
+        GM_Script.Player_1.TemporaryIntakeDamage = 0;
+        GM_Script.Player_2.TemporaryIntakeDamage = 0;
 
         ZdejmijKostkiIZmienKolorNaSzary(attackDices);
         ZdejmijKostkiIZmienKolorNaSzary(deffenceDices);
@@ -226,8 +226,8 @@ public class CombatManager : MonoBehaviour
     }
     IEnumerator Steal(List<GameObject> goldStealingDices, string playerWhoStealingName)
     {
-        int player1Gold = GM_Script.CurrentGold1;
-        int player2Gold = GM_Script.CurrentGold2;
+        int player1Gold = GM_Script.Player_1.CurrentGold;
+        int player2Gold = GM_Script.Player_2.CurrentGold;
 
         int maxOponentAvailableGoldToSteal = playerWhoStealingName == "Player1Dices" ? player2Gold : player1Gold;
 
@@ -249,8 +249,8 @@ public class CombatManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        GM_Script.CumulativeGoldStealingCounterP1 = 0;
-        GM_Script.CumulativeGoldStealingCounterP2 = 0;
+        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
 
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);
