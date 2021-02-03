@@ -2412,6 +2412,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 482941160}
+  - component: {fileID: 482941161}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -2441,6 +2442,25 @@ Transform:
   m_Father: {fileID: 1946960155}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &482941161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 482941159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a93ad9970dd6604084e467ece71c89d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMockedDataInitiated: 0
+  IsTurnON: 1
+  AI_Player: {fileID: 1301416610}
+  HUMAN_Player: {fileID: 1301416609}
+  IsRollAllowed: 1
+  debugShowDict: []
+  itsNeedToReCalculatePickChanceValues: 1
 --- !u!1 &483921941
 GameObject:
   m_ObjectHideFlags: 0
@@ -5046,8 +5066,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6416,6 +6436,7 @@ MonoBehaviour:
   isBattleModeTurnOn: 0
   CurrentPlayer: 
   currentGamePhase: 
+  CombatManager_Script: {fileID: 0}
 --- !u!4 &1301416608
 Transform:
   m_ObjectHideFlags: 0
@@ -6444,7 +6465,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentHealth_Value: 0
   _currentGold_Value: 0
-  GM: {fileID: 1301416607}
+  GameManager: {fileID: 1301416607}
   Name: Player2
   RollingCounter: 0
   GodsManager_Script: {fileID: 737306870}
@@ -6458,6 +6479,7 @@ MonoBehaviour:
   HealthText_TMP: {fileID: 238904183}
   liczbaPrzelewaniaObrazen: 0
   _temporaryIntakeDamage: 0
+  DiceManager: {fileID: 1795155977}
 --- !u!114 &1301416610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6472,7 +6494,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentHealth_Value: 0
   _currentGold_Value: 0
-  GM: {fileID: 1301416607}
+  GameManager: {fileID: 1301416607}
   Name: Player1
   RollingCounter: 0
   GodsManager_Script: {fileID: 2138301621760617542}
@@ -6486,6 +6508,7 @@ MonoBehaviour:
   HealthText_TMP: {fileID: 964748994}
   liczbaPrzelewaniaObrazen: 0
   _temporaryIntakeDamage: 0
+  DiceManager: {fileID: 228421449}
 --- !u!224 &1313521715 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,

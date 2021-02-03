@@ -187,7 +187,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void SwapRollButonWithEndTurn_OnClick(string playerName)
+    internal void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
     }

@@ -13,7 +13,7 @@ public class DiceRollScript : MonoBehaviour
     public static int ILOSC_RZUTOW = 100;
 
     [SerializeField] public bool DiceSlotIsLocked;
-    [SerializeField] bool rollingIsCompleted;
+    [SerializeField] public bool rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
 
     [SerializeField] Image _diceImage;
