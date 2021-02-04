@@ -271,4 +271,16 @@ public class EnemyAI : MonoBehaviour
 
     }
 
+    public void OnClick_TurnOnAI()
+    {
+        TurnONOFF();
+        if(IsTurnON) 
+        {
+            transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(0,255,0,255);
+        }  
+        else
+        {
+            transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(255,0,0,128);
+        }
+    }
 }

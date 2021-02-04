@@ -115,6 +115,7 @@ public class DiceRollScript : MonoBehaviour
                 // jezeli losowanie sie zakończyło
                 if (value == true)
                 {
+                    this.IsAbleToPickup = true;
                     // jeżeli jest to ostatnia tura
                     if (GetComponentInParent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES == true)
                     {
@@ -123,9 +124,9 @@ public class DiceRollScript : MonoBehaviour
                         {
                             SendDiceToBattlefield();
                             LockDiceOnBattlefield = true;
+                            this.IsAbleToPickup = false;
                         }
                     }
-                    this.IsAbleToPickup = true;
                 }
                 else
                 {

@@ -281,8 +281,12 @@ public class GameManager : MonoBehaviour
 
             // 3. zmiana trybu battlemade na OFF
             IsBattleModeTurnOn = false;
-
+            
             // 4. odkrycie buttonków rolla i końca tury dla graczy
+            
+            Player_1.TurnBlocker.SetActive(false);
+            Player_2.TurnBlocker.SetActive(false);
+            
             GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(true);
             GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(true);
 
