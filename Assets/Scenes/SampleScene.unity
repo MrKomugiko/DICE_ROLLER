@@ -2454,12 +2454,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a93ad9970dd6604084e467ece71c89d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugShowDict: []
   isMockedDataInitiated: 0
-  IsTurnON: 1
+  IsTurnON: 0
   AI_Player: {fileID: 1301416610}
   HUMAN_Player: {fileID: 1301416609}
   IsRollAllowed: 1
-  debugShowDict: []
+  calculationsCompleted: 0
+  FirstRoll: 1
+  SecondRoll: 0
+  ThirdRoll: 0
+  FourthRoll: 0
   itsNeedToReCalculatePickChanceValues: 1
 --- !u!1 &483921941
 GameObject:
@@ -7166,6 +7171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1587131165}
+  - component: {fileID: 1587131166}
   m_Layer: 0
   m_Name: Player2
   m_TagString: Untagged
@@ -7195,6 +7201,30 @@ Transform:
   m_Father: {fileID: 1946960155}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1587131166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1587131164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a93ad9970dd6604084e467ece71c89d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugShowDict: []
+  isMockedDataInitiated: 0
+  IsTurnON: 0
+  AI_Player: {fileID: 1301416609}
+  HUMAN_Player: {fileID: 1301416610}
+  IsRollAllowed: 1
+  calculationsCompleted: 0
+  FirstRoll: 1
+  SecondRoll: 0
+  ThirdRoll: 0
+  FourthRoll: 0
+  itsNeedToReCalculatePickChanceValues: 1
 --- !u!1 &1640551751
 GameObject:
   m_ObjectHideFlags: 0

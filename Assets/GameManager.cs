@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
 
                 GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
                 GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
-
             }
         }
     }
@@ -60,6 +59,13 @@ public class GameManager : MonoBehaviour
             if (playerAvailableDices == 0)
             {
                 SwapRollButonWithEndTurn_OnClick(CurrentPlayer);
+                Player_1.DiceManager.AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
+                Player_2.DiceManager.AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
+            }
+
+            if(TurnNumber >= 4.5f){
+                Player_1.TurnBlocker.SetActive(false);
+                Player_2.TurnBlocker.SetActive(false);
             }
         }
     }
@@ -149,7 +155,7 @@ public class GameManager : MonoBehaviour
             var player2Object = GameObject.Find(player).transform;
             var rollButtonObject = player2Object.Find("Roll Button").transform;
 
-            if (rollingTurnNumber == 3.0)
+            if (rollingTurnNumber >= 3.0)
             {
                 player2Object.Find("DiceHolder").GetComponent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = true;
             }
@@ -166,12 +172,12 @@ public class GameManager : MonoBehaviour
 
         if (CurrentPlayer == "Player1")
         {
-            Player_2.RollingCounter++;
+            Player_1.RollingCounter++;
             CurrentPlayer = "Player2";
         }
         else
         {
-            Player_1.RollingCounter++;
+            Player_2.RollingCounter++;
             CurrentPlayer = "Player1";
         }
 
@@ -258,6 +264,9 @@ public class GameManager : MonoBehaviour
     {
         if (IsBattleModeTurnOn == true)
         {
+            Player_1.DiceManager.transform.parent.GetComponentInParent<EnemyAI>().FirstRoll = true;
+            Player_2.DiceManager.transform.parent.GetComponentInParent<EnemyAI>().FirstRoll = true;
+
             // 0. nazwanie aktualnego etapu gry
             currentGamePhase = "Dice Rolling Mode";
 
