@@ -24,7 +24,8 @@ public class EnemyAI : MonoBehaviour
         if(!RollingIsCompleted) return;
         if(isMockedDataInitiated) return;
         isMockedDataInitiated = true;
-
+        debugShowDict.Add($"--------------------- Start new Round ---------------------");
+        dicesDict.Clear();  
         for (int i = 1; i <= 6; i++)
         {
             dicesDict.Add(key: i, value: dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
@@ -55,7 +56,6 @@ public class EnemyAI : MonoBehaviour
                 pickProbablityDict[dice.Key] = pickValue;
             }
         }
-
        // debugShowDict = new List<string>(); // czyszczenie wczesniejszego wpisu
         foreach (KeyValuePair<int, string> AI_Dice in dicesDict)
         {
@@ -65,7 +65,7 @@ public class EnemyAI : MonoBehaviour
                 $"Pick value: {pickProbablityDict.Where(p => p.Key == AI_Dice.Key).First().Value.ToString("00")}]\t"+
                 $"Dice name: {dicesDict.Where(d=>d.Key == AI_Dice.Key).First().Value}");
         }
-        debugShowDict.Add("----------------------------------");
+        debugShowDict.Add("--------------------- End of Turn ---------------------");
         foreach (string log in debugShowDict)
         {
             AndroidLogger.Log(log,AndroidLogger.GetPlayerLogColor(AI_Player.Name));
@@ -84,6 +84,7 @@ public class EnemyAI : MonoBehaviour
 
             if (RollingIsCompleted)
             {
+                isMockedDataInitiated = false;
                 GeneratePickChanceValuesForDices();
                 AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
                 CalculatePickingValuesForOwnedDices();
@@ -152,7 +153,14 @@ public class EnemyAI : MonoBehaviour
         {
             RollDices();
             if (RollingIsCompleted)
-            {   
+            {
+                foreach (KeyValuePair<int, string> AI_Dice in dicesDict)
+                {
+                    debugShowDict.Add(
+                        $"Dice:{AI_Dice.Key}\t" +
+                        $"Dice name: {dicesDict.Where(d => d.Key == AI_Dice.Key).First().Value}"+
+                        $" -> Automatic last pick.");
+                }
                 print("Final round FOUR - auto pick last dices");
                 EndTurn(4);
             }
@@ -268,7 +276,6 @@ public class EnemyAI : MonoBehaviour
         itsNeedToReCalculatePickChanceValues = true;
         isMockedDataInitiated = true;
         calculationsCompleted = false;
-
     }
 
     public void OnClick_TurnOnAI()

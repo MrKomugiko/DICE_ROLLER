@@ -69,8 +69,16 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    public bool IsGameEnded { get => _isGameEnded; set => _isGameEnded = value; }
-
+    public bool IsGameEnded 
+    { 
+        get => _isGameEnded; 
+        set 
+        {
+            _isGameEnded = value; 
+            Player_1.TurnBlocker.SetActive(false);
+            Player_2.TurnBlocker.SetActive(false);
+        }
+    }
     #endregion
 
     public CombatManager CombatManager_Script;
@@ -180,7 +188,8 @@ public class GameManager : MonoBehaviour
             Player_2.RollingCounter++;
             CurrentPlayer = "Player1";
         }
-
+    if(!IsBattleModeTurnOn)
+    {
         if (CurrentPlayer == "Player1")
         {
             Player_1.TurnBlocker.SetActive(false);
@@ -191,6 +200,7 @@ public class GameManager : MonoBehaviour
             Player_1.TurnBlocker.SetActive(true);
             Player_2.TurnBlocker.SetActive(false);
         }
+    }
     }
 
     internal void SwapRollButonWithEndTurn_OnClick(string playerName)
