@@ -246,6 +246,9 @@ public class GameManager : MonoBehaviour
     {
         if (IsBattleModeTurnOn == false)
         {
+             Player_1.ListOfDicesOnBattleground.Clear();
+             Player_2.ListOfDicesOnBattleground.Clear();
+             
             currentGamePhase = "Battle: Phase 1 -> ''sorting dices''";
 
             var battlefieldRT = BattleField.GetComponent<RectTransform>();

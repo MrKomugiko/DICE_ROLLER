@@ -11,7 +11,7 @@ public class DiceManager : MonoBehaviour
     [SerializeField] public List<DiceRollScript> Dices;
     [SerializeField] bool _setDicesOff;
     [SerializeField] int _numberOfDicesOnBattlefield;
-
+    [SerializeField] Dictionary<int,string> DicesOnBattlefield;
     void Start()
     {
         if(PlayerBattlefieldDiceHolder == null)

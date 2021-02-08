@@ -178,7 +178,7 @@ public class CombatManager : MonoBehaviour
 
         return dices;
     } 
-    List<GameObject> GetDicesFromContainer(GameObject diceContainer)
+     List<GameObject> GetDicesFromContainer(GameObject diceContainer)
     {
         List<GameObject> listOfDiceObjects = new List<GameObject>();
         foreach (var diceObject in diceContainer.GetComponentsInChildren<DiceRollScript>())

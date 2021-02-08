@@ -12,14 +12,18 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] bool isMockedDataInitiated = false;
     [SerializeField] bool IsTurnON = false;
     [SerializeField] Player AI_Player;
-    [SerializeField] Player HUMAN_Player;
+    [SerializeField] Player ENEMY_Player;
     [SerializeField] bool IsRollAllowed = true;
-    [SerializeField] bool calculationsCompleted = false;
     [SerializeField] AIPickChanceUi UI;
 
-    Dictionary<int, string> dicesDict = new Dictionary<int, string>();          // diceNumber <1;6> / "nazwa kostki"
-    public Dictionary<int, int> pickProbablityDict = new Dictionary<int, int>();       // diceNumber <1;6> / prawdopodobieństwo bycia wybraną <1;100> 
-    Dictionary<int, int> pickChanceForDicesDict = new Dictionary<int, int>();   // diceNumber <1;6> / losowa wartość do wybrania <1;100>
+    // diceNumber <1;6> / "nazwa kostki"
+    Dictionary<int, string> dicesDict = new Dictionary<int, string>();         
+    
+    // diceNumber <1;6> / prawdopodobieństwo bycia wybraną <1;100> 
+    public Dictionary<int, int> pickProbablityDict = new Dictionary<int, int>();       
+    
+    // diceNumber <1;6> / losowa wartość do wybrania <1;100>
+    Dictionary<int, int> pickChanceForDicesDict = new Dictionary<int, int>();   
     void Start()
     {
         UI = this.GetComponentInChildren<AIPickChanceUi>();
@@ -41,11 +45,11 @@ public class EnemyAI : MonoBehaviour
     private IEnumerator CalculatePickingValuesForOwnedDices()
     {
         print("CalculatePickingValuesForOwnedDices routine is working");
-        calculationsIsCompleted = false;
+        calculatingNewPickValuesIsCompleted = false;
         if (!isMockedDataInitiated) yield return null;
-        if (calculationsCompleted) yield return null;
+        if (calculatingNewPickValuesIsCompleted) yield return null;
 
-        calculationsCompleted = true;
+       
         foreach (KeyValuePair<int, string> dice in dicesDict)
         {
             int calculatedPickValue = 0;
@@ -65,8 +69,8 @@ public class EnemyAI : MonoBehaviour
             UI.SetPickChanceValues(diceNumber: dice.Key, dicePickChance: pickProbablityDict[dice.Key]);
         }
 
-        UpdateLogger();
-        calculationsIsCompleted = true;
+        UpdateLogger(); 
+        calculatingNewPickValuesIsCompleted = true;
     }
 
     private bool RecalculatePickValue(KeyValuePair<int, string> dice, out int pickValue)
@@ -76,10 +80,19 @@ public class EnemyAI : MonoBehaviour
 
         pickValue = 25;
         
-        //TODO: "PROCES SPRAWDZANIA I SZACOWANIA OPŁACALNOŚCI WYBORU KOŚCI"
+        // TODO: "PROCES SPRAWDZANIA I SZACOWANIA OPŁACALNOŚCI WYBORU KOŚCI"
+
+        GetCurrentEnemyDicesInBattlefield();
+
 
         return true;
     }
+
+    private void GetCurrentEnemyDicesInBattlefield()
+    {
+       // List<DiceRollScript> enemyDicesOnBattlefield = ENEMY_Player.DiceManager.PlayerBattlefieldDiceHolder
+    }
+
     private void UpdateLogger()
     {
         try
@@ -118,8 +131,12 @@ public class EnemyAI : MonoBehaviour
 
             if (RollingIsCompleted && calculatingCoroutine == null)
             {
+                isMockedDataInitiated = false;
+                pickProbablityDict.Clear();
+                AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
                 calculatingCoroutine = CalculatingChance(roundNumber: 1);
                 StartCoroutine(calculatingCoroutine);
+               
             }
         }
         if (IsTurnON && !AI_Player.TurnBlocker.activeSelf && SecondRoll)
@@ -159,51 +176,24 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    bool calculationsIsCompleted = false;
+    bool calculatingNewPickValuesIsCompleted = false;
     private IEnumerator CalculatingChance(int roundNumber)
     {
-        if (roundNumber == 1)
+        GeneratePickChanceValuesForDices();
+        StartCoroutine(CalculatePickingValuesForOwnedDices());
+        yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
+        List<int> numberOFPickedDices = new List<int>();
+        foreach (KeyValuePair<int, string> dice in dicesDict)
         {
-            print("CalculatingChance routine is working");
-            isMockedDataInitiated = false;
-            GeneratePickChanceValuesForDices();
-            AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
-            StartCoroutine(CalculatePickingValuesForOwnedDices());
-            yield return new WaitUntil(() => calculationsIsCompleted);
-
-            List<int> numberOFPickedDices = new List<int>();
-            // for test pick all dices
-            foreach (KeyValuePair<int, string> dice in dicesDict)
+            if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
             {
-                if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
-                {
-                    PickDice(diceNumber: dice.Key);
-                    numberOFPickedDices.Add(dice.Key);
-                    yield return new WaitForSeconds(1f);
-                }
+                PickDice(diceNumber: dice.Key);
+                numberOFPickedDices.Add(dice.Key);
             }
-            RemoveUsedDicesFromDictMemory(numberOFPickedDices);
-            EndTurn(roundNumber);
+            yield return new WaitForSeconds(0.5f);
         }
-        else
-        {
-            print("calculating round " + roundNumber);
-            GeneratePickChanceValuesForDices();
-            StartCoroutine(CalculatePickingValuesForOwnedDices());
-            yield return new WaitUntil(() => calculationsIsCompleted);
-            List<int> numberOFPickedDices = new List<int>();
-            foreach (KeyValuePair<int, string> dice in dicesDict)
-            {
-                if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
-                {
-                    PickDice(diceNumber: dice.Key);
-                    numberOFPickedDices.Add(dice.Key);
-                }
-                yield return new WaitForSeconds(1f);
-            }
-            RemoveUsedDicesFromDictMemory(numberOFPickedDices);
-            EndTurn(roundNumber);
-        }
+        RemoveUsedDicesFromDictMemory(numberOFPickedDices);
+        EndTurn(roundNumber);
     }
 
     private void RemoveUsedDicesFromDictMemory(List<int> numberOFPickedDices)
@@ -252,6 +242,7 @@ public class EnemyAI : MonoBehaviour
 
     [ContextMenu("Włącz SI")] public void TurnONOFF() => IsTurnON = !IsTurnON;
     private bool RollingIsCompleted => AI_Player.DiceManager.Dices.ElementAt(0).rollingIsCompleted;
+
     private void RollDices()
     {
         if (!IsRollAllowed) return;
@@ -303,7 +294,7 @@ public class EnemyAI : MonoBehaviour
         IsRollAllowed = true;
         itsNeedToReCalculatePickChanceValues = true;
         isMockedDataInitiated = true;
-        calculationsCompleted = false;
+        calculatingNewPickValuesIsCompleted = false;
 
         calculatingCoroutine = null;
     }

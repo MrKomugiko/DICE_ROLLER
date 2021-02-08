@@ -20,8 +20,8 @@ public class DiceRollScript : MonoBehaviour
     [SerializeField] bool _isSentToBattlefield;
     [SerializeField] bool _isAbleToPickup;
     [SerializeField] bool _lockDiceOnBattlefield;
+    private GameManager GameManager_Script;
 
-    [SerializeField]
     public bool IsAbleToPickup
     {
         get => _isAbleToPickup;
@@ -51,23 +51,30 @@ public class DiceRollScript : MonoBehaviour
     [SerializeField] public bool LockDiceOnBattlefield 
     { 
         get => _lockDiceOnBattlefield; 
-        set => _lockDiceOnBattlefield = value; 
+        set {
+            _lockDiceOnBattlefield = value; 
+        } 
     }
     public void OnClick_TEST_WrocKoscZpolaBitwy()
     {
         // sprawdzenie blokady na kostce "matce" na ręce wyszukanej po numeze kości
         var myContainer = this.GetComponent<DiceActionScript>().transform.parent;
         DiceRollScript originDice;
-
         if(myContainer.name == "Player1Dices")
         {
             var diceOriginContainer = GameObject.Find("Player1").transform.Find("DiceHolder").transform.GetComponentsInChildren<DiceRollScript>();
             originDice = diceOriginContainer.Where(d=>d.DiceNumber == this.DiceNumber).First();
+           
+            var diceOnBattlefield = GameManager_Script.Player_1.ListOfDicesOnBattleground.Where(d=>d.DiceNumber == this.DiceNumber).First();
+            GameManager_Script.Player_1.ListOfDicesOnBattleground.Remove(diceOnBattlefield);
         }
         else
         {
             var diceOriginContainer = GameObject.Find("Player2").transform.Find("DiceHolder").transform.GetComponentsInChildren<DiceRollScript>();
             originDice = diceOriginContainer.Where(d=>d.DiceNumber == this.DiceNumber).First();
+
+            var diceOnBattlefield = GameManager_Script.Player_2.ListOfDicesOnBattleground.Where(d=>d.DiceNumber == this.DiceNumber).First();
+            GameManager_Script.Player_2.ListOfDicesOnBattleground.Remove(diceOnBattlefield);
         }
         if (DiceSlotIsLocked == false)
         {
@@ -87,7 +94,7 @@ public class DiceRollScript : MonoBehaviour
             {
                 this.GetComponent<Image>().color = Color.clear;
                 this.GetComponent<Button>().interactable = false;
-                this.IsAbleToPickup = false;
+                this.IsAbleToPickup = false;            
             }
             if (value == false)
             {
@@ -171,6 +178,7 @@ public class DiceRollScript : MonoBehaviour
     }
     void Start()
     {
+        GameManager_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         this.IsAbleToPickup = false;
         DiceImage = this.GetComponent<Image>();
     }
@@ -183,7 +191,7 @@ public class DiceRollScript : MonoBehaviour
     private void SendDiceToBattlefield()
     {
         IsSentToBattlefield = true;
-        var diceOnBattlefield = Instantiate(GameObject.Find("GameManager").GetComponent<GameManager>().DicePrefab, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position, Quaternion.identity, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
+        var diceOnBattlefield = Instantiate(GameManager_Script.DicePrefab, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform.position, Quaternion.identity, GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder.transform);
         DiceRollScript diceRollScript = diceOnBattlefield.GetComponent<DiceRollScript>();
         diceRollScript.DiceNumber = this.DiceNumber;
         diceRollScript.DiceOwner = this.DiceOwner;
@@ -197,6 +205,15 @@ public class DiceRollScript : MonoBehaviour
             diceOnBattlefield.transform.Rotate(0, 0, 180f, Space.Self);
         }
         GetComponentInParent<DiceManager>().NumberOfDicesOnBattlefield++;
+        
+        if(DiceOwner == "Player1")
+        {
+            GameManager_Script.Player_1.ListOfDicesOnBattleground.Add(diceOnBattlefield.GetComponent<DiceRollScript>());
+        }
+        else
+        {
+            GameManager_Script.Player_2.ListOfDicesOnBattleground.Add(diceOnBattlefield.GetComponent<DiceRollScript>());
+        }
     }
     IEnumerator RollingAnimation(List<int> wynikiLosowania)
     {

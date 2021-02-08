@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
 
+    [SerializeField] private List<DiceRollScript> _listOfDicesOnBattleground;
     [SerializeField] private int _currentHealth_Value;
     public int CurrentHealth_Value
     {
@@ -139,19 +140,29 @@ public class Player : MonoBehaviour
         }
     }
 
+    public List<DiceRollScript> ListOfDicesOnBattleground 
+    { 
+        get => _listOfDicesOnBattleground; 
+        set 
+        {
+            _listOfDicesOnBattleground = value; 
+        }
+    }
+
     public DiceManager DiceManager;
     #endregion
 
 
 
     void Start()
-  {
-    CurrentGold_Value = Convert.ToInt32(GoldVault_Text.text);
-    CurrentHealth_Value = Convert.ToInt32(HPPoints_Text.text);
-    HealthText_TMP.text = "";
+    {
+        ListOfDicesOnBattleground = new List<DiceRollScript>();
+        CurrentGold_Value = Convert.ToInt32(GoldVault_Text.text);
+        CurrentHealth_Value = Convert.ToInt32(HPPoints_Text.text);
+        HealthText_TMP.text = "";
 
-    RollingCounter = 0;
-  }
+        RollingCounter = 0;
+    }
     internal void TransferGold()
     {
         if (LiczbaPrzelewowGolda > 0)
