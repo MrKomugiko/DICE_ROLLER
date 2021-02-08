@@ -1,10 +1,10 @@
-using System.Linq.Expressions;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
 using DiceRoller_Console;
+using System.Collections;
 
 public class EnemyAI : MonoBehaviour
 {
@@ -15,138 +15,130 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] Player HUMAN_Player;
     [SerializeField] bool IsRollAllowed = true;
     [SerializeField] bool calculationsCompleted = false;
+    [SerializeField] AIPickChanceUi UI;
 
     Dictionary<int, string> dicesDict = new Dictionary<int, string>();          // diceNumber <1;6> / "nazwa kostki"
-    Dictionary<int, int> pickProbablityDict = new Dictionary<int, int>();       // diceNumber <1;6> / prawdopodobieństwo bycia wybraną <1;100> 
+    public Dictionary<int, int> pickProbablityDict = new Dictionary<int, int>();       // diceNumber <1;6> / prawdopodobieństwo bycia wybraną <1;100> 
     Dictionary<int, int> pickChanceForDicesDict = new Dictionary<int, int>();   // diceNumber <1;6> / losowa wartość do wybrania <1;100>
+    void Start()
+    {
+        UI = this.GetComponentInChildren<AIPickChanceUi>();
+    }
     private void AutomaticPopulateDicesInDictList(List<DiceRollScript> dices)
     {
-        if(!RollingIsCompleted) return;
-        if(isMockedDataInitiated) return;
+        if (!RollingIsCompleted) return;
+        if (isMockedDataInitiated) return;
         isMockedDataInitiated = true;
         debugShowDict.Add($"--------------------- Start new Round ---------------------");
-        dicesDict.Clear();  
+        dicesDict.Clear();
         for (int i = 1; i <= 6; i++)
         {
-            dicesDict.Add(key: i, value: dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
-           // print(i + " / "+ dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
+            dicesDict.Add(key: i, value: dices.Where(d => d.DiceNumber == i).FirstOrDefault().name.Remove(0, 2));
+            // print(i + " / "+ dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
         }
     }
-    private void CalculatePickingValuesForOwnedDices()
+    [ContextMenu("CalculateDicesPickChance")]
+    private IEnumerator CalculatePickingValuesForOwnedDices()
     {
-        if(!isMockedDataInitiated) return;
-        if(calculationsCompleted) return;
+        print("CalculatePickingValuesForOwnedDices routine is working");
+        calculationsIsCompleted = false;
+        if (!isMockedDataInitiated) yield return null;
+        if (calculationsCompleted) yield return null;
+
         calculationsCompleted = true;
-        foreach(KeyValuePair<int,string> dice in dicesDict)
+        foreach (KeyValuePair<int, string> dice in dicesDict)
         {
-            int pickValue = 40; // TODO: Tutaj bedzie dziać sie magia xDD
-            if(!pickProbablityDict.ContainsKey(dice.Key))
+            int calculatedPickValue = 0;
+            Func<bool> recalculating = () => RecalculatePickValue(dice, out calculatedPickValue);
+            yield return new WaitUntil(recalculating);
+
+            if (!pickProbablityDict.ContainsKey(dice.Key))
             {
                 // jezeli nie zawiera numeru kostki więc jest to pewnie 1 tura, dodaj ją do dict'a
-                pickProbablityDict.Add(key: dice.Key, value: pickValue);
+                pickProbablityDict.Add(key: dice.Key, value: calculatedPickValue);
             }
             else
             {
-                pickValue = 50;
-                if(pickProbablityDict[dice.Key] == pickValue)
-                {
-                    pickValue += 10;
-                }
                 // posiada juz ten klicz w dictie , nadpisz go nową wartością
-                pickProbablityDict[dice.Key] = pickValue;
+                pickProbablityDict[dice.Key] += 15;
+            }
+            UI.SetPickChanceValues(diceNumber: dice.Key, dicePickChance: pickProbablityDict[dice.Key]);
+        }
+
+        UpdateLogger();
+        calculationsIsCompleted = true;
+    }
+
+    private bool RecalculatePickValue(KeyValuePair<int, string> dice, out int pickValue)
+    {
+        print("recalculate dice min pick value");
+        // Default value = 25.
+
+        pickValue = 25;
+        
+        //TODO: "PROCES SPRAWDZANIA I SZACOWANIA OPŁACALNOŚCI WYBORU KOŚCI"
+
+        return true;
+    }
+    private void UpdateLogger()
+    {
+        try
+        {
+            foreach (KeyValuePair<int, string> AI_Dice in dicesDict)
+            {
+                debugShowDict.Add(
+                    $"Dice:{AI_Dice.Key}\t" +
+                    $"Rolled value:[{pickChanceForDicesDict.Where(p => p.Key == AI_Dice.Key).First().Value.ToString("000")}] " +
+                    $"Pick value: {pickProbablityDict.Where(p => p.Key == AI_Dice.Key).First().Value.ToString("000")}]\t" +
+                    $"Dice name: {dicesDict.Where(d => d.Key == AI_Dice.Key).First().Value}");
+            }
+            debugShowDict.Add("--------------------- End of Turn ---------------------");
+            foreach (string log in debugShowDict)
+            {
+                AndroidLogger.Log(log, AndroidLogger.GetPlayerLogColor(AI_Player.Name));
             }
         }
-       // debugShowDict = new List<string>(); // czyszczenie wczesniejszego wpisu
-        foreach (KeyValuePair<int, string> AI_Dice in dicesDict)
+        catch (Exception ex)
         {
-            debugShowDict.Add(
-                $"Dice:{AI_Dice.Key}\t"+
-                $"Rolled value:[{pickChanceForDicesDict.Where(p => p.Key == AI_Dice.Key).First().Value.ToString("00")}] "+
-                $"Pick value: {pickProbablityDict.Where(p => p.Key == AI_Dice.Key).First().Value.ToString("00")}]\t"+
-                $"Dice name: {dicesDict.Where(d=>d.Key == AI_Dice.Key).First().Value}");
-        }
-        debugShowDict.Add("--------------------- End of Turn ---------------------");
-        foreach (string log in debugShowDict)
-        {
-            AndroidLogger.Log(log,AndroidLogger.GetPlayerLogColor(AI_Player.Name));
+         //   print(ex.Message);
         }
     }
-    [SerializeField] public  bool FirstRoll = true;
+
+    [SerializeField] public bool FirstRoll = true;
     [SerializeField] bool SecondRoll = false;
     [SerializeField] bool ThirdRoll = false;
     [SerializeField] bool FourthRoll = false;
 
+    IEnumerator calculatingCoroutine = null;
     void FixedUpdate()
     {
         if (IsTurnON && !AI_Player.TurnBlocker.activeSelf && FirstRoll)
         {
             RollDices();
 
-            if (RollingIsCompleted)
+            if (RollingIsCompleted && calculatingCoroutine == null)
             {
-                isMockedDataInitiated = false;
-                GeneratePickChanceValuesForDices();
-                AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
-                CalculatePickingValuesForOwnedDices();
-                List<int> numberOFPickedDices = new List<int>();
-                // for test pick all dices
-                foreach (KeyValuePair<int, string> dice in dicesDict)
-                {
-                    if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
-                    {
-                        PickDice(diceNumber: dice.Key);
-                        numberOFPickedDices.Add(dice.Key);
-                    }
-                }
-                RemoveUsedDicesFromDictMemory(numberOFPickedDices);
-                EndTurn(1);
+                calculatingCoroutine = CalculatingChance(roundNumber: 1);
+                StartCoroutine(calculatingCoroutine);
             }
         }
         if (IsTurnON && !AI_Player.TurnBlocker.activeSelf && SecondRoll)
         {
             RollDices();
-            if (RollingIsCompleted)
+            if (RollingIsCompleted && calculatingCoroutine == null)
             {
-                isMockedDataInitiated = true;
-                calculationsCompleted = false;
-                itsNeedToReCalculatePickChanceValues = true;
-
-                print("calculating round TWO");
-                GeneratePickChanceValuesForDices();
-                CalculatePickingValuesForOwnedDices();
-                List<int> numberOFPickedDices = new List<int>();
-                foreach (KeyValuePair<int, string> dice in dicesDict)
-                {
-                    if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
-                    {
-                        PickDice(diceNumber: dice.Key);
-                        numberOFPickedDices.Add(dice.Key);
-                    }
-                }
-                RemoveUsedDicesFromDictMemory(numberOFPickedDices);
-                EndTurn(2);
+                calculatingCoroutine = CalculatingChance(roundNumber: 2);
+                StartCoroutine(calculatingCoroutine);
             }
         }
         if (IsTurnON && !AI_Player.TurnBlocker.activeSelf && ThirdRoll)
         {
             RollDices();
 
-            if (RollingIsCompleted)
+            if (RollingIsCompleted && calculatingCoroutine == null)
             {
-                print("calculating round THREE");
-                GeneratePickChanceValuesForDices();
-                CalculatePickingValuesForOwnedDices();
-                List<int> numberOFPickedDices = new List<int>();
-                foreach (KeyValuePair<int, string> dice in dicesDict)
-                {
-                    if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
-                    {
-                        PickDice(diceNumber: dice.Key);
-                        numberOFPickedDices.Add(dice.Key);
-                    }
-                }
-                RemoveUsedDicesFromDictMemory(numberOFPickedDices);
-                EndTurn(3);
+                calculatingCoroutine = CalculatingChance(roundNumber: 3);
+                StartCoroutine(CalculatingChance(roundNumber: 3));
             }
         }
         if (IsTurnON && !AI_Player.TurnBlocker.activeSelf && FourthRoll)
@@ -158,7 +150,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     debugShowDict.Add(
                         $"Dice:{AI_Dice.Key}\t" +
-                        $"Dice name: {dicesDict.Where(d => d.Key == AI_Dice.Key).First().Value}"+
+                        $"Dice name: {dicesDict.Where(d => d.Key == AI_Dice.Key).First().Value}" +
                         $" -> Automatic last pick.");
                 }
                 print("Final round FOUR - auto pick last dices");
@@ -167,34 +159,70 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    bool calculationsIsCompleted = false;
+    private IEnumerator CalculatingChance(int roundNumber)
+    {
+        if (roundNumber == 1)
+        {
+            print("CalculatingChance routine is working");
+            isMockedDataInitiated = false;
+            GeneratePickChanceValuesForDices();
+            AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
+            StartCoroutine(CalculatePickingValuesForOwnedDices());
+            yield return new WaitUntil(() => calculationsIsCompleted);
+
+            List<int> numberOFPickedDices = new List<int>();
+            // for test pick all dices
+            foreach (KeyValuePair<int, string> dice in dicesDict)
+            {
+                if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
+                {
+                    PickDice(diceNumber: dice.Key);
+                    numberOFPickedDices.Add(dice.Key);
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+            RemoveUsedDicesFromDictMemory(numberOFPickedDices);
+            EndTurn(roundNumber);
+        }
+        else
+        {
+            print("calculating round " + roundNumber);
+            GeneratePickChanceValuesForDices();
+            StartCoroutine(CalculatePickingValuesForOwnedDices());
+            yield return new WaitUntil(() => calculationsIsCompleted);
+            List<int> numberOFPickedDices = new List<int>();
+            foreach (KeyValuePair<int, string> dice in dicesDict)
+            {
+                if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
+                {
+                    PickDice(diceNumber: dice.Key);
+                    numberOFPickedDices.Add(dice.Key);
+                }
+                yield return new WaitForSeconds(1f);
+            }
+            RemoveUsedDicesFromDictMemory(numberOFPickedDices);
+            EndTurn(roundNumber);
+        }
+    }
+
     private void RemoveUsedDicesFromDictMemory(List<int> numberOFPickedDices)
     {
-        foreach(int usedDice in numberOFPickedDices)
+        foreach (int usedDice in numberOFPickedDices)
         {
             dicesDict.Remove(usedDice);
         }
-         print("Pikniętych kostek:"+numberOFPickedDices.Count()+"/ usuniecie kostek z pamieci, aktualnie zostało:"+dicesDict.Count());
+        print("Pikniętych kostek:" + numberOFPickedDices.Count() + "/ usuniecie kostek z pamieci, aktualnie zostało:" + dicesDict.Count());
     }
 
     private bool CheckIfDiceShouldBePicked(int diceNumber)
     {
-        int dicePickRequirments = pickProbablityDict.Where(d=>d.Key == diceNumber).First().Value;
-        int rolledPickValue = pickChanceForDicesDict.Where(d=>d.Key == diceNumber).First().Value; 
+        int dicePickRequirments = pickProbablityDict.Where(d => d.Key == diceNumber).First().Value;
+        int rolledPickValue = pickChanceForDicesDict.Where(d => d.Key == diceNumber).First().Value;
         print($"CheckIfDiceShouldBePicked for dice:{diceNumber}. [{rolledPickValue}<{dicePickRequirments}]");
 
-        if(rolledPickValue<dicePickRequirments)
+        if (rolledPickValue < dicePickRequirments)
         {
-           /* 
-            * Note:
-            * ~ szansa na wylosowanie kostki to 75%, 
-            * ~`wylosowana wartość wynosi 60,
-            * => żeby kostka zostałą wybrana akceptowalne są wszytskie wartości 
-            *      poniżej lub jej równe - szansy(75%)
-            *      więc jeżeli watość(60) < szansa na wybranie(75)
-            *      w przeciwnym wypadku mamy gdy wartość jest większa niż szansa 
-            *      czyli reszta (25%) jest pomijane i zostane na następną runde
-            */
-
             return true;
         }
         return false;
@@ -209,7 +237,7 @@ public class EnemyAI : MonoBehaviour
 
         for (int i = 1; i <= 6; i++)
         {
-            if(!pickChanceForDicesDict.ContainsKey(i))
+            if (!pickChanceForDicesDict.ContainsKey(i))
             {
                 pickChanceForDicesDict.Add(key: i, value: RandomNumberGenerator.NumberBetween(1, 100));
             }
@@ -227,7 +255,7 @@ public class EnemyAI : MonoBehaviour
     private void RollDices()
     {
         if (!IsRollAllowed) return;
-   
+
         AI_Player.DiceManager.OnClick_ROLLDICES();
         AI_Player.GameManager.SwapRollButonWithEndTurn_OnClick(AI_Player.Name);
         IsRollAllowed = false;
@@ -242,7 +270,7 @@ public class EnemyAI : MonoBehaviour
         .GetChild(diceIndex)
         .GetComponent<Button>();
 
-        if(diceButton.IsInteractable()) diceButton.onClick.Invoke();
+        if (diceButton.IsInteractable()) diceButton.onClick.Invoke();
     }
 
     private void EndTurn(int turnNumber)
@@ -251,7 +279,7 @@ public class EnemyAI : MonoBehaviour
         {
             case 1:
                 FirstRoll = false;
-                 SecondRoll = true;
+                SecondRoll = true;
                 break;
 
             case 2:
@@ -259,12 +287,12 @@ public class EnemyAI : MonoBehaviour
                 ThirdRoll = true;
                 break;
 
-            case 3: 
+            case 3:
                 ThirdRoll = false;
                 FourthRoll = true;
                 break;
-            
-            case 4: 
+
+            case 4:
                 FourthRoll = false;
                 break;
         }
@@ -276,18 +304,20 @@ public class EnemyAI : MonoBehaviour
         itsNeedToReCalculatePickChanceValues = true;
         isMockedDataInitiated = true;
         calculationsCompleted = false;
+
+        calculatingCoroutine = null;
     }
 
     public void OnClick_TurnOnAI()
     {
         TurnONOFF();
-        if(IsTurnON) 
+        if (IsTurnON)
         {
-            transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(0,255,0,255);
-        }  
+            transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(0, 255, 0, 255);
+        }
         else
         {
-            transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(255,0,0,128);
+            transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(255, 0, 0, 128);
         }
     }
 }
