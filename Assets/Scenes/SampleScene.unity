@@ -2926,9 +2926,9 @@ MonoBehaviour:
   isMockedDataInitiated: 0
   IsTurnON: 0
   AI_Player: {fileID: 1301416610}
-  ENEMY_Player: {fileID: 0}
+  ENEMY_Player: {fileID: 1301416609}
   IsRollAllowed: 1
-  UI: {fileID: 0}
+  UI: {fileID: 243463607}
   FirstRoll: 1
   SecondRoll: 0
   ThirdRoll: 0
@@ -9046,9 +9046,9 @@ MonoBehaviour:
   isMockedDataInitiated: 0
   IsTurnON: 0
   AI_Player: {fileID: 1301416609}
-  ENEMY_Player: {fileID: 0}
+  ENEMY_Player: {fileID: 1301416610}
   IsRollAllowed: 1
-  UI: {fileID: 0}
+  UI: {fileID: 1683576310}
   FirstRoll: 1
   SecondRoll: 0
   ThirdRoll: 0
@@ -9231,6 +9231,7 @@ GameObject:
   - component: {fileID: 1683576309}
   - component: {fileID: 1683576308}
   - component: {fileID: 1683576307}
+  - component: {fileID: 1683576310}
   m_Layer: 0
   m_Name: AIIcon_Button
   m_TagString: Untagged
@@ -9357,6 +9358,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1683576305}
   m_CullTransparentMesh: 1
+--- !u!114 &1683576310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1683576305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34953b8b7252e44d88764718537009e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListOfPickChance_Image: []
+  ListOfPickChance_Text: []
+  needUpdateColorsUI: 1
 --- !u!1 &1699362332
 GameObject:
   m_ObjectHideFlags: 0
