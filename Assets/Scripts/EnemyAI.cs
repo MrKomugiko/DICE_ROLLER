@@ -12,24 +12,23 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] AIPickChanceUi UI;
 
     [SerializeField] public bool FirstRoll, SecondRoll, ThirdRoll, FourthRoll;
-    [SerializeField] bool isMockedDataInitiated, IsTurnON, calculatingNewPickValuesIsCompleted, IsRollAllowed = true, itsNeedToReCalculatePickChanceValues = true;
+    [SerializeField] bool isMockedDataInitiated, IsTurnON, calculatingNewPickValuesIsCompleted, IsRollAllowed = true, itsNeedToReCalculateRandomPickingValues = true;
 
     Dictionary<int, string> dicesDict = new Dictionary<int, string>();              // diceNumber <1;6> / "nazwa kostki" 
     Dictionary<int, string> actualLeftDicesOnHand = new Dictionary<int, string>();  // COPY of diceDict
     Dictionary<int, int> pickProbablityDict = new Dictionary<int, int>();           // diceNumber <1;6> / prawdopodobieństwo bycia wybraną <1;100> 
-    Dictionary<int, int> pickChanceForDicesDict = new Dictionary<int, int>();       // diceNumber <1;6> / losowa wartość do wybrania <1;100>
+    Dictionary<int, int> randomPickValueForDices = new Dictionary<int, int>();       // diceNumber <1;6> / losowa wartość do wybrania <1;100>
 
     [SerializeField] List<string> debugShowDict = new List<string>();
-    private List<DiceRollScript> GetCurrentEnemyDicesInBattlefield => ENEMY_Player.ListOfDicesOnBattleground;
-    private List<DiceRollScript> GetCurrentDicesInBattlefield => AI_Player.ListOfDicesOnBattleground;
-    private bool RollingIsCompleted => AI_Player.DiceManager.Dices.ElementAt(0).rollingIsCompleted;
+    List<DiceRollScript> GetCurrentEnemyDicesInBattlefield => ENEMY_Player.ListOfDicesOnBattleground;
+    List<DiceRollScript> GetCurrentDicesInBattlefield => AI_Player.ListOfDicesOnBattleground;
+    bool RollingIsCompleted => AI_Player.DiceManager.Dices.ElementAt(0).rollingIsCompleted;
 
     IEnumerator calculatingCoroutine = null;
     void Start()
     {
         UI = this.GetComponentInChildren<AIPickChanceUi>();
     }
-
     void FixedUpdate()
     {
         if (IsTurnON && !AI_Player.TurnBlocker.activeSelf)
@@ -83,7 +82,7 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void AutomaticPopulateDicesInDictList(List<DiceRollScript> dices)
+    void AutomaticPopulateDicesInDictList(List<DiceRollScript> dices)
     {
         if (!RollingIsCompleted) return;
         if (isMockedDataInitiated) return;
@@ -97,37 +96,19 @@ public class EnemyAI : MonoBehaviour
             // print(i + " / "+ dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
         }
     }
-    private bool RecalculatePickValue(KeyValuePair<int, string> dice, out int pickValue)
-    {
-
-        // Default value = 25.
-
-
-        pickValue = 25;
-
-        // TODO: "PROCES SPRAWDZANIA I SZACOWANIA OPŁACALNOŚCI WYBORU KOŚCI"
-        //      uzyj actual left dices zeby przeszukac czy masz na ręce jakieś inne "może lepsze kości" 
-        //      i ile sztuk => w razie planowania obrony lub ataku
-        print(GetCurrentDicesInBattlefield.Count());
-        print(GetCurrentEnemyDicesInBattlefield.Count());
-
-        print("obliczanie opłacalności kości: " + dice.Value + " łącznie na ręce zostało jeszcze " + actualLeftDicesOnHand.Count() + " oplaca się piknąć tą kość w " + pickValue + "%");
-        return true;
-    }
-    private void UpdateLogger(KeyValuePair<int, string> currentCheckingDice)
+    void UpdateLogger(KeyValuePair<int, string> currentCheckingDice)
     {
         debugShowDict.Add(
             $"Dice:{currentCheckingDice.Key}\t" +
-            $"Rolled value:[{pickChanceForDicesDict.Where(p => p.Key == currentCheckingDice.Key).First().Value.ToString("000")}] " +
+            $"Rolled value:[{randomPickValueForDices.Where(p => p.Key == currentCheckingDice.Key).First().Value.ToString("000")}] " +
             $"Pick value: {pickProbablityDict.Where(p => p.Key == currentCheckingDice.Key).First().Value.ToString("000")}]\t" +
             $"Dice name: {dicesDict.Where(d => d.Key == currentCheckingDice.Key).First().Value}");
 
         AndroidLogger.Log(debugShowDict.Last(), AndroidLogger.GetPlayerLogColor(AI_Player.Name));
     }
-
-    private IEnumerator CalculatingChance(int roundNumber)
+    IEnumerator CalculatingChance(int roundNumber)
     {
-        GeneratePickChanceValuesForDices();
+        PopulateDictWithRandomPickingValue();
         List<int> numberOFPickedDices = new List<int>();
         actualLeftDicesOnHand.Clear();
         foreach (var dice in dicesDict)
@@ -147,8 +128,11 @@ public class EnemyAI : MonoBehaviour
                 actualLeftDicesOnHand.Remove(usedDice);
             }
 
-            StartCoroutine(CalculatePickingValuesForOwnedDices(currentCheckingDice: actualLeftDicesOnHand.Where(d => d.Key == dice.Key).FirstOrDefault()));
-            yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
+            // execute for every possesed dice one by one 
+            var currentCheckingDice = actualLeftDicesOnHand.Where(d => d.Key == dice.Key).FirstOrDefault();
+            CalculatePickingValuesForOwnedDices(currentCheckingDice);
+            StartCoroutine(CalculatePickingValuesForOwnedDices(currentCheckingDice));
+           yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
 
             if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
             {
@@ -161,17 +145,14 @@ public class EnemyAI : MonoBehaviour
         RemoveUsedDicesFromDictMemory(numberOFPickedDices);
         EndTurn(roundNumber);
     }
-
-    [ContextMenu("CalculateDicesPickChance")]
-    private IEnumerator CalculatePickingValuesForOwnedDices(KeyValuePair<int, string> currentCheckingDice)
+    IEnumerator CalculatePickingValuesForOwnedDices(KeyValuePair<int, string> currentCheckingDice)
     {
         calculatingNewPickValuesIsCompleted = false;
         if (!isMockedDataInitiated) yield return null;
         if (calculatingNewPickValuesIsCompleted) yield return null;
 
         int calculatedPickValue = 0;
-        Func<bool> recalculating = () => RecalculatePickValue(currentCheckingDice, out calculatedPickValue);
-        yield return new WaitUntil(recalculating);
+        RecalculatePickWeightValueBasedOnLogic(currentCheckingDice, out calculatedPickValue);
 
         if (!pickProbablityDict.ContainsKey(currentCheckingDice.Key))
         {
@@ -181,26 +162,40 @@ public class EnemyAI : MonoBehaviour
         else
         {
             // posiada juz ten klicz w dictie , nadpisz go nową wartością
-            pickProbablityDict[currentCheckingDice.Key] += 15;
+            pickProbablityDict[currentCheckingDice.Key] = calculatedPickValue;
         }
         UI.SetPickChanceValues(diceNumber: currentCheckingDice.Key, dicePickChance: pickProbablityDict[currentCheckingDice.Key]);
 
         UpdateLogger(currentCheckingDice);
         calculatingNewPickValuesIsCompleted = true;
     }
-    private void RemoveUsedDicesFromDictMemory(List<int> numberOFPickedDices)
+    bool RecalculatePickWeightValueBasedOnLogic(KeyValuePair<int, string> dice, out int pickValue)
+    {
+        // Default value = 25.
+
+        pickValue = RandomNumberGenerator.NumberBetween(1,100);
+
+        // TODO: "PROCES SPRAWDZANIA I SZACOWANIA OPŁACALNOŚCI WYBORU KOŚCI"
+        //      uzyj actual left dices zeby przeszukac czy masz na ręce jakieś inne "może lepsze kości" 
+        //      i ile sztuk => w razie planowania obrony lub ataku
+
+        print(GetCurrentDicesInBattlefield.Count());
+        print(GetCurrentEnemyDicesInBattlefield.Count());
+
+        print("obliczanie opłacalności kości: " + dice.Value + " łącznie na ręce zostało jeszcze " + actualLeftDicesOnHand.Count() + " oplaca się piknąć tą kość w " + pickValue + "%");
+        return true;
+    }
+    void RemoveUsedDicesFromDictMemory(List<int> numberOFPickedDices)
     {
         foreach (int usedDice in numberOFPickedDices)
         {
             dicesDict.Remove(usedDice);
         }
-        print("Pikniętych kostek:" + numberOFPickedDices.Count() + "/ usuniecie kostek z pamieci, aktualnie zostało:" + dicesDict.Count());
     }
-    private bool CheckIfDiceShouldBePicked(int diceNumber)
+    bool CheckIfDiceShouldBePicked(int diceNumber)
     {
         int dicePickRequirments = pickProbablityDict.Where(d => d.Key == diceNumber).First().Value;
-        int rolledPickValue = pickChanceForDicesDict.Where(d => d.Key == diceNumber).First().Value;
-        print($"CheckIfDiceShouldBePicked for dice:{diceNumber}. [{rolledPickValue}<{dicePickRequirments}]");
+        int rolledPickValue = randomPickValueForDices.Where(d => d.Key == diceNumber).First().Value;
 
         if (rolledPickValue < dicePickRequirments)
         {
@@ -208,28 +203,26 @@ public class EnemyAI : MonoBehaviour
         }
         return false;
     }
-
-    private void GeneratePickChanceValuesForDices()
+    void PopulateDictWithRandomPickingValue()
     {
-        if (!itsNeedToReCalculatePickChanceValues) return;
+        if (!itsNeedToReCalculateRandomPickingValues) return;
 
-
+print("dodanie losowych wag pikniecia");
         for (int i = 1; i <= 6; i++)
         {
-            if (!pickChanceForDicesDict.ContainsKey(i))
+            if (!randomPickValueForDices.ContainsKey(i))
             {
-                pickChanceForDicesDict.Add(key: i, value: RandomNumberGenerator.NumberBetween(1, 100));
+                randomPickValueForDices.Add(key: i, value: RandomNumberGenerator.NumberBetween(1, 100));
             }
             else
             {
-                pickChanceForDicesDict[i] = RandomNumberGenerator.NumberBetween(1, 100);
+                randomPickValueForDices[i] = RandomNumberGenerator.NumberBetween(1, 100);
             }
         }
 
-        itsNeedToReCalculatePickChanceValues = false;
+        itsNeedToReCalculateRandomPickingValues = false;
     }
-    public void TurnONOFF() => IsTurnON = !IsTurnON;
-    private void RollDices()
+    void RollDices()
     {
         if (!IsRollAllowed) return;
 
@@ -237,7 +230,7 @@ public class EnemyAI : MonoBehaviour
         AI_Player.GameManager.SwapRollButonWithEndTurn_OnClick(AI_Player.Name);
         IsRollAllowed = false;
     }
-    private void PickDice(int diceNumber)
+    void PickDice(int diceNumber)
     {
         print("PickDice");
 
@@ -248,7 +241,7 @@ public class EnemyAI : MonoBehaviour
 
         if (diceButton.IsInteractable()) diceButton.onClick.Invoke();
     }
-    private void EndTurn(int turnNumber)
+    void EndTurn(int turnNumber)
     {
         switch (turnNumber)
         {
@@ -276,12 +269,14 @@ public class EnemyAI : MonoBehaviour
         this.transform.Find("EndTurnButton").GetComponent<Button>().onClick.Invoke();
 
         IsRollAllowed = true;
-        itsNeedToReCalculatePickChanceValues = true;
+        itsNeedToReCalculateRandomPickingValues = true;
         isMockedDataInitiated = true;
         calculatingNewPickValuesIsCompleted = false;
 
         calculatingCoroutine = null;
     }
+    void TurnONOFF() => IsTurnON = !IsTurnON;
+    
     public void OnClick_TurnOnAI()
     {
         TurnONOFF();
