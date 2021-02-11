@@ -10,7 +10,7 @@ public class DiceRollScript : MonoBehaviour
     [SerializeField] public string DiceOwner;
     [SerializeField] public int DiceNumber;
     public static int WIELKOSC_KOSCI = 6;
-    public static int ILOSC_RZUTOW = 10;
+    public static int ILOSC_RZUTOW = 20;
 
     [SerializeField] public bool DiceSlotIsLocked;
     [SerializeField] public bool rollingIsCompleted;
@@ -218,9 +218,9 @@ public class DiceRollScript : MonoBehaviour
     IEnumerator RollingAnimation(List<int> wynikiLosowania)
     {
         IsAbleToPickup = false;
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 10; i++)
         {
-            this.GetComponent<Image>().sprite = listaDiceImages.ElementAt(wynikiLosowania[i] - 1);
+            this.GetComponent<Image>().sprite = listaDiceImages.ElementAt(wynikiLosowania[i]-1);
             yield return new WaitForSeconds(0.05f);
         }
         RollingIsCompleted = true;
