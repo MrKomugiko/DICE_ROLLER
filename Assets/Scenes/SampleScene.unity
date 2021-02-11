@@ -400,7 +400,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -418,13 +418,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -2612,7 +2612,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -2630,7 +2630,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -2648,7 +2648,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3217,7 +3217,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3235,7 +3235,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3253,7 +3253,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3596,7 +3596,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3614,13 +3614,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -6717,7 +6717,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0
+  m_Text: 10
 --- !u!1 &1245502806
 GameObject:
   m_ObjectHideFlags: 0
@@ -7376,7 +7376,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7406,13 +7406,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7569,7 +7569,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7599,13 +7599,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7739,6 +7739,7 @@ MonoBehaviour:
   _turnNumber: 0
   isBattleModeTurnOn: 0
   CurrentPlayer: 
+  FirstMoveByPlayer: 
   currentGamePhase: 
   CombatManager_Script: {fileID: 0}
 --- !u!4 &1301416608
@@ -7785,6 +7786,7 @@ MonoBehaviour:
   liczbaPrzelewaniaObrazen: 0
   _temporaryIntakeDamage: 0
   DiceManager: {fileID: 1795155977}
+  skillsLoades: 0
 --- !u!114 &1301416610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7815,6 +7817,7 @@ MonoBehaviour:
   liczbaPrzelewaniaObrazen: 0
   _temporaryIntakeDamage: 0
   DiceManager: {fileID: 228421449}
+  skillsLoades: 0
 --- !u!224 &1313521715 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,
@@ -8946,7 +8949,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -8964,7 +8967,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -8976,7 +8979,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -9906,7 +9909,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -9924,7 +9927,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -9936,7 +9939,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -10465,7 +10468,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -10489,7 +10492,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -10501,7 +10504,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11129,7 +11132,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11153,13 +11156,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11772,7 +11775,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11796,7 +11799,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11808,7 +11811,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11980,7 +11983,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -12004,13 +12007,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}

@@ -167,7 +167,7 @@ public class DiceActionScript : MonoBehaviour
     [ContextMenu("Zadaj obrazenia")]
     public void TakeDamage()
     {
-        print("take damage");
+       //print("take damage");
         string parentName = this.transform.parent.name.ToString();
 
         GameManager GameManager_Script = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
@@ -176,12 +176,12 @@ public class DiceActionScript : MonoBehaviour
         {
             case "Player1Dices_Fight_DiceHolder":
                 GameManager_Script.Player_2.TemporaryIntakeDamage += 1;
-                print("take damage to player 2");
+               //print("take damage to player 2");
                 break;
 
             case "Player2Dices_Fight_DiceHolder":
                 GameManager_Script.Player_1.TemporaryIntakeDamage += 1;
-                print("take damage to player 1");
+               //print("take damage to player 1");
                 break;
         }
     } 

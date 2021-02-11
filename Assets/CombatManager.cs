@@ -23,16 +23,16 @@ public class CombatManager : MonoBehaviour
         GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (Player1ArenaDiceContainer == null)
         {
-            print("pole GameObject dla Player1ArenaDiceContainer jest puste, " +
-                "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
-                "'../Battlefield/FightZone/Player1Dices_Fight_DiceHolder'.");
+            //print("pole GameObject dla Player1ArenaDiceContainer jest puste, " +
+            //    "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
+            //    "'../Battlefield/FightZone/Player1Dices_Fight_DiceHolder'.");
             Player1ArenaDiceContainer = transform.GetChild(0).transform.gameObject; // Player1Dices_Fight_DiceHolder
         }
         if (Player2ArenaDiceContainer == null)
         {
-            print("pole GameObject dla Player2ArenaDiceContainer jest puste, " +
-                "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
-                "'../Battlefield/FightZone/Player2Dices_Fight_DiceHolder'.");
+            //print("pole GameObject dla Player2ArenaDiceContainer jest puste, " +
+            //    "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
+            //    "'../Battlefield/FightZone/Player2Dices_Fight_DiceHolder'.");
             Player2ArenaDiceContainer = transform.GetChild(1).transform.gameObject; // Player2Dices_Fight_DiceHolder
         }
     }
@@ -46,7 +46,7 @@ public class CombatManager : MonoBehaviour
             GM_Script.Player_1.TurnBlocker.SetActive(false);
             GM_Script.Player_2.TurnBlocker.SetActive(false);
 
-            print("atak m 1 => def m 2");
+            //print("atak m 1 => def m 2");
             readyToFight = false;
 
             // atak player 1
@@ -61,7 +61,7 @@ public class CombatManager : MonoBehaviour
         }
         if (IndexOfCombatAction == 2 && readyToFight)
         {
-            print("atak m 2 => def m 1");
+            //print("atak m 2 => def m 1");
             readyToFight = false;
 
             // atak player 2
@@ -76,7 +76,7 @@ public class CombatManager : MonoBehaviour
         }
         if (IndexOfCombatAction == 3 && readyToFight)
         {
-            print("atak r 1 => def r 2");
+            //print("atak r 1 => def r 2");
 
             readyToFight = false;
 
@@ -92,7 +92,7 @@ public class CombatManager : MonoBehaviour
         }
         if (IndexOfCombatAction == 4 && readyToFight)
         {
-            print("atak r 2 => def r 1");
+            //print("atak r 2 => def r 1");
 
             readyToFight = false;
 
@@ -111,7 +111,7 @@ public class CombatManager : MonoBehaviour
             GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
             GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
 
-            print("steal 1/2 <=> steal 2/1");
+            //print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
             readyToFight = false;
 
@@ -316,7 +316,7 @@ public class CombatManager : MonoBehaviour
         }
         catch(Exception ex)
         {
-            print("Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message);
+            //print("Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message);
         }
     }
 }

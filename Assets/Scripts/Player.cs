@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -218,5 +219,30 @@ public class Player : MonoBehaviour
                     TemporaryIntakeDamage = 0;
                 }
             }
+    }
+
+
+
+
+
+
+
+
+    public bool skillsLoades = false;
+    public IEnumerator LoadSkillsData()
+    {
+        print("start");
+        GodSkillWindow.SetActive(true);
+        yield return new WaitUntil(()=>GodsManager_Script._godCardsInContainer.First()._skill != null);
+        GodSkillWindow.SetActive(false);
+        print("end");
+        skillsLoades = true;
+    }
+    public void SelectLevel1Skill(string godName, int level)
+    {   
+        GodSkillWindow.SetActive(true);
+        CardScript CS = GodsManager_Script._godCardsInContainer.Where(c=>c._card.name == godName).First()._card;
+        CS._godTotem._skill.TrySelectSkill(level,Name, CS._godTotem._godData);
+        GodSkillWindow.SetActive(false);
     }
 }
