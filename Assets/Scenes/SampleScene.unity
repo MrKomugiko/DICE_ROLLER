@@ -1525,6 +1525,13 @@ MonoBehaviour:
   ListOfPickChance_Image: []
   ListOfPickChance_Text: []
   needUpdateColorsUI: 1
+  pickChanceGameObject:
+  - {fileID: 464491276}
+  - {fileID: 1703497667}
+  - {fileID: 1418446439}
+  - {fileID: 1500931200}
+  - {fileID: 1394832915}
+  - {fileID: 1174054428}
 --- !u!1 &257941803
 GameObject:
   m_ObjectHideFlags: 0
@@ -2390,7 +2397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &464491277
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2922,18 +2929,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a93ad9970dd6604084e467ece71c89d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugShowDict: []
-  isMockedDataInitiated: 0
-  IsTurnON: 0
   AI_Player: {fileID: 1301416610}
   ENEMY_Player: {fileID: 1301416609}
-  IsRollAllowed: 1
   UI: {fileID: 243463607}
   FirstRoll: 1
   SecondRoll: 0
   ThirdRoll: 0
   FourthRoll: 0
-  itsNeedToReCalculatePickChanceValues: 1
+  IsTurnON: 0
+  isMockedDataInitiated: 0
+  calculatingNewPickValuesIsCompleted: 0
+  IsRollAllowed: 1
+  itsNeedToReCalculateRandomPickingValues: 1
+  debugShowDict: []
 --- !u!1 &483921941
 GameObject:
   m_ObjectHideFlags: 0
@@ -3976,7 +3984,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 50
+  m_Text: 10
 --- !u!222 &640743860
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5622,7 +5630,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &994043064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5935,7 +5943,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0.8156863}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6226,7 +6234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1174054429
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6709,7 +6717,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 100
+  m_Text: 0
 --- !u!1 &1245502806
 GameObject:
   m_ObjectHideFlags: 0
@@ -6761,7 +6769,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 7
+  m_Text: 0
 --- !u!222 &1245502808
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7630,7 +7638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1291710564
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8054,7 +8062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1333964385
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8130,7 +8138,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1350366089
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8376,7 +8384,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1394832916
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8452,7 +8460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1399560943
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8662,7 +8670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1418446440
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8738,7 +8746,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1500931201
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9042,18 +9050,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a93ad9970dd6604084e467ece71c89d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugShowDict: []
-  isMockedDataInitiated: 0
-  IsTurnON: 0
   AI_Player: {fileID: 1301416609}
   ENEMY_Player: {fileID: 1301416610}
-  IsRollAllowed: 1
   UI: {fileID: 1683576310}
   FirstRoll: 1
   SecondRoll: 0
   ThirdRoll: 0
   FourthRoll: 0
-  itsNeedToReCalculatePickChanceValues: 1
+  IsTurnON: 0
+  isMockedDataInitiated: 0
+  calculatingNewPickValuesIsCompleted: 0
+  IsRollAllowed: 1
+  itsNeedToReCalculateRandomPickingValues: 1
+  debugShowDict: []
 --- !u!1 &1640551751
 GameObject:
   m_ObjectHideFlags: 0
@@ -9373,6 +9382,13 @@ MonoBehaviour:
   ListOfPickChance_Image: []
   ListOfPickChance_Text: []
   needUpdateColorsUI: 1
+  pickChanceGameObject:
+  - {fileID: 994043063}
+  - {fileID: 1399560942}
+  - {fileID: 2127272330}
+  - {fileID: 1291710563}
+  - {fileID: 1350366088}
+  - {fileID: 1333964384}
 --- !u!1 &1699362332
 GameObject:
   m_ObjectHideFlags: 0
@@ -9523,7 +9539,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1703497668
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12033,7 +12049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2127272331
 RectTransform:
   m_ObjectHideFlags: 0

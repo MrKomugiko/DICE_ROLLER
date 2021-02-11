@@ -9,8 +9,8 @@ public class DiceRollScript : MonoBehaviour
 {
     [SerializeField] public string DiceOwner;
     [SerializeField] public int DiceNumber;
-    public static int WIELKOSC_KOSCI = 8;
-    public static int ILOSC_RZUTOW = 100;
+    public static int WIELKOSC_KOSCI = 6;
+    public static int ILOSC_RZUTOW = 10;
 
     [SerializeField] public bool DiceSlotIsLocked;
     [SerializeField] public bool rollingIsCompleted;
@@ -44,7 +44,7 @@ public class DiceRollScript : MonoBehaviour
             }
             catch (System.Exception)
             {
-                GameManager test = new GameManager();
+               // GameManager test = new GameManager();
             }
         }
     }

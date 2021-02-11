@@ -12,15 +12,41 @@ public class AIPickChanceUi : MonoBehaviour
 
     [SerializeField] private bool needUpdateColorsUI = true;
 
+    [SerializeField]List<GameObject> pickChanceGameObject;
+    bool isConfigured = false;
     void Start()
     {
-        ListOfPickChance_Image.AddRange(this.GetComponentsInChildren<Image>().ToList().Where(i => i.name.Contains("Dice")));
-        ListOfPickChance_Text.AddRange(this.GetComponentsInChildren<Text>().ToList());
+        Configure_AddObjectsToList();
+    }
+
+    private void Configure_AddObjectsToList()
+    {
+        foreach(var item in pickChanceGameObject)
+        {
+            ListOfPickChance_Image.Add(item.GetComponentInChildren<Image>());
+            ListOfPickChance_Text.Add(item.GetComponentInChildren<Text>());
+        }
     }
 
     void Update()
     {
-        UpdateColorsDeppendsOfPickChanceValue();
+
+        if(GetComponentInParent<EnemyAI>().IsTurnON)
+        {
+            foreach(var item in pickChanceGameObject)
+            {
+                item.transform.gameObject.SetActive(true);
+            }
+            UpdateColorsDeppendsOfPickChanceValue();
+        }
+        
+        if(!GetComponentInParent<EnemyAI>().IsTurnON)
+        {
+           foreach(var item in pickChanceGameObject)
+            {
+                item.transform.gameObject.SetActive(false);
+            }
+        }
     }
 
     void UpdateColorsDeppendsOfPickChanceValue()
@@ -39,7 +65,7 @@ public class AIPickChanceUi : MonoBehaviour
         if(ListOfPickChance_Text[diceIndex].text == dicePickChance.ToString()) return;
 
         ListOfPickChance_Text[diceIndex].text = dicePickChance.ToString();
-        print($"kostka nr: {diceNumber} Change value from {ListOfPickChance_Text[diceIndex].text} to {dicePickChance}");
+        //print($"kostka nr: {diceNumber} Change value from {ListOfPickChance_Text[diceIndex].text} to {dicePickChance}");
 
         needUpdateColorsUI=true;
     }
