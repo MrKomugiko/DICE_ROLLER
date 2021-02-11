@@ -40,12 +40,12 @@ public class GameManager : MonoBehaviour
 
                 GameObject.Find("Player1").transform.Find("Roll Button").gameObject.SetActive(false);
                 GameObject.Find("Player2").transform.Find("Roll Button").gameObject.SetActive(false);
-
             }
         }
     }
     float time = 0.0f, time2 = 0.0f;
     [SerializeField] string CurrentPlayer;
+    [SerializeField] string FirstMoveByPlayer;
     [SerializeField] string currentGamePhase;
     float TurnNumber
     {
@@ -60,11 +60,27 @@ public class GameManager : MonoBehaviour
             if (playerAvailableDices == 0)
             {
                 SwapRollButonWithEndTurn_OnClick(CurrentPlayer);
+                Player_1.DiceManager.AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
+                Player_2.DiceManager.AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = false;
+            }
+
+            if (TurnNumber >= 4.5f)
+            {
+                Player_1.TurnBlocker.SetActive(false);
+                Player_2.TurnBlocker.SetActive(false);
             }
         }
     }
-    public bool IsGameEnded { get => _isGameEnded; set => _isGameEnded = value; }
-
+    public bool IsGameEnded
+    {
+        get => _isGameEnded;
+        set
+        {
+            _isGameEnded = value;
+            Player_1.TurnBlocker.SetActive(false);
+            Player_2.TurnBlocker.SetActive(false);
+        }
+    }
     #endregion
 
     public CombatManager CombatManager_Script;
@@ -84,7 +100,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        CurrentPlayer = "Player1";
+        FirstMoveByPlayer = "Player1";
+        CurrentPlayer = FirstMoveByPlayer;
         currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
 
@@ -149,7 +166,7 @@ public class GameManager : MonoBehaviour
             var player2Object = GameObject.Find(player).transform;
             var rollButtonObject = player2Object.Find("Roll Button").transform;
 
-            if (rollingTurnNumber == 3.0)
+            if (rollingTurnNumber >= 3.0)
             {
                 player2Object.Find("DiceHolder").GetComponent<DiceManager>().AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES = true;
             }
@@ -166,28 +183,30 @@ public class GameManager : MonoBehaviour
 
         if (CurrentPlayer == "Player1")
         {
-            Player_2.RollingCounter++;
+            Player_1.RollingCounter++;
             CurrentPlayer = "Player2";
         }
         else
         {
-            Player_1.RollingCounter++;
+            Player_2.RollingCounter++;
             CurrentPlayer = "Player1";
         }
-
-        if (CurrentPlayer == "Player1")
+        if (!IsBattleModeTurnOn)
         {
-            Player_1.TurnBlocker.SetActive(false);
-            Player_2.TurnBlocker.SetActive(true);
-        }
-        else
-        {
-            Player_1.TurnBlocker.SetActive(true);
-            Player_2.TurnBlocker.SetActive(false);
+            if (CurrentPlayer == "Player1")
+            {
+                Player_1.TurnBlocker.SetActive(false);
+                Player_2.TurnBlocker.SetActive(true);
+            }
+            else
+            {
+                Player_1.TurnBlocker.SetActive(true);
+                Player_2.TurnBlocker.SetActive(false);
+            }
         }
     }
 
-    void SwapRollButonWithEndTurn_OnClick(string playerName)
+    internal void SwapRollButonWithEndTurn_OnClick(string playerName)
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(2);
     }
@@ -230,6 +249,9 @@ public class GameManager : MonoBehaviour
     {
         if (IsBattleModeTurnOn == false)
         {
+            Player_1.ListOfDicesOnBattleground.Clear();
+            Player_2.ListOfDicesOnBattleground.Clear();
+
             currentGamePhase = "Battle: Phase 1 -> ''sorting dices''";
 
             var battlefieldRT = BattleField.GetComponent<RectTransform>();
@@ -258,6 +280,9 @@ public class GameManager : MonoBehaviour
     {
         if (IsBattleModeTurnOn == true)
         {
+            Player_1.DiceManager.transform.parent.GetComponentInParent<EnemyAI>().FirstRoll = true;
+            Player_2.DiceManager.transform.parent.GetComponentInParent<EnemyAI>().FirstRoll = true;
+
             // 0. nazwanie aktualnego etapu gry
             currentGamePhase = "Dice Rolling Mode";
 
@@ -274,6 +299,10 @@ public class GameManager : MonoBehaviour
             IsBattleModeTurnOn = false;
 
             // 4. odkrycie buttonków rolla i końca tury dla graczy
+
+            Player_1.TurnBlocker.SetActive(true);
+            Player_2.TurnBlocker.SetActive(true);
+
             GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(true);
             GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(true);
 
@@ -299,7 +328,8 @@ public class GameManager : MonoBehaviour
                 dice.RollingIsCompleted = false;
             }
 
-            // 6. pokazanie sie paneli "blokady tury"
+            FirstMoveByPlayer = FirstMoveByPlayer == "Player1" ? "Player2" : "Player1";
+            CurrentPlayer = FirstMoveByPlayer;
             ChangePlayersTurn();
 
             // 7. przywrócenie opcji losowania ( zamiana miejscami z guzikiem konca tury )
@@ -354,6 +384,9 @@ public class GameManager : MonoBehaviour
 
     public void OnClick_PlayAgain()
     {
+        if (GameObject.Find("Player1").GetComponent<EnemyAI>().IsTurnON == true) GameObject.Find("Player1").GetComponent<EnemyAI>().OnClick_TurnOnAI();
+        if (GameObject.Find("Player2").GetComponent<EnemyAI>().IsTurnON == true) GameObject.Find("Player2").GetComponent<EnemyAI>().OnClick_TurnOnAI();
+
         CombatManager_Script.BackDicesToHand();
 
         Player_1.CurrentHealth_Value = 10;
@@ -367,10 +400,13 @@ public class GameManager : MonoBehaviour
 
         ChangeUIToRollingMode();
 
+
         EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(false);
         EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(false);
 
         IsGameEnded = false;
+
+
 
         //TODO: dodac reset aktywnego skilla.
 

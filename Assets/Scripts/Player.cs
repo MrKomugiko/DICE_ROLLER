@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
 
+    [SerializeField] private List<DiceRollScript> _listOfDicesOnBattleground;
     [SerializeField] private int _currentHealth_Value;
     public int CurrentHealth_Value
     {
@@ -32,7 +33,7 @@ public class Player : MonoBehaviour
 
 //-------------------------------------------------
 
-    public GameManager GM;
+    public GameManager GameManager;
     public string Name;
     public int RollingCounter;
     public GodsManager GodsManager_Script;
@@ -103,13 +104,13 @@ public class Player : MonoBehaviour
         {
             _temporaryIntakeDamage = value;
             
-            if(GM.IsGameEnded == false)
+            if(GameManager.IsGameEnded == false)
             {
                 if(CurrentHealth_Value <= 0)
                 {
                     print($"{Name} Actual HP = "+CurrentHealth_Value);
                     string winnerName = Name=="Player1"?"Player2":"Player1";
-                    GM.ShowEndGameResultWindow(winner:winnerName);
+                    GameManager.ShowEndGameResultWindow(winner:winnerName);
                     _temporaryIntakeDamage = 0;
                 }
             }
@@ -138,18 +139,30 @@ public class Player : MonoBehaviour
             }
         }
     }
-  #endregion
+
+    public List<DiceRollScript> ListOfDicesOnBattleground 
+    { 
+        get => _listOfDicesOnBattleground; 
+        set 
+        {
+            _listOfDicesOnBattleground = value; 
+        }
+    }
+
+    public DiceManager DiceManager;
+    #endregion
 
 
 
-  void Start()
-  {
-    CurrentGold_Value = Convert.ToInt32(GoldVault_Text.text);
-    CurrentHealth_Value = Convert.ToInt32(HPPoints_Text.text);
-    HealthText_TMP.text = "";
+    void Start()
+    {
+        ListOfDicesOnBattleground = new List<DiceRollScript>();
+        CurrentGold_Value = Convert.ToInt32(GoldVault_Text.text);
+        CurrentHealth_Value = Convert.ToInt32(HPPoints_Text.text);
+        HealthText_TMP.text = "";
 
-    RollingCounter = 0;
-  }
+        RollingCounter = 0;
+    }
     internal void TransferGold()
     {
         if (LiczbaPrzelewowGolda > 0)

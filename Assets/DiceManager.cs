@@ -8,10 +8,10 @@ public class DiceManager : MonoBehaviour
 {
     [SerializeField] public GameObject PlayerBattlefieldDiceHolder;
     [SerializeField] bool _AFTER_ROLL_AUOMATIC_SELECT_ALL_LEFT_DICES;
-    [SerializeField] List<DiceRollScript> Dices;
+    [SerializeField] public List<DiceRollScript> Dices;
     [SerializeField] bool _setDicesOff;
     [SerializeField] int _numberOfDicesOnBattlefield;
-
+    [SerializeField] Dictionary<int,string> DicesOnBattlefield;
     void Start()
     {
         if(PlayerBattlefieldDiceHolder == null)

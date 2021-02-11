@@ -43,6 +43,9 @@ public class CombatManager : MonoBehaviour
         // WHOLE COMBAT ROUTINE (6 steps of combat):
         if (IndexOfCombatAction == 1 && readyToFight)
         {
+            GM_Script.Player_1.TurnBlocker.SetActive(false);
+            GM_Script.Player_2.TurnBlocker.SetActive(false);
+
             print("atak m 1 => def m 2");
             readyToFight = false;
 
@@ -175,7 +178,7 @@ public class CombatManager : MonoBehaviour
 
         return dices;
     } 
-    List<GameObject> GetDicesFromContainer(GameObject diceContainer)
+     List<GameObject> GetDicesFromContainer(GameObject diceContainer)
     {
         List<GameObject> listOfDiceObjects = new List<GameObject>();
         foreach (var diceObject in diceContainer.GetComponentsInChildren<DiceRollScript>())
