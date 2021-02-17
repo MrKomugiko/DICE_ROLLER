@@ -111,6 +111,7 @@ public class Player : MonoBehaviour
                 {
                     print($"{Name} Actual HP = "+CurrentHealth_Value);
                     string winnerName = Name=="Player1"?"Player2":"Player1";
+                    GameManager.LastGameWinner = Name =="Player1"?"Player2":"Player1"; 
                     GameManager.ShowEndGameResultWindow(winner:winnerName);
                     _temporaryIntakeDamage = 0;
                 }

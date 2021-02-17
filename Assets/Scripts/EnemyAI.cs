@@ -81,7 +81,7 @@ public class EnemyAI : MonoBehaviour
                             $"Dice name: {dicesDict.Where(d => d.Key == AI_Dice.Key).First().Value}" +
                             $" -> Automatic last pick.");
                     }
-                   print("Final round FOUR - auto pick last dices");
+                   //...print("Final round FOUR - auto pick last dices");
                     // EndTurn(4);
                 }
             }
@@ -106,7 +106,7 @@ public class EnemyAI : MonoBehaviour
         for (int i = 1; i <= 6; i++)
         {
             dicesDict.Add(key: i, value: dices.Where(d => d.DiceNumber == i && d.IsSentToBattlefield == false).FirstOrDefault().name.Remove(0, 2));
-            //print(i + " / "+ dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
+            ////...print(i + " / "+ dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
         }
     }
     void UpdateLogger(KeyValuePair<int, string> currentCheckingDice)
@@ -138,7 +138,7 @@ public class EnemyAI : MonoBehaviour
             {
                 dicesDict.Add(key: i, value: AI_Player.DiceManager.Dices.Where(d => d.DiceNumber == i).FirstOrDefault().DiceImage.name.Remove(0, 2));
             }
-           print("uaktualniono liste kosci");
+           //...print("uaktualniono liste kosci");
         }
 
         ENEMY_PickedDices = GetListDiceNames(GetCurrentEnemyDicesInBattlefield);
@@ -179,7 +179,7 @@ public class EnemyAI : MonoBehaviour
             // Debug.LogError("czy znajdje sie tam jeszcze kostka "+dice.Key +" => " +actualLeftDicesOnHand.ContainsKey(dice.Key));
             if (actualLeftDicesOnHand.ContainsKey(dice.Key))
             {
-               print(AI_DicesLeftsInHand.Count() + " kostek na ręce");
+               //...print(AI_DicesLeftsInHand.Count() + " kostek na ręce");
                 StartCoroutine(CalculatePickingValuesForOwnedDices(actualLeftDicesOnHand.Where(d => d.Key == dice.Key).First()));
                 yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
 
@@ -187,7 +187,7 @@ public class EnemyAI : MonoBehaviour
                 {
                     PickDice(diceNumber: dice.Key);
                     numberOFPickedDices.Add(dice.Key);
-                   print("Kosc została wybrana: " + dice.Value);
+                   //...print("Kosc została wybrana: " + dice.Value);
                     AI_PickedDices = GetListDiceNames(GetCurrentDicesInBattlefield);
                 }
                 yield return new WaitForSeconds(1f);
@@ -201,7 +201,7 @@ public class EnemyAI : MonoBehaviour
     }
     IEnumerator CalculatePickingValuesForOwnedDices(KeyValuePair<int, string> currentCheckingDice)
     {
-       print("Calculate picking value weight for dice: [ " + currentCheckingDice.Key + " | " + currentCheckingDice.Value + " ]");
+       //...print("Calculate picking value weight for dice: [ " + currentCheckingDice.Key + " | " + currentCheckingDice.Value + " ]");
         calculatingNewPickValuesIsCompleted = false;
         if (!isMockedDataInitiated) yield return null;
         if (calculatingNewPickValuesIsCompleted) yield return null;
@@ -221,7 +221,7 @@ public class EnemyAI : MonoBehaviour
         }
         UI.SetPickChanceValues(diceNumber: currentCheckingDice.Key, dicePickChance: pickProbablityDict[currentCheckingDice.Key]);
 
-        UpdateLogger(currentCheckingDice);
+       //... UpdateLogger(currentCheckingDice);
         calculatingNewPickValuesIsCompleted = true;
     }
     bool RecalculatePickWeightValueBasedOnLogic(KeyValuePair<int, string> dice, out int pickValue)
@@ -238,19 +238,19 @@ public class EnemyAI : MonoBehaviour
         int AI_Available_helmetsCounter = AI_DicesLeftsInHand.Where(d => d.Contains("Helmet")).Count();
         int AI_Available_handsCounter = AI_DicesLeftsInHand.Where(d => d.Contains("Hand")).Count();
 
-        //print("====================================");
-        //print("AI_Picked_axesCounter "+AI_Picked_axesCounter);
-        //print("AI_Picked_bowsCounter "+AI_Picked_bowsCounter);
-        //print("AI_Picked_shieldsCounter "+AI_Picked_shieldsCounter);
-        //print("AI_Picked_helmetsCounter "+AI_Picked_helmetsCounter);
-        //print("AI_Picked_handsCounter "+AI_Picked_handsCounter);
+        ////...print("====================================");
+        ////...print("AI_Picked_axesCounter "+AI_Picked_axesCounter);
+        ////...print("AI_Picked_bowsCounter "+AI_Picked_bowsCounter);
+        ////...print("AI_Picked_shieldsCounter "+AI_Picked_shieldsCounter);
+        ////...print("AI_Picked_helmetsCounter "+AI_Picked_helmetsCounter);
+        ////...print("AI_Picked_handsCounter "+AI_Picked_handsCounter);
 
-        //print("AI_Available_axesCounter "+AI_Available_axesCounter);
-        //print("AI_Available_bowsCounter "+AI_Available_bowsCounter);
-        //print("AI_Available_shieldsCounter "+AI_Available_shieldsCounter);
-        //print("AI_Available_helmetsCounter "+AI_Available_helmetsCounter);
-        //print("AI_Available_handsCounter "+AI_Available_handsCounter);
-        //print("====================================");
+        ////...print("AI_Available_axesCounter "+AI_Available_axesCounter);
+        ////...print("AI_Available_bowsCounter "+AI_Available_bowsCounter);
+        ////...print("AI_Available_shieldsCounter "+AI_Available_shieldsCounter);
+        ////...print("AI_Available_helmetsCounter "+AI_Available_helmetsCounter);
+        ////...print("AI_Available_handsCounter "+AI_Available_handsCounter);
+        ////...print("====================================");
 
         pickValue = RandomNumberGenerator.NumberBetween(1, 75);
 
@@ -270,82 +270,82 @@ public class EnemyAI : MonoBehaviour
 
         if (dice.Value.Contains("Helmet") || dice.Value.Contains("Shield"))
         {
-           print($"ta kostka to {dicename} i może blokować {(dicename == "Helmet" ? "Axe" : "Bow")} przeciwnika");
+           //...print($"ta kostka to {dicename} i może blokować {(dicename == "Helmet" ? "Axe" : "Bow")} przeciwnika");
             if (calculateHowMuchYouNeedToDeffenceYourself() >= 75)
             {
-               print($"'Prawdopodobnie' powinieneś się bronić przed nadchodzącym atakiem");
+               //...print($"'Prawdopodobnie' powinieneś się bronić przed nadchodzącym atakiem");
                 if (CheckIfOpponentHaveMoreAttackDicesToCover(deffenceDiceTypeName: dicename))
                 {
-                   print($"jezeli przeciwnik ma jeszcze jakieś {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania");
+                   //...print($"jezeli przeciwnik ma jeszcze jakieś {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania");
                     if (CheckIfYouHaveMoreDeffenceDicesThanEnemyIncomeAttack(deffenceDiceTypeName: dicename))
                     {
-                       print($"jeżeli masz dostępne {dicename} w ilości > większej niż pozostałe {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania ");
+                       //...print($"jeżeli masz dostępne {dicename} w ilości > większej niż pozostałe {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania ");
                         if (IfAvailableSameDiceButBlessed)
                         {
-                           print($"Posiadasz jeszcze inną kostke {dicename} która jest typu blessed.");
+                           //...print($"Posiadasz jeszcze inną kostke {dicename} która jest typu blessed.");
                             if (isBlessed)
                             {
-                               print($"to jest kostka {dicename} typu blessed więc szansa na jej wybranie to 100%");
+                               //...print($"to jest kostka {dicename} typu blessed więc szansa na jej wybranie to 100%");
                                 pickValue = 100;
                             }
                             else
                             {
-                               print($"jeżeli masz do dyspozycji inny {dicename} typu blessed, aktualny zmniejsza szanse piknięcia o 25%");
+                               //...print($"jeżeli masz do dyspozycji inny {dicename} typu blessed, aktualny zmniejsza szanse piknięcia o 25%");
                                 pickValue -= 25;
                             }
                         }
                         else
                         {
-                           print($"nie masz innych kości {dicename} typu blessed więc klasyczna ma 100% szansy na wybranie");
+                           //...print($"nie masz innych kości {dicename} typu blessed więc klasyczna ma 100% szansy na wybranie");
                             pickValue = 100;
                         }
                     }
                     else
                     {
-                       print($"NIE MASZ dostępnych {dicename} w ilości > większej niż pozostałe {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania ");
-                       print($"więc bierzesz aktualny {dicename} na 100% szansy");
+                       //...print($"NIE MASZ dostępnych {dicename} w ilości > większej niż pozostałe {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania ");
+                       //...print($"więc bierzesz aktualny {dicename} na 100% szansy");
                         pickValue = 100;
                     }
                 }
                 else
                 {
-                   print($"przeciwnik nie ma już żadnych {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania, ta kostka {dicename} ma 1% szansy na piknięcie");
+                   //...print($"przeciwnik nie ma już żadnych {(dicename == "Helmet" ? "Axe" : "Bow")} do zablokowania, ta kostka {dicename} ma 1% szansy na piknięcie");
                     pickValue = 1;
                 }
             }
             else
             {
-               print("'Prawdopodobnie' jesteś w stanie przyjąć nadchodzący atak na klate ;d");
+               //...print("'Prawdopodobnie' jesteś w stanie przyjąć nadchodzący atak na klate ;d");
             }
         }
         if (dice.Value.Contains("Hand"))
         {
-           print("jest to kostka rąsi i służy do kradzieży");
+           //...print("jest to kostka rąsi i służy do kradzieży");
 
             if (calculateHowMuchYouNeedToDeffenceYourself() >= 50)
             {
-               print("jest duże parcie na obrone, łapki są ci teraz nie potrzebne, liczymy ze w nastepnej turze dropnie wiecej defa");
+               //...print("jest duże parcie na obrone, łapki są ci teraz nie potrzebne, liczymy ze w nastepnej turze dropnie wiecej defa");
                 pickValue = 1;
             }
             else
             {
                 if (ENEMY_Player.CurrentGold_Value > 0)
                 {
-                   print("przeciwnik ma golda któego można ukraść");
+                   //...print("przeciwnik ma golda któego można ukraść");
                     if (isBlessed)
                     {
-                       print("kostka rąsi na dodatek typu blessed, szansa na piknięcie +15%");
+                       //...print("kostka rąsi na dodatek typu blessed, szansa na piknięcie +15%");
                         pickValue += 15;
                     }
                     else
                     {
-                       print("kostka rąsi klasyczna, losowa wartośc picku");
+                       //...print("kostka rąsi klasyczna, losowa wartośc picku");
                         pickValue = pickValue;
                     }
                 }
                 else
                 {
-                   print("przeciwnik nie ma nic co można ukraść, szansa wyboru łapki 1%");
+                   //...print("przeciwnik nie ma nic co można ukraść, szansa wyboru łapki 1%");
                     pickValue = 1;
                 }
             }
@@ -359,7 +359,7 @@ public class EnemyAI : MonoBehaviour
             pickValue += 15;
         }
 
-        print("obliczanie opłacalności kości zakończone: " + dice.Value + " łącznie na ręce zostało jeszcze " + actualLeftDicesOnHand.Count() + " oplaca się piknąć tą kość w " + pickValue + "%");
+        //...print("obliczanie opłacalności kości zakończone: " + dice.Value + " łącznie na ręce zostało jeszcze " + actualLeftDicesOnHand.Count() + " oplaca się piknąć tą kość w " + pickValue + "%");
         return true;
 
         // KROKI NIEZBĘDNE DO IDEALNEGO PICKA :d
@@ -408,7 +408,7 @@ public class EnemyAI : MonoBehaviour
             int deffProbality = 45;
             int healthDifference = ENEMY_Player.CurrentHealth_Value - AI_Player.CurrentHealth_Value;
 
-            print("Różnica twojego hp do przeciwnika wynosi: " + healthDifference);
+            //...print("Różnica twojego hp do przeciwnika wynosi: " + healthDifference);
 
             // UWZGLĘDNIENIE RÓŻNICY W PUNKTACH HP
             ChangeDeffPRobablityDeppendOfHealthDifferences(ref deffProbality, healthDifference);
@@ -422,7 +422,7 @@ public class EnemyAI : MonoBehaviour
             if (deffProbality > 0)
             {
 
-                print("ostatecznie obrona opłaca się na ok " + deffProbality + "%");
+                //...print("ostatecznie obrona opłaca się na ok " + deffProbality + "%");
             }
             return deffProbality;
 
@@ -433,19 +433,19 @@ public class EnemyAI : MonoBehaviour
                 {
                     chance = RandomNumberGenerator.NumberBetween(25, 60);
                     deffProbality += chance;
-                   print($"przeciwnik ma 3hp i więcej niż ty, szansa na obrone diametralnie wzrasta o {chance}%.[25-60%]");
+                   //...print($"przeciwnik ma 3hp i więcej niż ty, szansa na obrone diametralnie wzrasta o {chance}%.[25-60%]");
                 }
                 else if (healthDifference < 3 && healthDifference > -3)
                 {
                     chance = RandomNumberGenerator.NumberBetween(1, 25);
                     deffProbality += chance;
-                   print($"masz w miare tyle samo hp co przeciwnik +2/-2, szansa na obrone ulega nieznacznej zmianie {chance}%.[1-25%]");
+                   //...print($"masz w miare tyle samo hp co przeciwnik +2/-2, szansa na obrone ulega nieznacznej zmianie {chance}%.[1-25%]");
                 }
                 else if (healthDifference <= 3)
                 {
                     chance = RandomNumberGenerator.NumberBetween(1, 25);
                     deffProbality -= chance;
-                   print($"masz znacząco więcej hp niż przeciwnik +3 i wiecej, szansa na obrone zmniejsza sie {chance}%.[1-25%]");
+                   //...print($"masz znacząco więcej hp niż przeciwnik +3 i wiecej, szansa na obrone zmniejsza sie {chance}%.[1-25%]");
                 }
             }
 
@@ -456,14 +456,14 @@ public class EnemyAI : MonoBehaviour
                 {
                     chance = RandomNumberGenerator.NumberBetween(10, 40);
                     deffProbality += chance;
-                   print($"Przeciwnik ma mniej niż 4 hp, czas go dobić, szansa na obrone spada o {chance}%. [10-40%]");
+                   //...print($"Przeciwnik ma mniej niż 4 hp, czas go dobić, szansa na obrone spada o {chance}%. [10-40%]");
                 }
 
                 if (AI_HP < 4)
                 {
                     chance = RandomNumberGenerator.NumberBetween(25, 50);
                     deffProbality += chance;
-                   print($"Masz mniej niż 4 hp, czas przyjąc postawe deffensywną, szansa na obrone wzrasta o {chance}%. [25-50%]");
+                   //...print($"Masz mniej niż 4 hp, czas przyjąc postawe deffensywną, szansa na obrone wzrasta o {chance}%. [25-50%]");
                 }
             }
 
@@ -474,32 +474,32 @@ public class EnemyAI : MonoBehaviour
                 {
                     chance = RandomNumberGenerator.NumberBetween(1, 25);
                     deffProbality -= chance;
-                   print($"PRzeciwnik posiada na ręce mniej niż / równo 2 kości ataku, obrona nie jest tak potrzebna, zmniejszenie szansy o {chance}%. [1-25%]");
+                   //...print($"PRzeciwnik posiada na ręce mniej niż / równo 2 kości ataku, obrona nie jest tak potrzebna, zmniejszenie szansy o {chance}%. [1-25%]");
                 }
 
                 if (ENEMY_axesCounter + ENEMY_bowsCounter > 2)
                 {
                     chance = RandomNumberGenerator.NumberBetween(10, 30);
                     deffProbality += chance;
-                   print($"Przeciwnik posiada na ręce więcej niż 2 kości ataku, obrona jest potrzebna, zwiększenie szansy o {chance}%. [10-30%]");
+                   //...print($"Przeciwnik posiada na ręce więcej niż 2 kości ataku, obrona jest potrzebna, zwiększenie szansy o {chance}%. [10-30%]");
                 }
                 if (ENEMY_axesCounter + ENEMY_bowsCounter > 4)
                 {
                     chance = RandomNumberGenerator.NumberBetween(30, 50);
                     deffProbality += chance;
-                   print($"Przeciwnik ma zdecydowanie za dużo kości ataku na polu, obrona jest wymagana !, zwiększenie szansy o kolejne  {chance}%. [30-50%]");
+                   //...print($"Przeciwnik ma zdecydowanie za dużo kości ataku na polu, obrona jest wymagana !, zwiększenie szansy o kolejne  {chance}%. [30-50%]");
                 }
 
                 if (AI_HP - (ENEMY_axesCounter + ENEMY_bowsCounter) <= 0)
                 {
                     deffProbality = 100;
-                   print($"Nadchodzący atak jest w stanie cie pokonać, obrona jest wymagana w 100%. [100%]");
+                   //...print($"Nadchodzący atak jest w stanie cie pokonać, obrona jest wymagana w 100%. [100%]");
                 }
 
                 if ((ENEMY_axesCounter + ENEMY_bowsCounter) == 0)
                 {
                     deffProbality = 0;
-                   print($"PRzeciwnik cie nie atakuje, obrona nie jest konieczna. [0%]");
+                   //...print($"PRzeciwnik cie nie atakuje, obrona nie jest konieczna. [0%]");
                 }
 
             }
@@ -586,7 +586,7 @@ public class EnemyAI : MonoBehaviour
         }
 
 
-       print("EndTurn");
+       //...print("EndTurn");
         this.transform.Find("EndTurnButton").GetComponent<Button>().onClick.Invoke();
         IsRollAllowed = true;
         itsNeedToReCalculateRandomPickingValues = true;
@@ -596,8 +596,8 @@ public class EnemyAI : MonoBehaviour
         calculatingCoroutine = null;
     }
     public void TurnONOFF() => IsTurnON = !IsTurnON;
-    public void OnClick_TurnOnAI()
-    {
+    public void OnClick_TurnOnOFFAI()
+    {   
         TurnONOFF();
         if (IsTurnON)
         {

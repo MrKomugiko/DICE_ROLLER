@@ -14,6 +14,8 @@ public class DiceActionScript : MonoBehaviour
     [SerializeField] bool _inBattlefield;
     [SerializeField] bool _markDiceAsAttacking;
 
+   public Coroutine addGoldCooutine = null;
+
     public bool AddGoldFromBlessedItems
     {
         get => _addGoldFromBlessedItems;
@@ -24,8 +26,7 @@ public class DiceActionScript : MonoBehaviour
                 // najpierw sprawdzenie czy item jest faktycznie "blogoslawiony"
                 if (this.name.Contains("Blessed"))
                 {
-                    // jeżeli tak -> uruchom "Animacje" i wszystko co sie z nią wiąże
-                    StartCoroutine(AddGodCoin());
+                       addGoldCooutine ??= StartCoroutine(AddGodCoin());
                 }
             }
             // zresetuj wartośc na false
@@ -110,14 +111,14 @@ public class DiceActionScript : MonoBehaviour
         }
     }
     
-    void Update()
+    void FixedUpdate()
     {
         #region debbuging inspector function checker
         // sprawdzanie funkcji z posiomu inspektora
         if (_addGoldFromBlessedItems && this.name.Contains("Blessed"))
         {
             _addGoldFromBlessedItems = false;
-            StartCoroutine(AddGodCoin());
+            addGoldCooutine ??= StartCoroutine(AddGodCoin());
         }
 
         if (_stealGoldUsingHandItem && this.name.Contains("Hand"))
@@ -262,6 +263,9 @@ public class DiceActionScript : MonoBehaviour
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
             yield return new WaitForSeconds(0.05f);
         }
+
+        print("usuniecie rutyny z pamięci");
+        addGoldCooutine = null;
     }
     IEnumerator StealGodCoinFromOponent()
     {

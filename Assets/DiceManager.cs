@@ -60,9 +60,12 @@ public class DiceManager : MonoBehaviour
     }
     public void OnClick_ROLLDICES()
     {
+        var whosThisDice = "";
         foreach (DiceRollScript dice in Dices)
         {
             dice.StartRolling();
+            whosThisDice = dice.DiceOwner;
         }
+       //  AndroidLogger.Log("Rozpoczęscie rollowania przez gracza : "+whosThisDice,AndroidLogger.GetPlayerLogColor(whosThisDice));
     }
 }
