@@ -167,8 +167,8 @@ public class CombatManager : MonoBehaviour
         {
             readyToFight = false;
             //GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
-            ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL();
             IndexOfCombatAction++;
+            ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL();
         }        
     }
 
@@ -348,6 +348,8 @@ public class CombatManager : MonoBehaviour
         GM_Script.ChangeUIToRollingMode();
         GameObject.Find("Player1").GetComponent<EnemyAI>().IsRollAllowed = true;
         GameObject.Find("Player2").GetComponent<EnemyAI>().IsRollAllowed = true;
+
+        IndexOfCombatAction = 0;
 
     }
 
