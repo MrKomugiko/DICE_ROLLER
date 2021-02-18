@@ -66,6 +66,6 @@ public class DiceManager : MonoBehaviour
             dice.StartRolling();
             whosThisDice = dice.DiceOwner;
         }
-       //  AndroidLogger.Log("Rozpoczęscie rollowania przez gracza : "+whosThisDice,AndroidLogger.GetPlayerLogColor(whosThisDice));
+         AndroidLogger.Log("Rozpoczęscie rollowania przez gracza : "+whosThisDice,AndroidLogger.GetPlayerLogColor(whosThisDice));
     }
 }

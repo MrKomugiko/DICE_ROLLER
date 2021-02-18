@@ -55,27 +55,35 @@ public static class AndroidLogger
     }
     public static void Log_Which_Player_Attack_First_and_how_many_rounds(
         string whoStartGameSession = "", 
-        string whoAttakckInFirstRund ="", 
+        string whoRollinCurrentRund ="", 
         string numberOfRund = "",
         string whoAttackedFirstInThisRund ="", 
         string winner ="")
     {
-        string path = @"C:\Users\MrKom\Desktop\ORLOG_Logs\Which_Player_Attack_First_and_how_many_rounds.txt";
-        // This text is added only once to the file.
-        if (!File.Exists(path))
+        if (Application.platform == RuntimePlatform.Android)
         {
-            // Create a file to write to.
-            using (StreamWriter sw = File.CreateText(path))
-            {
-                sw.Write("Kto Zaczął grę\tKto pierwszy zaatakował\tNumer rundy\tkto rolluje w tej rundzie\tkto atakuje w tej rundzie\t Zwyciezca\n");
-            }
+            Log("saving logs only for windows platform");
         }
-
-        // This text is always added, making the file longer over time
-        // if it is not deleted.
-        using (StreamWriter sw = File.AppendText(path))
+        else
         {
-            sw.WriteLine($"{whoStartGameSession}\t{whoAttakckInFirstRund}\t{numberOfRund}\t{whoAttackedFirstInThisRund}\t{winner}");
+            string path = @"C:\Users\MrKom\Desktop\ORLOG_Logs\Which_Player_Attack_First_and_how_many_rounds.txt";
+            // This text is added only once to the file.
+            if (!File.Exists(path))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.Write("Kto Zaczął grę\tkto pierwszy rollował w rundzie\tNumer rundy\tkto rolluje w tej rundzie\tkto atakuje w tej rundzie\t Zwyciezca\n");
+                }
+            }
+
+            // This text is always added, making the file longer over time
+            // if it is not deleted.
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine($"{whoStartGameSession}\t{whoRollinCurrentRund}\t{numberOfRund}\t{whoAttackedFirstInThisRund}\t{winner}");
+            }
+
         }
     }
     public static void DisplayFileContent(string fileName)

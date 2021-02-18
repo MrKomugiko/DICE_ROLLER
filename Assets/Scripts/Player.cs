@@ -241,9 +241,12 @@ public class Player : MonoBehaviour
     }
     public void SelectLevel1Skill(string godName, int level)
     {   
-        GodSkillWindow.SetActive(true);
-        CardScript CS = GodsManager_Script._godCardsInContainer.Where(c=>c._card.name == godName).First()._card;
-        CS._godTotem._skill.TrySelectSkill(level,Name, CS._godTotem._godData);
-        GodSkillWindow.SetActive(false);
+        if(level > 0)
+        {
+            GodSkillWindow.SetActive(true);
+            CardScript CS = GodsManager_Script._godCardsInContainer.Where(c=>c._card.name == godName).First()._card;
+            CS._godTotem._skill.TrySelectSkill(level,Name, CS._godTotem._godData);
+            GodSkillWindow.SetActive(false);
+        }
     }
 }

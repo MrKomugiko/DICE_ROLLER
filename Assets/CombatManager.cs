@@ -157,6 +157,15 @@ public class CombatManager : MonoBehaviour
         if (IndexOfCombatAction == 7 && readyToFight)
         {
             readyToFight = false;
+
+            GameObject.Find("Player1").GetComponent<EnemyAI>().AI_Player.GodsManager_Script.OnClick_ExecuteSelectedGodSkill();            
+
+            IndexOfCombatAction++;
+            readyToFight = true;
+        }
+        if (IndexOfCombatAction == 8 && readyToFight)
+        {
+            readyToFight = false;
             //GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
             ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL();
             IndexOfCombatAction++;
@@ -337,6 +346,9 @@ public class CombatManager : MonoBehaviour
         print("fight is over, go to new round - rolling phase");
         readyToFight = false;
         GM_Script.ChangeUIToRollingMode();
+        GameObject.Find("Player1").GetComponent<EnemyAI>().IsRollAllowed = true;
+        GameObject.Find("Player2").GetComponent<EnemyAI>().IsRollAllowed = true;
+
     }
 
 [ContextMenu("Fight is over => CANCEL AND CLEAN")]

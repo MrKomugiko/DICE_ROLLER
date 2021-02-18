@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     #region GENERAL   
     [SerializeField] private bool _isGameEnded = false;
-    [SerializeField] public static float GameSpeedValueModifier = 100;
+    [SerializeField] public static float GameSpeedValueModifier = 10;
     [SerializeField] GameObject EndGameResultWindows;
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
@@ -364,9 +364,11 @@ public class GameManager : MonoBehaviour
             GameObject.Find("Player1").transform.Find("EndTurnButton").SetSiblingIndex(1);
             GameObject.Find("Player2").transform.Find("EndTurnButton").SetSiblingIndex(1);
 
+           
             AndroidLogger.Log_Which_Player_Attack_First_and_how_many_rounds(
                 whoStartGameSession:            PlayerWhoMakeFirstRollinCurrentGameSession,
                 whoAttackedFirstInThisRund:     CombatManager_Script.RecentAttacker,
+                whoRollinCurrentRund:           CurrentPlayer,
                 numberOfRund:                   rundCounter.ToString(),
                 winner:                         LastGameWinner
                 );
@@ -452,7 +454,7 @@ public class GameManager : MonoBehaviour
 
 
 
-        AndroidLogger.Log_Result_Affect_Of_A_Priority_To_Win_Chance(PlayerWhoMakeFirstRollinCurrentGameSession,CombatManager_Script.FirstAttacker,LastGameWinner);
+       // AndroidLogger.Log_Result_Affect_Of_A_Priority_To_Win_Chance(PlayerWhoMakeFirstRollinCurrentGameSession,CombatManager_Script.FirstAttacker,LastGameWinner);
        
         GameObject.Find("Player1").GetComponent<EnemyAI>().IsTurnON = true;
         GameObject.Find("Player2").GetComponent<EnemyAI>().IsTurnON = true;

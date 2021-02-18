@@ -247,7 +247,7 @@ public class DiceActionScript : MonoBehaviour
             }
 
             this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.yellow, i);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.01f);
         }
 
         for (float i = 0f; i <= 1; i += 0.05f)
@@ -261,7 +261,7 @@ public class DiceActionScript : MonoBehaviour
                 coinText_2.color = Color.Lerp(Color.yellow, Color.clear, (i));
             }
             this.GetComponent<Image>().color = Color.Lerp(Color.yellow, Color.white, i);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.01f);
         }
 
         print("usuniecie rutyny z pamięci");
