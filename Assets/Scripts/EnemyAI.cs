@@ -40,24 +40,29 @@ public class EnemyAI : MonoBehaviour
 
     void FixedUpdate()
     {
+   
         if (isEndGameWindowsIsClosed)
         {
             if (IsTurnON && !AI_Player.TurnBlocker.activeSelf)
             {
                 if (FirstRoll)
                 {
+                    //FirstRoll = false;
                     StartCoroutine(WykonanieRund_1());
                 }
                 else if (SecondRoll)
                 {
+                    //SecondRoll = false;
                     StartCoroutine(WykonaniemRund_2_3_4(2));
                 }
                 else if (ThirdRoll)
                 {
+                    //ThirdRoll = false;
                     StartCoroutine(WykonaniemRund_2_3_4(3));
                 }
                 else if (FourthRoll)
                 {
+                    //FourthRoll = false;
                     StartCoroutine(WykonaniemRund_2_3_4(4));
                 }
             }
@@ -90,7 +95,13 @@ public class EnemyAI : MonoBehaviour
     {
         isSkillSelected = false;
         isMockedDataInitiated = false;
-        AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
+        try{
+            AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
+        }
+        catch (Exception ex)
+        {
+            print("o to tu chodzi ?... nie wiem ["+ex.Message+"]");
+        }
         calculatingCoroutine = CalculatingChance(roundNumber: 1);
         StartCoroutine(calculatingCoroutine);
     }
@@ -163,10 +174,11 @@ public class EnemyAI : MonoBehaviour
         isMockedDataInitiated = true;
         debugShowDict.Add($"--------------------- Start new Round ---------------------");
         dicesDict.Clear();
-        for (int i = 1; i <= 6; i++)
-        {
-            dicesDict.Add(key: i, value: dices.Where(d => d.DiceNumber == i && d.IsSentToBattlefield == false).FirstOrDefault().name.Remove(0, 2));
-        }
+     
+            for (int i = 1; i <= 6; i++)
+            {
+                dicesDict.Add(key: i, value: dices.Where(d => d.DiceNumber == i && d.IsSentToBattlefield == false).FirstOrDefault().name.Remove(0, 2));
+            }
     }
     void UpdateLogger(KeyValuePair<int, string> currentCheckingDice)
     {

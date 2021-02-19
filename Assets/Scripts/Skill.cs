@@ -60,7 +60,7 @@ public class Skill
         {
             if (CheckIfItsDoubleSelectPreviousSkill(skillLevel, castingPlayer, god))
             {
-                Debug.Log("anulowanie wyboru skilla - przez ponownejego jego wybranie");
+                // Debug.Log("anulowanie wyboru skilla - przez ponownejego jego wybranie");
                 UnSelectAnySelectedSkill();
                 return;
             }
@@ -86,7 +86,7 @@ public class Skill
         {
             if (recentSelectedGod == newSelectedGod)
             {
-                Debug.Log("Zmiana skilla tego samego Boga");
+                // Debug.Log("Zmiana skilla tego samego Boga");
                 return true;
             }
         }

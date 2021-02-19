@@ -871,7 +871,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 1000
 --- !u!222 &160803604
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2947,7 +2947,7 @@ MonoBehaviour:
   needToRollDices: 1
   isSkillSelected: 0
   THOR: 1
-  IDUN: 0
+  IDUN: 1
   bot_can_use_skills: 1
 --- !u!1 &483921941
 GameObject:
@@ -3991,7 +3991,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 1000
 --- !u!222 &640743860
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7745,7 +7745,7 @@ MonoBehaviour:
   interpolationPeriod: 0.5
   _turnNumber: 0
   isBattleModeTurnOn: 0
-  CurrentPlayer: 
+  currentPlayer: 
   LastGameWinner: 
   currentGamePhase: 
   CombatManager_Script: {fileID: 0}
@@ -9078,7 +9078,7 @@ MonoBehaviour:
   debugShowDict: []
   needToRollDices: 1
   isSkillSelected: 0
-  THOR: 0
+  THOR: 1
   IDUN: 1
   bot_can_use_skills: 1
 --- !u!1 &1640551751

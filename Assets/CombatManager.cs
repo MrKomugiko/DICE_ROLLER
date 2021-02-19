@@ -47,19 +47,28 @@ public class CombatManager : MonoBehaviour
     }
 
     public string lastGameFirstAttacking = "";
+    private string _recentAttacker;
     [SerializeField] public string RecentAttacker;
-    public string FirstAttacker => GM_Script.PlayerWhoMakeFirstRollInCurrentRound;
+   
+    public string FirstAttacker => GM_Script.PlayerWhoMakeFirstRollinCurrentGameSession;
     
-    private GameObject  FirstTurnPlayerDices => RecentAttacker=="Player1"?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
+    private GameObject FirstTurnPlayerDices => RecentAttacker=="Player1"?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
     private GameObject SecondTurnPlayerDices => RecentAttacker=="Player1"?Player2BattlefieldDiceContainer:Player1BattlefieldDiceContainer;
 
     void Update()
     {    
-        if(GM_Script.IsGameEnded == true) IndexOfCombatAction = 0;
-        
+        if(GM_Script.IsGameEnded == true) 
+        {
+            IndexOfCombatAction = 0;
+          //  print("0 First roller in game = "+FirstAttacker);
+            RecentAttacker = FirstAttacker=="Player1"?"Player2":"Player1";
+          //  print("0 Recent attacker = "+ RecentAttacker);
+        }
         if (IndexOfCombatAction == 1 && readyToFight)
         {
-            RecentAttacker = FirstAttacker;
+          //  print("1 old recent attacker = "+RecentAttacker);
+            RecentAttacker = RecentAttacker=="Player1"?"Player2":"Player1";
+          //  print("1 new recent/current attacker = "+RecentAttacker);
 
             readyToFight = false;
             
@@ -109,12 +118,12 @@ public class CombatManager : MonoBehaviour
         }
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
+            readyToFight = false;
 
             GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
             GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
 
             var playerComtainer = IndexOfCombatAction == 5 ? FirstTurnPlayerDices : SecondTurnPlayerDices;
-            readyToFight = false;
 
             var goldStealDices = GetDiceOfType("Steal", GetDicesFromContainer(playerComtainer));
 
@@ -318,25 +327,27 @@ public class CombatManager : MonoBehaviour
             var player2currentFightingDices = new List<GameObject>();
 
             var p1ListActionScripts = Player1ArenaDiceContainer.GetComponentsInChildren<DiceActionScript>().ToList();
-            foreach(var diceScript in p1ListActionScripts)
+            foreach (var diceScript in p1ListActionScripts)
             {
                 player1currentFightingDices.Add(diceScript.transform.gameObject);
             }
 
             var p2ListActionScripts = Player2ArenaDiceContainer.GetComponentsInChildren<DiceActionScript>().ToList();
-            foreach(var diceScript in p2ListActionScripts)
+            foreach (var diceScript in p2ListActionScripts)
             {
                 player2currentFightingDices.Add(diceScript.transform.gameObject);
             }
+
 
             ZdejmijKostkiIZmienKolorNaSzary(player1currentFightingDices);
             ZdejmijKostkiIZmienKolorNaSzary(player2currentFightingDices);
 
             IndexOfCombatAction = 0;
+
         }
         catch(Exception)
         {
-            // Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message.
+            // Wszystko w porządku, nie było potrzeby sprzątać
         }
     }
 }

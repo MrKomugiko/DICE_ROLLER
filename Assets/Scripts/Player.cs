@@ -108,8 +108,8 @@ public class Player : MonoBehaviour
             if(GameManager.IsGameEnded == false)
             {
                 if(CurrentHealth_Value <= 0)
-                    GameManager.IsGameEnded = true;
                 {
+                    GameManager.IsGameEnded = true;
                     string winnerName = Name=="Player1"?"Player2":"Player1";
                     GameManager.LastGameWinner = winnerName; 
                     GameManager.ShowEndGameResultWindow(winnerName);

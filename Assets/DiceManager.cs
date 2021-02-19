@@ -70,6 +70,8 @@ public class DiceManager : MonoBehaviour
         StartCoroutine(ShowInfoWhenRollingIsCompleteSuccesfully());
     }
 
+
+
     IEnumerator ShowInfoWhenRollingIsCompleteSuccesfully()
     {
         yield return new WaitUntil(()=>CheckIfPlayerFinishRolling());
@@ -77,6 +79,7 @@ public class DiceManager : MonoBehaviour
 
     private bool CheckIfPlayerFinishRolling()
     {
+        // print("sprawdzanie czy wszystkie sie zrollowały");
         if( Dices.Where(d=>d.RollingIsCompleted == false).Any() ) return false;
         return true;
     }

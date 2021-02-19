@@ -105,7 +105,7 @@ public class GodsManager : MonoBehaviour
         }
         catch (System.Exception)
         {
-            // skill uzyty przez bota bez uzycia interfejsu.
+            print("skill uzyty przez bota bez uzycia interfejsu.");
         }
     }
     private void ChangeSkillButtonToEnabled(GodScript godScript, int level)
