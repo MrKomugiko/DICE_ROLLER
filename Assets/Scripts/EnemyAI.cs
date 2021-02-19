@@ -35,7 +35,7 @@ public class EnemyAI : MonoBehaviour
         StartCoroutine(AI_Player.LoadSkillsData());
     }
     [SerializeField] bool needToRollDices = true;
-    [SerializeField] bool isSkillSelected = false;
+    [SerializeField] bool isSkillSelected = false, THOR = true, IDUN = true;
     void FixedUpdate()
     {
         if (AI_Player.GameManager.EndGameResultWindows.transform.GetChild(0).gameObject.activeSelf == false && AI_Player.GameManager.EndGameResultWindows.transform.GetChild(1).gameObject.activeSelf == false)
@@ -668,9 +668,16 @@ public class EnemyAI : MonoBehaviour
 
 
         var values = Enum.GetValues(typeof(gods));
-        string randomGodName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
-        if (bot_can_use_skills) TrySelectAnyAvaiableSkillFromGod(randomGodName);
-
+            if (bot_can_use_skills) 
+            {
+                if(THOR && IDUN) 
+                {
+                    string randomGodName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
+                    TrySelectAnyAvaiableSkillFromGod(randomGodName);
+                }
+                else if(THOR) TrySelectAnyAvaiableSkillFromGod("Thor");
+                else if(IDUN) TrySelectAnyAvaiableSkillFromGod("Idun");
+            }
         IsRollAllowed = true;
         itsNeedToReCalculateRandomPickingValues = true;
         isMockedDataInitiated = true;

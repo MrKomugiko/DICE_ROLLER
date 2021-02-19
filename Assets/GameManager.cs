@@ -427,8 +427,8 @@ public class GameManager : MonoBehaviour
 
         CombatManager_Script.BackDicesToHand();
 
-        Player_1.CurrentHealth_Value = 1000;
-        Player_2.CurrentHealth_Value = 1000;
+        Player_1.CurrentHealth_Value = 10;
+        Player_2.CurrentHealth_Value = 10;
 
         Player_1.CurrentGold_Value = 0;
         Player_2.CurrentGold_Value = 0;
