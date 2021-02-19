@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -16,7 +17,7 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] public bool FirstRoll, SecondRoll, ThirdRoll, FourthRoll, IsTurnON;
     [SerializeField] bool isMockedDataInitiated, calculatingNewPickValuesIsCompleted, itsNeedToReCalculateRandomPickingValues = true;
-[SerializeField] public bool IsRollAllowed = true;
+    [SerializeField] public bool IsRollAllowed = true;
     Dictionary<int, string> dicesDict = new Dictionary<int, string>();              // diceNumber <1;6> / "nazwa kostki"
     Dictionary<int, string> actualLeftDicesOnHand = new Dictionary<int, string>();  // COPY of diceDict
     Dictionary<int, int> pickProbablityDict = new Dictionary<int, int>();           // diceNumber <1;6> / prawdopodobieństwo bycia wybraną <1;100>
@@ -25,7 +26,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] List<string> debugShowDict = new List<string>();
     List<DiceRollScript> GetCurrentEnemyDicesInBattlefield => ENEMY_Player.ListOfDicesOnBattleground;
     List<DiceRollScript> GetCurrentDicesInBattlefield => AI_Player.ListOfDicesOnBattleground;
-    bool RollingIsCompleted => AI_Player.DiceManager.Dices.Where(d=>d.rollingIsCompleted == false).Any()?false:true;
+    bool RollingIsCompleted => AI_Player.DiceManager.Dices.Where(d => d.RollingIsCompleted == false).Any() ? false : true;
     IEnumerator calculatingCoroutine = null;
 
     void Start()
@@ -33,77 +34,95 @@ public class EnemyAI : MonoBehaviour
         UI = this.GetComponentInChildren<AIPickChanceUi>();
         StartCoroutine(AI_Player.LoadSkillsData());
     }
-    bool isSkillSelected = false;
+    [SerializeField] bool needToRollDices = true;
+    [SerializeField] bool isSkillSelected = false;
     void FixedUpdate()
     {
-        if (IsTurnON && !AI_Player.TurnBlocker.activeSelf)
+        if (AI_Player.GameManager.EndGameResultWindows.transform.GetChild(0).gameObject.activeSelf == false && AI_Player.GameManager.EndGameResultWindows.transform.GetChild(1).gameObject.activeSelf == false)
         {
-               
-            if (FirstRoll)
+            if (IsTurnON && !AI_Player.TurnBlocker.activeSelf)
             {
-                 RollDices();
-           //     IsRollAllowed = true;
-                if (RollingIsCompleted && calculatingCoroutine == null)
+                if (FirstRoll)
                 {
-                    isSkillSelected = false;
-                    isMockedDataInitiated = false;
-                    AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
-                    calculatingCoroutine = CalculatingChance(roundNumber: 1);
-                    StartCoroutine(calculatingCoroutine);
+                    FirstRoll = false;
+                    print("[FirstRoll]");
+                    StartCoroutine(WykonanieRund_1());
                 }
-            }
-            if (SecondRoll)
-            {
-                 RollDices();
-               // IsRollAllowed = true;
-                if (RollingIsCompleted && calculatingCoroutine == null)
+                else if (SecondRoll)
                 {
-                    isSkillSelected = false;
-                    calculatingCoroutine = CalculatingChance(roundNumber: 2);
-                    StartCoroutine(calculatingCoroutine);
+                    SecondRoll = false;
+                    print("[SecondRoll]");
+                    StartCoroutine(WykonaniemRund_2_3_4(2));
                 }
-            }
-            if (ThirdRoll)
-            {
-                 RollDices();
-             //   IsRollAllowed = true;
-                if (RollingIsCompleted && calculatingCoroutine == null)
+                else if (ThirdRoll)
                 {
-                    isSkillSelected = false;
-                    calculatingCoroutine = CalculatingChance(roundNumber: 3);
-                    StartCoroutine(calculatingCoroutine);
+                    ThirdRoll = false;
+                    print("[ThirdRoll]");
+                    StartCoroutine(WykonaniemRund_2_3_4(3));
                 }
-            }
-            if (FourthRoll)
-            {
-                 RollDices();
-             //   IsRollAllowed = true;
-                if (RollingIsCompleted && calculatingCoroutine == null)
+                else if (FourthRoll)
                 {
-                    // opstatnia opcja na wybranie/ zmiane skilla
-                    calculatingCoroutine = CalculatingChance(roundNumber: 4);
-                    StartCoroutine(calculatingCoroutine);
-
-
-
-
-
-
-
-
-                    // ile.AppendAllText("AI_logs",$"ENEMY_PickedDices = [ {String.Join(", ",ENEMY_PickedDices)} ] \n");
-                    foreach (KeyValuePair<int, string> AI_Dice in dicesDict)
-                    {
-                        debugShowDict.Add(
-                            $"Dice:{AI_Dice.Key}\t" +
-                            $"Dice name: {dicesDict.Where(d => d.Key == AI_Dice.Key).First().Value}" +
-                            $" -> Automatic last pick.");
-                    }
-                    //...print("Final round FOUR - auto pick last dices");
-                    // EndTurn(4);
+                    FourthRoll = false;
+                    print("[FourthRoll]");
+                    StartCoroutine(WykonaniemRund_2_3_4(4));
                 }
             }
         }
+    }
+
+    IEnumerator WykonanieRund_1()
+    {
+        print("czekanie za [PrzeprowadzLosowanieKostek]");
+        yield return new WaitUntil(()=>needToRollDices);
+        PrzeprowadzLosowanieKostek();
+
+        print("czekanie za [PrzejdzPrzezProcesILogikeDlaRundy_1]");
+        yield return new WaitUntil(()=>(RollingIsCompleted && calculatingCoroutine == null));
+        PrzejdzPrzezProcesILogikeDlaRundy_1();
+    }
+    IEnumerator WykonaniemRund_2_3_4(int rundNumber)
+    {
+        print("czekanie za [PrzeprowadzLosowanieKostek]");
+        yield return new WaitUntil(()=>needToRollDices);
+        PrzeprowadzLosowanieKostek();
+
+        print("czekanie za [PrzejdzPrzezProcesILogikeDlaRundy_1]");
+        yield return new WaitUntil(()=>(RollingIsCompleted && calculatingCoroutine == null));
+        PrzejdzPrzezProcesILogikeDlaRund_2_3_4(rundNumber);
+    }
+
+    private void PrzeprowadzLosowanieKostek()
+    {
+        print("wykonywanie [PrzeprowadzLosowanieKostek]");
+
+        needToRollDices = false;
+        RollDices();  
+
+        print("zakońćzenie wykonywania [PrzeprowadzLosowanieKostek]"); 
+    }
+    private void PrzejdzPrzezProcesILogikeDlaRundy_1()
+    {
+        print("wykonywanie [PrzejdzPrzezProcesILogikeDlaRundy_1]");
+
+        isSkillSelected = false;
+        isMockedDataInitiated = false;
+        AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
+        calculatingCoroutine = CalculatingChance(roundNumber: 1);
+        StartCoroutine(calculatingCoroutine);
+
+        print("zakończenie wykonywania [PrzejdzPrzezProcesILogikeDlaRundy_1]");
+    }
+    private void PrzejdzPrzezProcesILogikeDlaRund_2_3_4(int rundNumber)
+    {
+        print($"wykonywanie [PrzejdzPrzezProcesILogikeDlaRundy_{rundNumber}]");
+
+        if(rundNumber != 4) isSkillSelected = false; //  4 rundzie nie ma szansy juz zmienic skila 
+
+        calculatingCoroutine = CalculatingChance(rundNumber);
+        StartCoroutine(calculatingCoroutine);
+        
+                    
+        print("zakończenie wykonywania [PrzejdzPrzezProcesILogikeDlaRundy_2]");
     }
 
     private void TrySelectAnyAvaiableSkillFromGod(string godName)
@@ -115,22 +134,45 @@ public class EnemyAI : MonoBehaviour
             {
                 if (AI_Player.CurrentGold_Value >= 4)
                 {
-                    AndroidLogger.Log("mozna wybrac skill lvl 1 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    //AndroidLogger.Log("mozna wybrac skill lvl 1 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 1;
                 }
                 if (AI_Player.CurrentGold_Value >= 8)
                 {
-                    AndroidLogger.Log("mozna wybrac skill lvl 2 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    //AndroidLogger.Log("mozna wybrac skill lvl 2 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 2;
                 }
                 if (AI_Player.CurrentGold_Value >= 12)
                 {
-                    AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    //AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 3;
                 }
 
                 isSkillSelected = choosenSkillLevel > 0 ? true : false;
                 if (choosenSkillLevel > 0) AndroidLogger.Log("Wybrano skill thora na posiomie " + choosenSkillLevel, AndroidLogger.GetPlayerLogColor(AI_Player.Name));
+                AI_Player.SelectLevel1Skill(godName, choosenSkillLevel);
+            }
+
+            if (godName == "Idun")
+            {
+                if (AI_Player.CurrentGold_Value >= 4)
+                {
+                    //AndroidLogger.Log("mozna wybrac skill lvl 1 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    choosenSkillLevel = 1;
+                }
+                if (AI_Player.CurrentGold_Value >= 7)
+                {
+                    //AndroidLogger.Log("mozna wybrac skill lvl 2 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    choosenSkillLevel = 2;
+                }
+                if (AI_Player.CurrentGold_Value >= 10)
+                {
+                  //  AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    choosenSkillLevel = 3;
+                }
+
+                isSkillSelected = choosenSkillLevel > 0 ? true : false;
+                if (choosenSkillLevel > 0) AndroidLogger.Log("Wybrano skill Idun`y na posiomie " + choosenSkillLevel, AndroidLogger.GetPlayerLogColor(AI_Player.Name));
                 AI_Player.SelectLevel1Skill(godName, choosenSkillLevel);
             }
 
@@ -170,6 +212,7 @@ public class EnemyAI : MonoBehaviour
 
     IEnumerator CalculatingChance(int roundNumber)
     {
+        print("coroutine [CalculatingChance] start");
         PopulateDictWithRandomPickingValue();
 
         if (dicesDict != null)
@@ -205,25 +248,15 @@ public class EnemyAI : MonoBehaviour
 
             AI_DicesLeftsInHand = GetListDiceNames(actualLeftDicesOnHand);
 
-            // foreach (int usedDice in numberOFPickedDices)
-            // {
-            //     // Deleting already picked dices from copied dictionary
-            //     KeyValuePair<int,string> oldDice = actualLeftDicesOnHand.Where(d=>d.Key == usedDice).FirstOrDefault();
-            //     if(oldDice.Value != null) actualLeftDicesOnHand.Remove(oldDice.Key);
-            // }
-            // Debug.LogWarning("actualLeftDicesOnHand po edycji: "+string.Join(" / ",actualLeftDicesOnHand.Values));
-            // execute for every possesed dice one by one
-            // var currentCheckingDice = actualLeftDicesOnHand.Where(d => d.Key == dice.Key).FirstOrDefault();
-            // if(currentCheckingDice.Value == null) continue;
-
-            //CalculatePickingValuesForOwnedDices(dice);
-            // Debug.LogError("czy znajdje sie tam jeszcze kostka "+dice.Key +" => " +actualLeftDicesOnHand.ContainsKey(dice.Key));
             if (actualLeftDicesOnHand.ContainsKey(dice.Key))
             {
-                //...print(AI_DicesLeftsInHand.Count() + " kostek na ręce");
                 StartCoroutine(CalculatePickingValuesForOwnedDices(actualLeftDicesOnHand.Where(d => d.Key == dice.Key).First()));
-                yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
 
+                print("czekanie az [calculatingNewPickValuesIsCompleted] sie zakońćzy ");
+                yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
+                print("koniec -. [calculatingNewPickValuesIsCompleted] ");
+
+                print("rozpoczęcie pikowania kostki");
                 if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
                 {
                     PickDice(diceNumber: dice.Key);
@@ -234,6 +267,7 @@ public class EnemyAI : MonoBehaviour
                 yield return new WaitForSeconds(1f);
             }
         }
+        print("zakońćzenie procesu zbierania kostek");
 
         // AI_PickedDices = GetListDiceNames(GetCurrentDicesInBattlefield);
         // Debug.LogWarning("numberOFPickedDices: "+string.Join(" / ",numberOFPickedDices));
@@ -580,15 +614,15 @@ public class EnemyAI : MonoBehaviour
     }
     void RollDices()
     {
-       // if(!IsRollAllowed) IsDicesRolledThisTurn = false;
-        if(IsRollAllowed)
+        // if(!IsRollAllowed) IsDicesRolledThisTurn = false;
+        if (IsRollAllowed)
         {
             //if(IsDicesRolledThisTurn == true) return;
 
             AI_Player.DiceManager.OnClick_ROLLDICES();
             AI_Player.GameManager.SwapRollButonWithEndTurn_OnClick(AI_Player.Name);
             IsRollAllowed = false;
-        }   
+        }
     }
     void PickDice(int diceNumber)
     {
@@ -602,6 +636,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] public bool bot_can_use_skills = false;
     void EndTurn(int turnNumber)
     {
+        print($"[EndTurn {turnNumber}] ");
         AI_DicesLeftsInHand = GetListDiceNames(actualLeftDicesOnHand);
         ///*  File.AppendAllText("AI_logs", */ AndroidLogger.Log($"AI_DicesInHand = [ {String.Join(", ",AI_DicesLeftsInHand)} ] \n");
         // /*  File.AppendAllText("AI_logs", */ AndroidLogger.Log($"AI_PickedDices = [ {String.Join(", ",AI_PickedDices)} ] \n");
@@ -631,15 +666,25 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-        if (bot_can_use_skills) TrySelectAnyAvaiableSkillFromGod("Thor");
 
-        this.transform.Find("EndTurnButton").GetComponent<Button>().onClick.Invoke();
+        var values = Enum.GetValues(typeof(gods));
+        string randomGodName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
+        if (bot_can_use_skills) TrySelectAnyAvaiableSkillFromGod(randomGodName);
+
         IsRollAllowed = true;
         itsNeedToReCalculateRandomPickingValues = true;
         isMockedDataInitiated = true;
         calculatingNewPickValuesIsCompleted = false;
-
         calculatingCoroutine = null;
+        needToRollDices = true;
+
+        this.transform.Find("EndTurnButton").GetComponent<Button>().onClick.Invoke();
+    }
+
+    enum gods
+    {
+        Thor,
+        Idun
     }
     public void TurnONOFF() => IsTurnON = !IsTurnON;
     public void OnClick_TurnOnOFFAI()

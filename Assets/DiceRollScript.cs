@@ -13,7 +13,7 @@ public class DiceRollScript : MonoBehaviour
     public static int ILOSC_RZUTOW = 20;
 
     [SerializeField] public bool DiceSlotIsLocked;
-    [SerializeField] public bool rollingIsCompleted;
+    [SerializeField] private bool _rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
 
     [SerializeField] Image _diceImage;
@@ -112,10 +112,10 @@ public class DiceRollScript : MonoBehaviour
     }
     public bool RollingIsCompleted
     {
-        get => rollingIsCompleted;
+        get => _rollingIsCompleted;
         set
         {
-            rollingIsCompleted = value;
+            _rollingIsCompleted = value;
             // jezeli kość nie jest na polu bitwy
             if (!this.IsSentToBattlefield)
             {

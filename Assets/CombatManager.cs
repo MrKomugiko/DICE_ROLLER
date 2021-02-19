@@ -154,16 +154,17 @@ public class CombatManager : MonoBehaviour
 
             StartCoroutine(Steal(goldStealDices, playerComtainer.name));
         }
-        if (IndexOfCombatAction == 7 && readyToFight)
+        if ((IndexOfCombatAction == 7|| IndexOfCombatAction == 8) && readyToFight)
         {
             readyToFight = false;
 
-            GameObject.Find("Player1").GetComponent<EnemyAI>().AI_Player.GodsManager_Script.OnClick_ExecuteSelectedGodSkill();            
+            string playerName = IndexOfCombatAction == 7 ? FirstTurnPlayerDices.name.Replace("Dices","") : SecondTurnPlayerDices.name.Replace("Dices","");
+            GameObject.Find(playerName).GetComponent<EnemyAI>().AI_Player.GodsManager_Script.OnClick_ExecuteSelectedGodSkill();            
 
             IndexOfCombatAction++;
             readyToFight = true;
         }
-        if (IndexOfCombatAction == 8 && readyToFight)
+        if (IndexOfCombatAction == 9 && readyToFight)
         {
             readyToFight = false;
             //GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;

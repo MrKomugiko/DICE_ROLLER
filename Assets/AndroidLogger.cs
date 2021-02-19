@@ -73,7 +73,7 @@ public static class AndroidLogger
                 // Create a file to write to.
                 using (StreamWriter sw = File.CreateText(path))
                 {
-                    sw.Write("Kto Zaczął grę\tkto pierwszy rollował w rundzie\tNumer rundy\tkto rolluje w tej rundzie\tkto atakuje w tej rundzie\t Zwyciezca\n");
+                    sw.Write("Kto Zaczął grę\tkto pierwszy rollował w rundzie\tNumer rundy\tkto atakuje w tej rundzie\t Zwyciezca\n");
                 }
             }
 

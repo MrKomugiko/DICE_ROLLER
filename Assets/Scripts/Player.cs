@@ -109,6 +109,7 @@ public class Player : MonoBehaviour
             {
                 if(CurrentHealth_Value <= 0)
                 {
+                    GameManager.IsGameEnded = true;
                     print($"{Name} Actual HP = "+CurrentHealth_Value);
                     string winnerName = Name=="Player1"?"Player2":"Player1";
                     GameManager.LastGameWinner = Name =="Player1"?"Player2":"Player1"; 
@@ -126,9 +127,9 @@ public class Player : MonoBehaviour
 
             if (value < 0)
             {
-                print("value: " + value);
+               // print("value: " + value);
 
-                print("różnica : " + (TemporaryIntakeDamage - value).ToString());
+             //   print("różnica : " + (TemporaryIntakeDamage - value).ToString());
 
                 HealthText_TMP.SetText("+" + _temporaryIntakeDamage.ToString());
                 HealthText_TMP.color = Color.green;

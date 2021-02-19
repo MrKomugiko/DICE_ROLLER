@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class DiceManager : MonoBehaviour
 {
@@ -60,12 +61,31 @@ public class DiceManager : MonoBehaviour
     }
     public void OnClick_ROLLDICES()
     {
+         //AndroidLogger.Log("Rozpoczęscie rollowania przez gracza : "+whosThisDice,AndroidLogger.GetPlayerLogColor(whosThisDice));
+        print("----------------> ROLL ROZPOCZĘTY");
         var whosThisDice = "";
         foreach (DiceRollScript dice in Dices)
         {
             dice.StartRolling();
             whosThisDice = dice.DiceOwner;
         }
-         AndroidLogger.Log("Rozpoczęscie rollowania przez gracza : "+whosThisDice,AndroidLogger.GetPlayerLogColor(whosThisDice));
+
+        StartCoroutine(ShowInfoWhenRollingIsCompleteSuccesfully());
+    }
+
+
+
+    IEnumerator ShowInfoWhenRollingIsCompleteSuccesfully()
+    {
+        print("czekanie za sprawdzeniem czy gracz skończył losowanie kostek");
+        yield return new WaitUntil(()=>CheckIfPlayerFinishRolling());
+    }
+
+    private bool CheckIfPlayerFinishRolling()
+    {
+        // print("sprawdzanie czy wszystkie sie zrollowały");
+        if( Dices.Where(d=>d.RollingIsCompleted == false).Any() ) return false;
+        print("----------------> ROLL ZAKOŃCZONY");
+        return true;
     }
 }
