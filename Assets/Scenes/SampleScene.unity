@@ -871,7 +871,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1
+  m_Text: 10
 --- !u!222 &160803604
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2944,6 +2944,10 @@ MonoBehaviour:
   itsNeedToReCalculateRandomPickingValues: 1
   IsRollAllowed: 1
   debugShowDict: []
+  needToRollDices: 1
+  isSkillSelected: 0
+  THOR: 1
+  IDUN: 0
   bot_can_use_skills: 1
 --- !u!1 &483921941
 GameObject:
@@ -3987,7 +3991,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1
+  m_Text: 10
 --- !u!222 &640743860
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9072,6 +9076,10 @@ MonoBehaviour:
   itsNeedToReCalculateRandomPickingValues: 1
   IsRollAllowed: 1
   debugShowDict: []
+  needToRollDices: 1
+  isSkillSelected: 0
+  THOR: 0
+  IDUN: 1
   bot_can_use_skills: 1
 --- !u!1 &1640551751
 GameObject:
