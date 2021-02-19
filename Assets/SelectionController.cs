@@ -99,7 +99,6 @@ public class SelectionController : MonoBehaviour
 
             if (Skill != null)
             {
-                // self triggering set method
                 IsSkillSelected = IsSkillSelected;
             }
         }
@@ -107,7 +106,6 @@ public class SelectionController : MonoBehaviour
 
     void HideLastSelectedBorderByPlayerName(string owner)
     {
-        print("hide last border by player " + owner);
         if (owner == "Player1") 
         {
             GameObject skillButton = LastActivatedBorder_Player1.transform.parent.transform.gameObject;
@@ -156,14 +154,11 @@ public class SelectionController : MonoBehaviour
             selectionTextColor = Color.red;
         }
 
-        //save and change border state
-        //  LastActivatedBorder = skillButton.transform.Find("Border-Selected").transform.gameObject;
-        //  LastActivatedBorder.GetComponent<Image>().color = Color.yellow;
         if (owner == "Player1")
         {
             LastActivatedBorder_Player1 = skillButton.transform.Find("Border-Selected").transform.gameObject;
             LastActivatedBorder_Player1.GetComponent<Image>().color = selectionBorderColor;
-            // get button and make on him colorize stuff
+
             skillButton.GetComponent<Image>().color = selectionBackgroundColor;
             skillButton.GetComponentInChildren<Text>().color = selectionTextColor;
         }
@@ -229,7 +224,6 @@ public class SelectionController : MonoBehaviour
 
         Skill selectedSkill = ownedSkills.Where(s => s.SkillIsSelected).FirstOrDefault();
 
-        //print($"aktualnie wybrany skill to: {selectedSkill.SkillName}, {selectedSkill.selectedSkillLevel} lvl. Należący do boga: {selectedSkill.GodName}");
         return selectedSkill;
     }
 }

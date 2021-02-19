@@ -18,23 +18,13 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
-        
-//            GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = false;    
-        
-
         GM_Script ??= GameObject.Find("GameManager").GetComponent<GameManager>();
         if (Player1ArenaDiceContainer == null)
         {
-            //print("pole GameObject dla Player1ArenaDiceContainer jest puste, " +
-            //    "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
-            //    "'../Battlefield/FightZone/Player1Dices_Fight_DiceHolder'.");
             Player1ArenaDiceContainer = transform.GetChild(0).transform.gameObject; // Player1Dices_Fight_DiceHolder
         }
         if (Player2ArenaDiceContainer == null)
         {
-            //print("pole GameObject dla Player2ArenaDiceContainer jest puste, " +
-            //    "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
-            //    "'../Battlefield/FightZone/Player2Dices_Fight_DiceHolder'.");
             Player2ArenaDiceContainer = transform.GetChild(1).transform.gameObject; // Player2Dices_Fight_DiceHolder
         }
     }
@@ -67,23 +57,15 @@ public class CombatManager : MonoBehaviour
     {    
         if(GM_Script.IsGameEnded == true) IndexOfCombatAction = 0;
         
-        // WHOLE COMBAT ROUTINE (6 steps of combat):
         if (IndexOfCombatAction == 1 && readyToFight)
         {
             RecentAttacker = FirstAttacker;
-            print(RecentAttacker+" <= on zaczal atakowac jako pierwszy");
-            // GM_Script.Player_1.TurnBlocker.SetActive(false);
-            // GM_Script.Player_2.TurnBlocker.SetActive(false);
 
-            //print("atak m 1 => def m 2");
             readyToFight = false;
-            AndroidLogger.Log($"Atak zaczyna gracz : {RecentAttacker}",AndroidLogger.GetPlayerLogColor(FirstAttacker));
             
-            // atak player 1
             List<GameObject> attack = GetDiceOfType("MeleeAttack", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def player 2
             List<GameObject> deffence = GetDiceOfType("MeleeDeffence", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
@@ -91,14 +73,11 @@ public class CombatManager : MonoBehaviour
         }
         if (IndexOfCombatAction == 2 && readyToFight)
         {
-               //print("atak m 2 => def m 1");
             readyToFight = false;
 
-            // atak player 2
             List<GameObject> attack = GetDiceOfType("MeleeAttack", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def player 1
             List<GameObject> deffence = GetDiceOfType("MeleeDeffence", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
@@ -106,16 +85,11 @@ public class CombatManager : MonoBehaviour
         }
         if (IndexOfCombatAction == 3 && readyToFight)
         {
-
-            //print("atak r 1 => def r 2");
-
             readyToFight = false;
 
-            // atak ranged player 1
             List<GameObject> attack = GetDiceOfType("RangedAttack", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def ranged player 2
             List<GameObject> deffence = GetDiceOfType("RangedDeffence", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
@@ -123,16 +97,11 @@ public class CombatManager : MonoBehaviour
         }
         if (IndexOfCombatAction == 4 && readyToFight)
         {
-
-            //print("atak r 2 => def r 1");
-
             readyToFight = false;
 
-            // atak ranged player 2
             List<GameObject> attack = GetDiceOfType("RangedAttack", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def ranged player 1
             List<GameObject> deffence = GetDiceOfType("RangedDeffence", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
@@ -144,7 +113,6 @@ public class CombatManager : MonoBehaviour
             GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
             GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
 
-            //print("steal 1/2 <=> steal 2/1");
             var playerComtainer = IndexOfCombatAction == 5 ? FirstTurnPlayerDices : SecondTurnPlayerDices;
             readyToFight = false;
 
@@ -167,7 +135,6 @@ public class CombatManager : MonoBehaviour
         if (IndexOfCombatAction == 9 && readyToFight)
         {
             readyToFight = false;
-            //GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
             IndexOfCombatAction++;
             ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL();
         }        
@@ -264,7 +231,6 @@ public class CombatManager : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
 
-        // wyzorowanie info o otryzmanych obrazeniach
         GM_Script.Player_1.TemporaryIntakeDamage = 0;
         GM_Script.Player_2.TemporaryIntakeDamage = 0;
 
@@ -304,15 +270,11 @@ public class CombatManager : MonoBehaviour
         GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
         GM_Script.Player_1.TemporaryGoldVault = 0;
 
-
-
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);
 
-
         GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
         GM_Script.Player_2.TemporaryGoldVault = 0;
-        
 
         IndexOfCombatAction++;
         readyToFight = true;
@@ -325,36 +287,29 @@ public class CombatManager : MonoBehaviour
 
     private IEnumerator Fight()
     {
-        print("wait for execute fight coroutine");
-        // czekanie aż 
         yield return new WaitUntil(()=>((co_Fight != null) && (GoldIsAddedSuccesully == true)) && GM_Script.IsBattleModeTurnOn);
         co_Fight = null;
         
-        print("fight config is ready, fight started");
         IndexOfCombatAction = 1;
         readyToFight = true;
     }
 
     public void ANDROID_BUTTON_START_COMBAT_ROUTINE()
     {
-        print("fight config is ready, fight started");
         IndexOfCombatAction = 1;
         readyToFight = true;
     }
 
     public void ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL()
     {
-        print("fight is over, go to new round - rolling phase");
         readyToFight = false;
         GM_Script.ChangeUIToRollingMode();
         GameObject.Find("Player1").GetComponent<EnemyAI>().IsRollAllowed = true;
         GameObject.Find("Player2").GetComponent<EnemyAI>().IsRollAllowed = true;
 
         IndexOfCombatAction = 0;
-
     }
 
-[ContextMenu("Fight is over => CANCEL AND CLEAN")]
     public void BackDicesToHand()
     {
         try
@@ -374,19 +329,14 @@ public class CombatManager : MonoBehaviour
                 player2currentFightingDices.Add(diceScript.transform.gameObject);
             }
 
-            AndroidLogger.Log("Zdjete kostki gracza 1"+player1currentFightingDices.Count.ToString());
-            AndroidLogger.Log("Zdjete kostki gracza 2"+player2currentFightingDices.Count.ToString());
-
             ZdejmijKostkiIZmienKolorNaSzary(player1currentFightingDices);
             ZdejmijKostkiIZmienKolorNaSzary(player2currentFightingDices);
 
             IndexOfCombatAction = 0;
-         //   GM_Script.ChangeUIToRollingMode();
-            
         }
-        catch(Exception ex)
+        catch(Exception)
         {
-            //print("Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message);
+            // Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message.
         }
     }
 }

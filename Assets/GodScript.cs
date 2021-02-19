@@ -51,7 +51,6 @@ public class GodScript : MonoBehaviour
 
             if (_skill != null)
             {
-                print(_skill.SkillName + $"[lvl {skillLevel}] dodany");
                 _card.AttachSkillsFunctionToButtons(skillLevel, _skill);
             }
             skillLevel++;

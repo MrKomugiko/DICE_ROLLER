@@ -28,42 +28,36 @@ public class EnemyAI : MonoBehaviour
     List<DiceRollScript> GetCurrentDicesInBattlefield => AI_Player.ListOfDicesOnBattleground;
     bool RollingIsCompleted => AI_Player.DiceManager.Dices.Where(d => d.RollingIsCompleted == false).Any() ? false : true;
     IEnumerator calculatingCoroutine = null;
+    [SerializeField] bool needToRollDices = true;
+    [SerializeField] bool isSkillSelected = false, THOR = true, IDUN = true;
+    [SerializeField] bool isEndGameWindowsIsClosed => AI_Player.GameManager.EndGameResultWindows.transform.GetChild(0).gameObject.activeSelf == false && AI_Player.GameManager.EndGameResultWindows.transform.GetChild(1).gameObject.activeSelf == false;
 
     void Start()
     {
         UI = this.GetComponentInChildren<AIPickChanceUi>();
         StartCoroutine(AI_Player.LoadSkillsData());
     }
-    [SerializeField] bool needToRollDices = true;
-    [SerializeField] bool isSkillSelected = false, THOR = true, IDUN = true;
+
     void FixedUpdate()
     {
-        if (AI_Player.GameManager.EndGameResultWindows.transform.GetChild(0).gameObject.activeSelf == false && AI_Player.GameManager.EndGameResultWindows.transform.GetChild(1).gameObject.activeSelf == false)
+        if (isEndGameWindowsIsClosed)
         {
             if (IsTurnON && !AI_Player.TurnBlocker.activeSelf)
             {
                 if (FirstRoll)
                 {
-                    FirstRoll = false;
-                    print("[FirstRoll]");
                     StartCoroutine(WykonanieRund_1());
                 }
                 else if (SecondRoll)
                 {
-                    SecondRoll = false;
-                    print("[SecondRoll]");
                     StartCoroutine(WykonaniemRund_2_3_4(2));
                 }
                 else if (ThirdRoll)
                 {
-                    ThirdRoll = false;
-                    print("[ThirdRoll]");
                     StartCoroutine(WykonaniemRund_2_3_4(3));
                 }
                 else if (FourthRoll)
                 {
-                    FourthRoll = false;
-                    print("[FourthRoll]");
                     StartCoroutine(WykonaniemRund_2_3_4(4));
                 }
             }
@@ -72,57 +66,40 @@ public class EnemyAI : MonoBehaviour
 
     IEnumerator WykonanieRund_1()
     {
-        print("czekanie za [PrzeprowadzLosowanieKostek]");
-        yield return new WaitUntil(()=>needToRollDices);
-        PrzeprowadzLosowanieKostek();
+        FirstRoll = false;
+        yield return new WaitUntil(() => needToRollDices);
+        RollDices();
 
-        print("czekanie za [PrzejdzPrzezProcesILogikeDlaRundy_1]");
-        yield return new WaitUntil(()=>(RollingIsCompleted && calculatingCoroutine == null));
+        yield return new WaitUntil(() => (RollingIsCompleted && calculatingCoroutine == null));
         PrzejdzPrzezProcesILogikeDlaRundy_1();
     }
     IEnumerator WykonaniemRund_2_3_4(int rundNumber)
     {
-        print("czekanie za [PrzeprowadzLosowanieKostek]");
-        yield return new WaitUntil(()=>needToRollDices);
-        PrzeprowadzLosowanieKostek();
+        SecondRoll = false;
+        ThirdRoll = false;
+        FourthRoll = false;
 
-        print("czekanie za [PrzejdzPrzezProcesILogikeDlaRundy_1]");
-        yield return new WaitUntil(()=>(RollingIsCompleted && calculatingCoroutine == null));
+        yield return new WaitUntil(() => needToRollDices);
+        RollDices();
+
+        yield return new WaitUntil(() => (RollingIsCompleted && calculatingCoroutine == null));
         PrzejdzPrzezProcesILogikeDlaRund_2_3_4(rundNumber);
     }
 
-    private void PrzeprowadzLosowanieKostek()
-    {
-        print("wykonywanie [PrzeprowadzLosowanieKostek]");
-
-        needToRollDices = false;
-        RollDices();  
-
-        print("zakońćzenie wykonywania [PrzeprowadzLosowanieKostek]"); 
-    }
     private void PrzejdzPrzezProcesILogikeDlaRundy_1()
     {
-        print("wykonywanie [PrzejdzPrzezProcesILogikeDlaRundy_1]");
-
         isSkillSelected = false;
         isMockedDataInitiated = false;
         AutomaticPopulateDicesInDictList(AI_Player.DiceManager.Dices);
         calculatingCoroutine = CalculatingChance(roundNumber: 1);
         StartCoroutine(calculatingCoroutine);
-
-        print("zakończenie wykonywania [PrzejdzPrzezProcesILogikeDlaRundy_1]");
     }
     private void PrzejdzPrzezProcesILogikeDlaRund_2_3_4(int rundNumber)
     {
-        print($"wykonywanie [PrzejdzPrzezProcesILogikeDlaRundy_{rundNumber}]");
-
-        if(rundNumber != 4) isSkillSelected = false; //  4 rundzie nie ma szansy juz zmienic skila 
+        if (rundNumber != 4) isSkillSelected = false; //  4 rundzie nie ma szansy juz zmienic skila 
 
         calculatingCoroutine = CalculatingChance(rundNumber);
         StartCoroutine(calculatingCoroutine);
-        
-                    
-        print("zakończenie wykonywania [PrzejdzPrzezProcesILogikeDlaRundy_2]");
     }
 
     private void TrySelectAnyAvaiableSkillFromGod(string godName)
@@ -167,7 +144,7 @@ public class EnemyAI : MonoBehaviour
                 }
                 if (AI_Player.CurrentGold_Value >= 10)
                 {
-                  //  AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
+                    //  AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 3;
                 }
 
@@ -189,7 +166,6 @@ public class EnemyAI : MonoBehaviour
         for (int i = 1; i <= 6; i++)
         {
             dicesDict.Add(key: i, value: dices.Where(d => d.DiceNumber == i && d.IsSentToBattlefield == false).FirstOrDefault().name.Remove(0, 2));
-            ////...print(i + " / "+ dices.Where(d=>d.DiceNumber == i).FirstOrDefault().name.Remove(0,2));
         }
     }
     void UpdateLogger(KeyValuePair<int, string> currentCheckingDice)
@@ -212,7 +188,6 @@ public class EnemyAI : MonoBehaviour
 
     IEnumerator CalculatingChance(int roundNumber)
     {
-        print("coroutine [CalculatingChance] start");
         PopulateDictWithRandomPickingValue();
 
         if (dicesDict != null)
@@ -222,7 +197,6 @@ public class EnemyAI : MonoBehaviour
             {
                 dicesDict.Add(key: i, value: AI_Player.DiceManager.Dices.Where(d => d.DiceNumber == i).FirstOrDefault().DiceImage.name.Remove(0, 2));
             }
-            //...print("uaktualniono liste kosci");
         }
 
         ENEMY_PickedDices = GetListDiceNames(GetCurrentEnemyDicesInBattlefield);
@@ -234,7 +208,6 @@ public class EnemyAI : MonoBehaviour
             if (numberOFPickedDices.Contains(dice.Key)) continue;
             actualLeftDicesOnHand.Add(dice.Key, dice.Value);
         }
-        //AI_DicesLeftsInHand = GetListDiceNames(actualLeftDicesOnHand);
 
         foreach (KeyValuePair<int, string> dice in dicesDict)
         {
@@ -252,31 +225,22 @@ public class EnemyAI : MonoBehaviour
             {
                 StartCoroutine(CalculatePickingValuesForOwnedDices(actualLeftDicesOnHand.Where(d => d.Key == dice.Key).First()));
 
-                print("czekanie az [calculatingNewPickValuesIsCompleted] sie zakońćzy ");
                 yield return new WaitUntil(() => calculatingNewPickValuesIsCompleted);
-                print("koniec -. [calculatingNewPickValuesIsCompleted] ");
 
-                print("rozpoczęcie pikowania kostki");
                 if (CheckIfDiceShouldBePicked(diceNumber: dice.Key))
                 {
                     PickDice(diceNumber: dice.Key);
                     numberOFPickedDices.Add(dice.Key);
-                    //...print("Kosc została wybrana: " + dice.Value);
                     AI_PickedDices = GetListDiceNames(GetCurrentDicesInBattlefield);
                 }
                 yield return new WaitForSeconds(1f);
             }
         }
-        print("zakońćzenie procesu zbierania kostek");
-
-        // AI_PickedDices = GetListDiceNames(GetCurrentDicesInBattlefield);
-        // Debug.LogWarning("numberOFPickedDices: "+string.Join(" / ",numberOFPickedDices));
 
         EndTurn(roundNumber);
     }
     IEnumerator CalculatePickingValuesForOwnedDices(KeyValuePair<int, string> currentCheckingDice)
     {
-        //...print("Calculate picking value weight for dice: [ " + currentCheckingDice.Key + " | " + currentCheckingDice.Value + " ]");
         calculatingNewPickValuesIsCompleted = false;
         if (!isMockedDataInitiated) yield return null;
         if (calculatingNewPickValuesIsCompleted) yield return null;
@@ -286,17 +250,14 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitUntil(() => calculatedPickValue != 0);
         if (!pickProbablityDict.ContainsKey(currentCheckingDice.Key))
         {
-            // jezeli nie zawiera numeru kostki więc jest to pewnie 1 tura, dodaj ją do dict'a
             pickProbablityDict.Add(key: currentCheckingDice.Key, value: calculatedPickValue);
         }
         else
         {
-            // posiada juz ten klicz w dictie , nadpisz go nową wartością
             pickProbablityDict[currentCheckingDice.Key] = calculatedPickValue;
         }
         UI.SetPickChanceValues(diceNumber: currentCheckingDice.Key, dicePickChance: pickProbablityDict[currentCheckingDice.Key]);
 
-        //... UpdateLogger(currentCheckingDice);
         calculatingNewPickValuesIsCompleted = true;
     }
     bool RecalculatePickWeightValueBasedOnLogic(KeyValuePair<int, string> dice, out int pickValue)
@@ -313,26 +274,8 @@ public class EnemyAI : MonoBehaviour
         int AI_Available_helmetsCounter = AI_DicesLeftsInHand.Where(d => d.Contains("Helmet")).Count();
         int AI_Available_handsCounter = AI_DicesLeftsInHand.Where(d => d.Contains("Hand")).Count();
 
-        ////...print("====================================");
-        ////...print("AI_Picked_axesCounter "+AI_Picked_axesCounter);
-        ////...print("AI_Picked_bowsCounter "+AI_Picked_bowsCounter);
-        ////...print("AI_Picked_shieldsCounter "+AI_Picked_shieldsCounter);
-        ////...print("AI_Picked_helmetsCounter "+AI_Picked_helmetsCounter);
-        ////...print("AI_Picked_handsCounter "+AI_Picked_handsCounter);
-
-        ////...print("AI_Available_axesCounter "+AI_Available_axesCounter);
-        ////...print("AI_Available_bowsCounter "+AI_Available_bowsCounter);
-        ////...print("AI_Available_shieldsCounter "+AI_Available_shieldsCounter);
-        ////...print("AI_Available_helmetsCounter "+AI_Available_helmetsCounter);
-        ////...print("AI_Available_handsCounter "+AI_Available_handsCounter);
-        ////...print("====================================");
-
         pickValue = RandomNumberGenerator.NumberBetween(1, 75);
 
-        // TODO: "PROCES SPRAWDZANIA I SZACOWANIA OPŁACALNOŚCI WYBORU KOŚCI"
-        //      uzyj actual left dices zeby przeszukac czy masz na ręce jakieś inne "może lepsze kości"
-        //      i ile sztuk => w razie planowania obrony lub ataku
-        //
         string dicename = dice.Value;
         bool isBlessed = false;
         if (dicename.Contains("Blessed"))
@@ -434,22 +377,8 @@ public class EnemyAI : MonoBehaviour
             pickValue += 15;
         }
 
-        //...print("obliczanie opłacalności kości zakończone: " + dice.Value + " łącznie na ręce zostało jeszcze " + actualLeftDicesOnHand.Count() + " oplaca się piknąć tą kość w " + pickValue + "%");
         return true;
 
-        // KROKI NIEZBĘDNE DO IDEALNEGO PICKA :d
-        //  1. Czy przeciwnik ma wrzucone kości na arenie ?
-        //  2. Czy masz wrzucone jakieś kości na arene ?
-        //  3. Czy masz więcej lub rowno hp co przeciwnik ?
-        //  4. Czy przeciwnik ma golda lub będzie mieć uwzględniając aktualne blessed kostki
-        //  5. Czy jesteś w stanie przebić się przez obrone przeciwnika minimum na 1 dmg
-        //      z aktualnie posiadanymi kostkami?
-        //  6. Czy masz jakieś odpowiednie do ataku lub obrony blessed kostki?
-        //  7. Czy przeciwnik ma dużo golda ?
-        //  8. Czy jezeli nie jesteś w stanie się obronić i stracisz dużo hp, możesz dobrać kostki
-        //      blessed lub zwiększyć szanse na piknięcie łapki w zamian użycia god skilla = heal
-        //  9. Czy masz duzo wiecej hp niz przeciwnik i możesz skupić sie na zbieraniu golda żeby wykończyć
-        //      przeciwnika skillem boga = atak
         bool CheckIfYouHaveMoreDeffenceDicesThanEnemyIncomeAttack(string deffenceDiceTypeName)
         {
             switch (deffenceDiceTypeName)
@@ -464,6 +393,7 @@ public class EnemyAI : MonoBehaviour
             }
             return false;
         }
+
         bool CheckIfOpponentHaveMoreAttackDicesToCover(string deffenceDiceTypeName)
         {
             switch (deffenceDiceTypeName)
@@ -478,12 +408,11 @@ public class EnemyAI : MonoBehaviour
             }
             return false;
         }
+
         int calculateHowMuchYouNeedToDeffenceYourself()
         {
             int deffProbality = 45;
             int healthDifference = ENEMY_Player.CurrentHealth_Value - AI_Player.CurrentHealth_Value;
-
-            //...print("Różnica twojego hp do przeciwnika wynosi: " + healthDifference);
 
             // UWZGLĘDNIENIE RÓŻNICY W PUNKTACH HP
             ChangeDeffPRobablityDeppendOfHealthDifferences(ref deffProbality, healthDifference);
@@ -494,11 +423,6 @@ public class EnemyAI : MonoBehaviour
             // UWZGLĘDNIENIE NADCHODZĄCEGO ATAKU - POZIOMU ZAGROŻENIA
             ChangeDeffProbablityDeppendOfEnemyAttackIncomming(ref deffProbality, AI_Player.CurrentHealth_Value, ENEMY_Picked_axesCounter, ENEMY_Picked_bowsCounter);
 
-            if (deffProbality > 0)
-            {
-
-                //...print("ostatecznie obrona opłaca się na ok " + deffProbality + "%");
-            }
             return deffProbality;
 
             static void ChangeDeffPRobablityDeppendOfHealthDifferences(ref int deffProbality, int healthDifference)
@@ -614,10 +538,9 @@ public class EnemyAI : MonoBehaviour
     }
     void RollDices()
     {
-        // if(!IsRollAllowed) IsDicesRolledThisTurn = false;
         if (IsRollAllowed)
         {
-            //if(IsDicesRolledThisTurn == true) return;
+            needToRollDices = false;
 
             AI_Player.DiceManager.OnClick_ROLLDICES();
             AI_Player.GameManager.SwapRollButonWithEndTurn_OnClick(AI_Player.Name);
@@ -636,11 +559,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] public bool bot_can_use_skills = false;
     void EndTurn(int turnNumber)
     {
-        print($"[EndTurn {turnNumber}] ");
         AI_DicesLeftsInHand = GetListDiceNames(actualLeftDicesOnHand);
-        ///*  File.AppendAllText("AI_logs", */ AndroidLogger.Log($"AI_DicesInHand = [ {String.Join(", ",AI_DicesLeftsInHand)} ] \n");
-        // /*  File.AppendAllText("AI_logs", */ AndroidLogger.Log($"AI_PickedDices = [ {String.Join(", ",AI_PickedDices)} ] \n");
-        // /*  File.AppendAllText("AI_logs", */ AndroidLogger.Log($"ENEMY_PickedDices = [ {String.Join(", ",ENEMY_PickedDices)} ] \n");
 
         switch (turnNumber)
         {
@@ -666,18 +585,19 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
 
-
         var values = Enum.GetValues(typeof(gods));
-            if (bot_can_use_skills) 
+
+        if (bot_can_use_skills)
+        {
+            if (THOR && IDUN)
             {
-                if(THOR && IDUN) 
-                {
-                    string randomGodName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
-                    TrySelectAnyAvaiableSkillFromGod(randomGodName);
-                }
-                else if(THOR) TrySelectAnyAvaiableSkillFromGod("Thor");
-                else if(IDUN) TrySelectAnyAvaiableSkillFromGod("Idun");
+                string randomGodName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
+                TrySelectAnyAvaiableSkillFromGod(randomGodName);
             }
+            else if (THOR) TrySelectAnyAvaiableSkillFromGod("Thor");
+            else if (IDUN) TrySelectAnyAvaiableSkillFromGod("Idun");
+        }
+
         IsRollAllowed = true;
         itsNeedToReCalculateRandomPickingValues = true;
         isMockedDataInitiated = true;
@@ -687,7 +607,6 @@ public class EnemyAI : MonoBehaviour
 
         this.transform.Find("EndTurnButton").GetComponent<Button>().onClick.Invoke();
     }
-
     enum gods
     {
         Thor,

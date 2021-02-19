@@ -108,12 +108,11 @@ public class Player : MonoBehaviour
             if(GameManager.IsGameEnded == false)
             {
                 if(CurrentHealth_Value <= 0)
-                {
                     GameManager.IsGameEnded = true;
-                    print($"{Name} Actual HP = "+CurrentHealth_Value);
+                {
                     string winnerName = Name=="Player1"?"Player2":"Player1";
-                    GameManager.LastGameWinner = Name =="Player1"?"Player2":"Player1"; 
-                    GameManager.ShowEndGameResultWindow(winner:winnerName);
+                    GameManager.LastGameWinner = winnerName; 
+                    GameManager.ShowEndGameResultWindow(winnerName);
                     _temporaryIntakeDamage = 0;
                 }
             }
@@ -127,10 +126,6 @@ public class Player : MonoBehaviour
 
             if (value < 0)
             {
-               // print("value: " + value);
-
-             //   print("różnica : " + (TemporaryIntakeDamage - value).ToString());
-
                 HealthText_TMP.SetText("+" + _temporaryIntakeDamage.ToString());
                 HealthText_TMP.color = Color.green;
                 liczbaPrzelewaniaObrazen--;
@@ -222,22 +217,12 @@ public class Player : MonoBehaviour
                 }
             }
     }
-
-
-
-
-
-
-
-
     public bool skillsLoades = false;
     public IEnumerator LoadSkillsData()
     {
-        print("start");
         GodSkillWindow.SetActive(true);
         yield return new WaitUntil(()=>GodsManager_Script._godCardsInContainer.First()._skill != null);
         GodSkillWindow.SetActive(false);
-        print("end");
         skillsLoades = true;
     }
     public void SelectLevel1Skill(string godName, int level)

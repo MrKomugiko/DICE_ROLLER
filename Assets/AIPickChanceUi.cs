@@ -65,7 +65,6 @@ public class AIPickChanceUi : MonoBehaviour
         if(ListOfPickChance_Text[diceIndex].text == dicePickChance.ToString()) return;
 
         ListOfPickChance_Text[diceIndex].text = dicePickChance.ToString();
-        //print($"kostka nr: {diceNumber} Change value from {ListOfPickChance_Text[diceIndex].text} to {dicePickChance}");
 
         needUpdateColorsUI=true;
     }

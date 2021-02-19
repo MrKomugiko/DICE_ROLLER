@@ -46,8 +46,6 @@ public class GameManager : MonoBehaviour
     }
     float time = 0.0f, time2 = 0.0f;
     [SerializeField] public string CurrentPlayer;
-    //  [SerializeField] public string LastPlayerWhoRollingBeforeBattle = "";
-    //  [SerializeField] public string PlayerWhoFirstStartRollingInCurrentGameSession = "";
     [SerializeField] public string LastGameWinner;
 
     [SerializeField] string currentGamePhase;
@@ -242,7 +240,7 @@ public class GameManager : MonoBehaviour
     {
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(1);
         GameObject.Find(playerName).transform.Find("DiceHolder").GetComponent<DiceManager>().SetDicesOff = true;
-        CurrentPlayer = playerName;
+       // CurrentPlayer = playerName;
         ChangePlayersTurn();
 
         // automatyczne przelączenie sie do widoku walki jezeli na polu bitwy znajduje sie 12 kostek

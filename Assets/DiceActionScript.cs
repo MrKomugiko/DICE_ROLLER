@@ -14,7 +14,7 @@ public class DiceActionScript : MonoBehaviour
     [SerializeField] bool _inBattlefield;
     [SerializeField] bool _markDiceAsAttacking;
 
-   public Coroutine addGoldCooutine = null;
+    public Coroutine addGoldCooutine = null;
 
     public bool AddGoldFromBlessedItems
     {
@@ -26,7 +26,7 @@ public class DiceActionScript : MonoBehaviour
                 // najpierw sprawdzenie czy item jest faktycznie "blogoslawiony"
                 if (this.name.Contains("Blessed"))
                 {
-                       addGoldCooutine ??= StartCoroutine(AddGodCoin());
+                    addGoldCooutine ??= StartCoroutine(AddGodCoin());
                 }
             }
             // zresetuj wartośc na false
@@ -110,7 +110,7 @@ public class DiceActionScript : MonoBehaviour
             _markDiceAsAttacking = false;
         }
     }
-    
+
     void FixedUpdate()
     {
         #region debbuging inspector function checker
@@ -168,7 +168,6 @@ public class DiceActionScript : MonoBehaviour
     [ContextMenu("Zadaj obrazenia")]
     public void TakeDamage()
     {
-       //print("take damage");
         string parentName = this.transform.parent.name.ToString();
 
         GameManager GameManager_Script = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
@@ -177,15 +176,13 @@ public class DiceActionScript : MonoBehaviour
         {
             case "Player1Dices_Fight_DiceHolder":
                 GameManager_Script.Player_2.TemporaryIntakeDamage += 1;
-               //print("take damage to player 2");
                 break;
 
             case "Player2Dices_Fight_DiceHolder":
                 GameManager_Script.Player_1.TemporaryIntakeDamage += 1;
-               //print("take damage to player 1");
                 break;
         }
-    } 
+    }
     void MoveToArena(string playerName)
     {
         CombatManager CM = GameObject.Find("FightZone").GetComponent<CombatManager>();
@@ -223,7 +220,6 @@ public class DiceActionScript : MonoBehaviour
     {
         _addGoldFromBlessedItems = false;
         string parentName = this.transform.parent.name.ToString();
-
 
         var coinText_1 = GameManager_Script.Player_1.coinText_TMP;
         var coinText_2 = GameManager_Script.Player_2.coinText_TMP;
@@ -264,19 +260,18 @@ public class DiceActionScript : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
         }
 
-        print("usuniecie rutyny z pamięci");
         addGoldCooutine = null;
     }
     IEnumerator StealGodCoinFromOponent()
     {
         _stealGoldUsingHandItem = false;
         // szukanie do kogo należy obiekt kości
-        string parentName = this.transform.parent.name.ToString(); 
-    var coinText_1 = GameManager_Script.Player_1.coinText_TMP;
+        string parentName = this.transform.parent.name.ToString();
+        var coinText_1 = GameManager_Script.Player_1.coinText_TMP;
         var coinText_2 = GameManager_Script.Player_2.coinText_TMP;
 
         GameManager goldVaults = GameObject.Find("GameManager").transform.GetComponent<GameManager>();
-            yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f);
 
         // Dodawanie golda do puli i przełączanie sie kostek na kolor żółty 
         for (float i = 0f; i <= 2; i += 0.1f)
@@ -286,29 +281,25 @@ public class DiceActionScript : MonoBehaviour
                 switch (parentName)
                 {
                     case "Player1Dices_Fight_DiceHolder":
-                    // właśicicielem jest gracz 1, ondostanie golda, przeciwnikiem player2 jemu zaboerzemy
-                        // właściciel
                         GameManager_Script.Player_1.TemporaryGoldVault += 1;
                         coinText_1.color = Color.yellow;
-                        // przeciwnik
+
                         GameManager_Script.Player_2.TemporaryGoldVault -= 1;
                         coinText_2.color = Color.red;
                         break;
 
                     case "Player2Dices_Fight_DiceHolder":
-                    // właśicicielem jest gracz 1, ondostanie golda, przeciwnikiem player2 jemu zaboerzemy
-                        // właściciel
-                        GameManager_Script.Player_2.TemporaryGoldVault  += 1;
+                        GameManager_Script.Player_2.TemporaryGoldVault += 1;
                         coinText_2.color = Color.yellow;
-                        // przeciwnik
-                        GameManager_Script.Player_1.TemporaryGoldVault  -= 1;
+
+                        GameManager_Script.Player_1.TemporaryGoldVault -= 1;
                         coinText_1.color = Color.red;
                         break;
-                }   
+                }
             }
-            this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.green, i*2);
+            this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.green, i * 2);
             yield return new WaitForSeconds(0.05f);
-       }
+        }
     }
     IEnumerator ChangeColor(Color color)
     {
@@ -316,18 +307,15 @@ public class DiceActionScript : MonoBehaviour
         for (float i = 0f; i <= 1; i += 0.05f)
         {
             this.GetComponent<Image>().color = Color.Lerp(this.GetComponent<Image>().color, color, i);
-            #region Color.RED => ATAK -> wysłanie obrażeń do gracza ( przeciwnika )
             if (!done)
             {
-                // jakos tak w pierwszej polowie zmiany koloru zeby odjelo hp pzeciwnika
                 if (color == Color.red)
                 {
                     TakeDamage();
                     done = true;
                 }
             }
-            #endregion
             yield return new WaitForSeconds(0.05f);
         }
     }
-    }
+}
