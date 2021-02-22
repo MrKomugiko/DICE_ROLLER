@@ -2949,6 +2949,7 @@ MonoBehaviour:
   THOR: 1
   IDUN: 1
   bot_can_use_skills: 1
+  smartSkillSelect: 0
 --- !u!1 &483921941
 GameObject:
   m_ObjectHideFlags: 0
@@ -7745,7 +7746,7 @@ MonoBehaviour:
   interpolationPeriod: 0.5
   _turnNumber: 0
   isBattleModeTurnOn: 0
-  currentPlayer: 
+  _currentPlayer: 
   LastGameWinner: 
   currentGamePhase: 
   CombatManager_Script: {fileID: 0}
@@ -9081,6 +9082,7 @@ MonoBehaviour:
   THOR: 1
   IDUN: 1
   bot_can_use_skills: 1
+  smartSkillSelect: 1
 --- !u!1 &1640551751
 GameObject:
   m_ObjectHideFlags: 0

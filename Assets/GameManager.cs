@@ -222,7 +222,7 @@ public class GameManager : MonoBehaviour
                 CurrentPlayer = "Player2";
 
 
-                print("playerfirstrollinginlastturn = " + playerfirstrollinginlastturn + "/ PlayerWhoMakeFirstRollInCurrentRound.1 = " + PlayerWhoMakeFirstRollInCurrentRound);
+             //   print("playerfirstrollinginlastturn = " + playerfirstrollinginlastturn + "/ PlayerWhoMakeFirstRollInCurrentRound.1 = " + PlayerWhoMakeFirstRollInCurrentRound);
             }
             if (PlayerWhoMakeFirstRollinCurrentGameSession == "") PlayerWhoMakeFirstRollinCurrentGameSession = CurrentPlayer;
 
