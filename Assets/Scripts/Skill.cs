@@ -86,7 +86,7 @@ public class Skill
         {
             if (recentSelectedGod == newSelectedGod)
             {
-                // Debug.Log("Zmiana skilla tego samego Boga");
+                 Debug.Log("Wybranie skilla tego samego Boga");
                 return true;
             }
         }

@@ -15,6 +15,7 @@ public class DiceActionScript : MonoBehaviour
     [SerializeField] bool _markDiceAsAttacking;
 
     public Coroutine addGoldCooutine = null;
+    public Coroutine stealGoldCooutine = null;
 
     public bool AddGoldFromBlessedItems
     {
@@ -300,6 +301,7 @@ public class DiceActionScript : MonoBehaviour
             this.GetComponent<Image>().color = Color.Lerp(Color.white, Color.green, i * 2);
             yield return new WaitForSeconds(0.05f);
         }
+        stealGoldCooutine = null;
     }
     IEnumerator ChangeColor(Color color)
     {

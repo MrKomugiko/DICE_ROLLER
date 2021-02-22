@@ -72,6 +72,18 @@ public class EnemyAI : MonoBehaviour
     IEnumerator WykonanieRund_1()
     {
         FirstRoll = false;
+        
+        var whostartCombat = AI_Player.GameManager.CombatManager_Script.RecentAttacker;
+        // z automatu 1 graczem jest player 2, więc 1 atakującym jest gracz 1 ( przeciwnik ) 
+        // jeżeli wartość recentattacker jest pusta, czyli nie obyłą sie jeszcze zadna walka
+        // zaczyna gracz 2;
+        whostartCombat = whostartCombat==""?"Player2":whostartCombat;
+
+        // zmiana nazwy ostatniego przciwnika na nazwe przeciwnika aktualnie zaczynającego woalke
+        whostartCombat = whostartCombat=="Player1"?"Player2":"Player1";
+
+      //  print("sprawdzenie kto komu pierwszy zacznie podkradać golda, zaczyna "+whostartCombat);
+
         yield return new WaitUntil(() => needToRollDices);
         RollDices();
 
@@ -115,22 +127,27 @@ public class EnemyAI : MonoBehaviour
 
     private void TrySelectAnyAvaiableSkillFromGod(string godName)
     {
+        if(godName == "Thor" && !THOR) return;
+        if(godName == "Idun" && !IDUN) return; 
+
         int choosenSkillLevel = 0;
         if (!isSkillSelected && AI_Player.skillsLoades)
         {
+            int avaiableGold = AI_Player.CurrentGold_Value;
+            
             if (godName == "Thor")
             {
-                if (AI_Player.CurrentGold_Value >= 4)
+                if (avaiableGold >= 4)
                 {
                     //AndroidLogger.Log("mozna wybrac skill lvl 1 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 1;
                 }
-                if (AI_Player.CurrentGold_Value >= 8)
+                if (avaiableGold >= 8)
                 {
                     //AndroidLogger.Log("mozna wybrac skill lvl 2 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 2;
                 }
-                if (AI_Player.CurrentGold_Value >= 12)
+                if (avaiableGold >= 12)
                 {
                     //AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 3;
@@ -139,21 +156,20 @@ public class EnemyAI : MonoBehaviour
                 isSkillSelected = choosenSkillLevel > 0 ? true : false;
                 if (choosenSkillLevel > 0) AndroidLogger.Log("Wybrano skill thora na posiomie " + choosenSkillLevel, AndroidLogger.GetPlayerLogColor(AI_Player.Name));
                 AI_Player.SelectLevel1Skill(godName, choosenSkillLevel);
-            }
-
+            }            
             if (godName == "Idun")
             {
-                if (AI_Player.CurrentGold_Value >= 4)
+                if (avaiableGold >= 4)
                 {
                     //AndroidLogger.Log("mozna wybrac skill lvl 1 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 1;
                 }
-                if (AI_Player.CurrentGold_Value >= 7)
+                if (avaiableGold >= 7)
                 {
                     //AndroidLogger.Log("mozna wybrac skill lvl 2 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 2;
                 }
-                if (AI_Player.CurrentGold_Value >= 10)
+                if (avaiableGold >= 10)
                 {
                     //  AndroidLogger.Log("mozna wybrac skill lvl 3 aktualnie mam " + AI_Player.CurrentGold_Value + " Golda");
                     choosenSkillLevel = 3;
@@ -165,6 +181,25 @@ public class EnemyAI : MonoBehaviour
             }
 
         }
+    }
+
+    private string CalculateWhichGodChoose()
+    {
+        var whoGonnaFirstAttackWithSkillInCombat = AI_Player.GameManager.PlayerWhoMakeFirstRollinCurrentGameSession;
+        string godToChoose = "";
+
+        // Thor => ATAK
+        //      MASZ PIERWSZEŃŚTWO ?
+        //          PRZECIWNIK ZEJDZIE NA HITA :D?
+            if(whoGonnaFirstAttackWithSkillInCombat == AI_Player.Name) godToChoose = "Thor";
+            if(AI_Player.CurrentHealth_Value >= 5) godToChoose = "Thor";
+
+        // Idun => OBRONA
+        //      MASZ PIERWSZEŃŚTWO ?
+        //          ZDĄZYSZ OBRONIĆ SIĘ PRZED ŚMIERCIĄ ?
+            if(AI_Player.CurrentHealth_Value <5) godToChoose = "Idun";
+
+        return godToChoose;
     }
 
     void AutomaticPopulateDicesInDictList(List<DiceRollScript> dices)
@@ -245,7 +280,7 @@ public class EnemyAI : MonoBehaviour
                     numberOFPickedDices.Add(dice.Key);
                     AI_PickedDices = GetListDiceNames(GetCurrentDicesInBattlefield);
                 }
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(0.2f);
             }
         }
 
@@ -569,6 +604,8 @@ public class EnemyAI : MonoBehaviour
         if (diceButton.IsInteractable()) diceButton.onClick.Invoke();
     }
     [SerializeField] public bool bot_can_use_skills = false;
+    [SerializeField] public bool smartSkillSelect = false;
+
     void EndTurn(int turnNumber)
     {
         AI_DicesLeftsInHand = GetListDiceNames(actualLeftDicesOnHand);
@@ -601,13 +638,9 @@ public class EnemyAI : MonoBehaviour
 
         if (bot_can_use_skills)
         {
-            if (THOR && IDUN)
-            {
-                string randomGodName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
-                TrySelectAnyAvaiableSkillFromGod(randomGodName);
-            }
-            else if (THOR) TrySelectAnyAvaiableSkillFromGod("Thor");
-            else if (IDUN) TrySelectAnyAvaiableSkillFromGod("Idun");
+                string godName = ((gods)values.GetValue(RandomNumberGenerator.NumberBetween(0, values.Length - 1))).ToString();
+                if(smartSkillSelect) godName = CalculateWhichGodChoose();
+                TrySelectAnyAvaiableSkillFromGod(godName);
         }
 
         IsRollAllowed = true;
@@ -628,12 +661,15 @@ public class EnemyAI : MonoBehaviour
     public void OnClick_TurnOnOFFAI()
     {
         TurnONOFF();
+        print("Wylaczenie/Włączenie bota");
         if (IsTurnON)
         {
+            print("zmiana koloru na zielony");
             transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(0, 255, 0, 255);
         }
         else
         {
+            print("zmiana koloru na czerwony");
             transform.Find("AIIcon_Button").GetComponent<Image>().color = new Color32(255, 0, 0, 128);
         }
     }

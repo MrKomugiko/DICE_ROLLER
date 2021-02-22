@@ -71,6 +71,7 @@ public class GodsManager : MonoBehaviour
                 }
                 else
                 {
+                    print("nie stać Cie na tego skilla");
                     AndroidLogger.Log("you dont have enought Gold to cast skill", AndroidLogger.GetPlayerLogColor(ownerName));
                     lastUsedSkill.SkillIsSelected = false;
                 }

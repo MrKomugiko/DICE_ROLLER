@@ -7,7 +7,7 @@ public static class AndroidLogger
 {
     static int LoggerLineCounter = 0;
     static List<string> Logs = new List<string>();
-    static int messageMaxSize = 15;
+    static int messageMaxSize = 25;
 
     public static void Log(string newLog, string color = "white")
     {
@@ -58,7 +58,6 @@ public static class AndroidLogger
      public static int latestLogNumber = 0;
     public static void ApplicationStartedCheckLogFilesAndChangeNumber()
     {
-        Debug.Log("ELO MORDY");
             if (Application.platform == RuntimePlatform.Android)
             {
                 path = Application.persistentDataPath+$"\\{latestLogNumber.ToString("000")}_Game_Combat_Logs.txt";
@@ -66,22 +65,22 @@ public static class AndroidLogger
             else
             {
                 path = $"C:\\Users\\MrKom\\Desktop\\ORLOG_Logs\\{latestLogNumber.ToString("000")}_Which_Player_Attack_First_and_how_many_rounds.txt";
-                Debug.Log("szukanacja to: "+path);
+//                Debug.Log("szukanacja to: "+path);
             }
 
             while (true)
             {   
-                Debug.Log("szukaj lognumber : "+latestLogNumber);
+  //              Debug.Log("szukaj lognumber : "+latestLogNumber);
                 if (File.Exists(path))
                 {
-                    Debug.Log("juz istnieje"+path);
+    //                Debug.Log("juz istnieje"+path);
                     latestLogNumber++;
                     path = path.Replace((latestLogNumber-1).ToString("000"),latestLogNumber.ToString("000"));
                 }
 
                 if(!File.Exists(path))
                 {
-                    Debug.Log("nowa ścieżka = "+path);
+      //              Debug.Log("nowa ścieżka = "+path);
                     using (StreamWriter sw = File.CreateText(path))
                     {
                         sw.Write("Kto Zaczął grę\tkto pierwszy rollował w rundzie\tNumer rundy\tkto atakuje w tej rundzie\t Zwyciezca\t P1_HP\t P1_Gold\t P2_HP\t P2_Gold\n");
@@ -93,7 +92,7 @@ public static class AndroidLogger
     public static void Log_Which_Player_Attack_First_and_how_many_rounds(
         string whoStartGameSession = "", 
         string whoRollinCurrentRund ="", 
-        string numberOfRund = "",
+        string numberOfRund = "1",
         string whoAttackedFirstInThisRund ="", 
         string winner ="",
 

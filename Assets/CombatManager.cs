@@ -19,6 +19,7 @@ public class CombatManager : MonoBehaviour
     void Start()
     {
         GM_Script ??= GameObject.Find("GameManager").GetComponent<GameManager>();
+
         if (Player1ArenaDiceContainer == null)
         {
             Player1ArenaDiceContainer = transform.GetChild(0).transform.gameObject; // Player1Dices_Fight_DiceHolder
@@ -46,10 +47,25 @@ public class CombatManager : MonoBehaviour
         }
     }
 
+    private bool IsPayerEndStealing
+    {
+        get{
+            var p1_dices = Player1BattlefieldDiceContainer.GetComponentsInChildren<DiceActionScript>();
+            var p2_dices = Player2BattlefieldDiceContainer.GetComponentsInChildren<DiceActionScript>();
+
+            if(p1_dices.Where(d=>d.stealGoldCooutine == null).Count() == 6 && p2_dices.Where(d=>d.stealGoldCooutine == null).Count() == 6)
+            {
+                // to znaczy że nie wykonuje sie zadna rutyna przyznawania golda w tej chwili na żadnej z kostek
+                return true;
+            }
+            return false;
+        }
+    }
+
     public string lastGameFirstAttacking = "";
     private string _recentAttacker;
     [SerializeField] public string RecentAttacker;
-   
+
     public string FirstAttacker => GM_Script.PlayerWhoMakeFirstRollinCurrentGameSession;
     
     private GameObject FirstTurnPlayerDices => RecentAttacker=="Player1"?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
@@ -61,14 +77,15 @@ public class CombatManager : MonoBehaviour
         {
             IndexOfCombatAction = 0;
           //  print("0 First roller in game = "+FirstAttacker);
-            RecentAttacker = FirstAttacker=="Player1"?"Player2":"Player1";
+            RecentAttacker = FirstAttacker;
           //  print("0 Recent attacker = "+ RecentAttacker);
         }
         if (IndexOfCombatAction == 1 && readyToFight)
         {
-          //  print("1 old recent attacker = "+RecentAttacker);
+          //print("1 old recent attacker = "+RecentAttacker);
             RecentAttacker = RecentAttacker=="Player1"?"Player2":"Player1";
-          //  print("1 new recent/current attacker = "+RecentAttacker);
+           // print("1 new recent/current attacker = "+RecentAttacker);
+           // print("pierwsza osobą która zacznie kraść będzie: "+RecentAttacker);
 
             readyToFight = false;
             
@@ -119,6 +136,8 @@ public class CombatManager : MonoBehaviour
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
             readyToFight = false;
+            string playerName = IndexOfCombatAction == 7 ? FirstTurnPlayerDices.name.Replace("Dices","") : SecondTurnPlayerDices.name.Replace("Dices","");
+  //          print("Próba kradzieży golda przez : "+playerName);
 
             GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
             GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
@@ -136,6 +155,7 @@ public class CombatManager : MonoBehaviour
             readyToFight = false;
 
             string playerName = IndexOfCombatAction == 7 ? FirstTurnPlayerDices.name.Replace("Dices","") : SecondTurnPlayerDices.name.Replace("Dices","");
+//            print("Próba użycia skilla przez : "+playerName);
             GameObject.Find(playerName).GetComponent<EnemyAI>().AI_Player.GodsManager_Script.OnClick_ExecuteSelectedGodSkill();            
 
             IndexOfCombatAction++;
@@ -148,7 +168,6 @@ public class CombatManager : MonoBehaviour
             ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL();
         }        
     }
-
     void WrzucKostkiNaArene(List<GameObject> dices)
     {
         foreach (var dice in dices)
@@ -158,9 +177,16 @@ public class CombatManager : MonoBehaviour
     }
     void ZdejmijKostkiIZmienKolorNaSzary(List<GameObject> dices)
     {
-        foreach (var dice in dices)
+        try
         {
-            dice.GetComponent<DiceActionScript>().InBattlefield = true;
+            foreach (var dice in dices)
+            {
+                dice.GetComponent<DiceActionScript>().InBattlefield = true;
+            }
+        }
+        catch (System.Exception)
+        {
+//            throw;
         }
     }
     List<GameObject> GetDiceOfType(string diceType, List<GameObject> playerDices)
@@ -282,9 +308,12 @@ public class CombatManager : MonoBehaviour
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);
 
-        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+        GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
         GM_Script.Player_2.TemporaryGoldVault = 0;
 
+        //print("gracz zaczął kraść, czekam za końcem zeby przejść do następnego etapu");
+        yield return new WaitUntil(()=>IsPayerEndStealing);
+      //  print("Gracz skońćzył kraść ;d");
         IndexOfCombatAction++;
         readyToFight = true;
     }
