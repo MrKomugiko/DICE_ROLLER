@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -108,9 +109,10 @@ public class Player : MonoBehaviour
             {
                 if(CurrentHealth_Value <= 0)
                 {
-                    print($"{Name} Actual HP = "+CurrentHealth_Value);
+                    GameManager.IsGameEnded = true;
                     string winnerName = Name=="Player1"?"Player2":"Player1";
-                    GameManager.ShowEndGameResultWindow(winner:winnerName);
+                    GameManager.LastGameWinner = winnerName; 
+                    GameManager.ShowEndGameResultWindow(winnerName);
                     _temporaryIntakeDamage = 0;
                 }
             }
@@ -124,10 +126,6 @@ public class Player : MonoBehaviour
 
             if (value < 0)
             {
-                print("value: " + value);
-
-                print("różnica : " + (TemporaryIntakeDamage - value).ToString());
-
                 HealthText_TMP.SetText("+" + _temporaryIntakeDamage.ToString());
                 HealthText_TMP.color = Color.green;
                 liczbaPrzelewaniaObrazen--;
@@ -218,5 +216,23 @@ public class Player : MonoBehaviour
                     TemporaryIntakeDamage = 0;
                 }
             }
+    }
+    public bool skillsLoades = false;
+    public IEnumerator LoadSkillsData()
+    {
+        GodSkillWindow.SetActive(true);
+        yield return new WaitUntil(()=>GodsManager_Script._godCardsInContainer.First()._skill != null);
+        GodSkillWindow.SetActive(false);
+        skillsLoades = true;
+    }
+    public void SelectLevel1Skill(string godName, int level)
+    {   
+        if(level > 0)
+        {
+            GodSkillWindow.SetActive(true);
+            CardScript CS = GodsManager_Script._godCardsInContainer.Where(c=>c._card.name == godName).First()._card;
+            CS._godTotem._skill.TrySelectSkill(level,Name, CS._godTotem._godData);
+            GodSkillWindow.SetActive(false);
+        }
     }
 }

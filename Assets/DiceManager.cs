@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class DiceManager : MonoBehaviour
 {
@@ -16,7 +17,6 @@ public class DiceManager : MonoBehaviour
     {
         if(PlayerBattlefieldDiceHolder == null)
         {        
-            print("nie przypisane");
             if (this.transform.parent.name == "Player1")
             {
                 PlayerBattlefieldDiceHolder = GameObject.Find("Battlefield").transform.Find("Player1Dices").gameObject;
@@ -60,9 +60,27 @@ public class DiceManager : MonoBehaviour
     }
     public void OnClick_ROLLDICES()
     {
+        var whosThisDice = "";
         foreach (DiceRollScript dice in Dices)
         {
             dice.StartRolling();
+            whosThisDice = dice.DiceOwner;
         }
+
+        StartCoroutine(ShowInfoWhenRollingIsCompleteSuccesfully());
+    }
+
+
+
+    IEnumerator ShowInfoWhenRollingIsCompleteSuccesfully()
+    {
+        yield return new WaitUntil(()=>CheckIfPlayerFinishRolling());
+    }
+
+    private bool CheckIfPlayerFinishRolling()
+    {
+        // print("sprawdzanie czy wszystkie sie zrollowały");
+        if( Dices.Where(d=>d.RollingIsCompleted == false).Any() ) return false;
+        return true;
     }
 }

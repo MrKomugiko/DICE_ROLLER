@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public partial class CardScript : MonoBehaviour
 {
-    GodScript _godTotem;
+    public GodScript _godTotem;
     Transform _transform;
     Image _cardImage;
     TextMeshProUGUI _cardDescription;

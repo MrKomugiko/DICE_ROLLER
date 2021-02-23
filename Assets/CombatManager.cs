@@ -18,102 +18,131 @@ public class CombatManager : MonoBehaviour
 
     void Start()
     {
-        GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = false;
+        GM_Script ??= GameObject.Find("GameManager").GetComponent<GameManager>();
 
-        GM_Script = GameObject.Find("GameManager").GetComponent<GameManager>();
         if (Player1ArenaDiceContainer == null)
         {
-            print("pole GameObject dla Player1ArenaDiceContainer jest puste, " +
-                "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
-                "'../Battlefield/FightZone/Player1Dices_Fight_DiceHolder'.");
             Player1ArenaDiceContainer = transform.GetChild(0).transform.gameObject; // Player1Dices_Fight_DiceHolder
         }
         if (Player2ArenaDiceContainer == null)
         {
-            print("pole GameObject dla Player2ArenaDiceContainer jest puste, " +
-                "zaninicjowanie ze standardową opcją znalezienia po nazwie: " +
-                "'../Battlefield/FightZone/Player2Dices_Fight_DiceHolder'.");
             Player2ArenaDiceContainer = transform.GetChild(1).transform.gameObject; // Player2Dices_Fight_DiceHolder
         }
     }
+    Coroutine co_Fight = null;
+
+    public bool GoldIsAddedSuccesully 
+    {
+        get
+        {
+            var p1_dices = Player1BattlefieldDiceContainer.GetComponentsInChildren<DiceActionScript>();
+            var p2_dices = Player2BattlefieldDiceContainer.GetComponentsInChildren<DiceActionScript>();
+
+            if(p1_dices.Where(d=>d.addGoldCooutine == null).Count() == 6 && p2_dices.Where(d=>d.addGoldCooutine == null).Count() == 6)
+            {
+                // to znaczy że nie wykonuje sie zadna rutyna przyznawania golda w tej chwili na żadnej z kostek
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private bool IsPayerEndStealing
+    {
+        get{
+            var p1_dices = Player1BattlefieldDiceContainer.GetComponentsInChildren<DiceActionScript>();
+            var p2_dices = Player2BattlefieldDiceContainer.GetComponentsInChildren<DiceActionScript>();
+
+            if(p1_dices.Where(d=>d.stealGoldCooutine == null).Count() == 6 && p2_dices.Where(d=>d.stealGoldCooutine == null).Count() == 6)
+            {
+                // to znaczy że nie wykonuje sie zadna rutyna przyznawania golda w tej chwili na żadnej z kostek
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public string lastGameFirstAttacking = "";
+    private string _recentAttacker;
+    [SerializeField] public string RecentAttacker;
+
+    public string FirstAttacker => GM_Script.PlayerWhoMakeFirstRollinCurrentGameSession;
+    
+    private GameObject FirstTurnPlayerDices => RecentAttacker=="Player1"?Player1BattlefieldDiceContainer:Player2BattlefieldDiceContainer;
+    private GameObject SecondTurnPlayerDices => RecentAttacker=="Player1"?Player2BattlefieldDiceContainer:Player1BattlefieldDiceContainer;
+
     void Update()
     {    
-        if(GM_Script.IsGameEnded == true) IndexOfCombatAction = 0;
-        
-        // WHOLE COMBAT ROUTINE (6 steps of combat):
+        if(GM_Script.IsGameEnded == true) 
+        {
+            IndexOfCombatAction = 0;
+          //  print("0 First roller in game = "+FirstAttacker);
+            RecentAttacker = FirstAttacker;
+          //  print("0 Recent attacker = "+ RecentAttacker);
+        }
         if (IndexOfCombatAction == 1 && readyToFight)
         {
-            GM_Script.Player_1.TurnBlocker.SetActive(false);
-            GM_Script.Player_2.TurnBlocker.SetActive(false);
+          //print("1 old recent attacker = "+RecentAttacker);
+            RecentAttacker = RecentAttacker=="Player1"?"Player2":"Player1";
+           // print("1 new recent/current attacker = "+RecentAttacker);
+           // print("pierwsza osobą która zacznie kraść będzie: "+RecentAttacker);
 
-            print("atak m 1 => def m 2");
             readyToFight = false;
-
-            // atak player 1
-            List<GameObject> attack = GetDiceOfType("MeleeAttack", GetDicesFromContainer(Player1BattlefieldDiceContainer));
+            
+            List<GameObject> attack = GetDiceOfType("MeleeAttack", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def player 2
-            List<GameObject> deffence = GetDiceOfType("MeleeDeffence", GetDicesFromContainer(Player2BattlefieldDiceContainer));
+            List<GameObject> deffence = GetDiceOfType("MeleeDeffence", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
             StartCoroutine(Combat(attack, deffence));
         }
         if (IndexOfCombatAction == 2 && readyToFight)
         {
-            print("atak m 2 => def m 1");
             readyToFight = false;
 
-            // atak player 2
-            List<GameObject> attack = GetDiceOfType("MeleeAttack", GetDicesFromContainer(Player2BattlefieldDiceContainer));
+            List<GameObject> attack = GetDiceOfType("MeleeAttack", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def player 1
-            List<GameObject> deffence = GetDiceOfType("MeleeDeffence", GetDicesFromContainer(Player1BattlefieldDiceContainer));
+            List<GameObject> deffence = GetDiceOfType("MeleeDeffence", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
             StartCoroutine(Combat(attack, deffence));
         }
         if (IndexOfCombatAction == 3 && readyToFight)
         {
-            print("atak r 1 => def r 2");
-
             readyToFight = false;
 
-            // atak ranged player 1
-            List<GameObject> attack = GetDiceOfType("RangedAttack", GetDicesFromContainer(Player1BattlefieldDiceContainer));
+            List<GameObject> attack = GetDiceOfType("RangedAttack", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def ranged player 2
-            List<GameObject> deffence = GetDiceOfType("RangedDeffence", GetDicesFromContainer(Player2BattlefieldDiceContainer));
+            List<GameObject> deffence = GetDiceOfType("RangedDeffence", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
             StartCoroutine(Combat(attack, deffence));
         }
         if (IndexOfCombatAction == 4 && readyToFight)
         {
-            print("atak r 2 => def r 1");
-
             readyToFight = false;
 
-            // atak ranged player 2
-            List<GameObject> attack = GetDiceOfType("RangedAttack", GetDicesFromContainer(Player2BattlefieldDiceContainer));
+            List<GameObject> attack = GetDiceOfType("RangedAttack", GetDicesFromContainer(SecondTurnPlayerDices));
             WrzucKostkiNaArene(attack);
 
-            // def ranged player 1
-            List<GameObject> deffence = GetDiceOfType("RangedDeffence", GetDicesFromContainer(Player1BattlefieldDiceContainer));
+            List<GameObject> deffence = GetDiceOfType("RangedDeffence", GetDicesFromContainer(FirstTurnPlayerDices));
             WrzucKostkiNaArene(deffence);
 
             StartCoroutine(Combat(attack, deffence));
         }
         if ((IndexOfCombatAction == 5 || IndexOfCombatAction == 6) && readyToFight)
         {
+            readyToFight = false;
+            string playerName = IndexOfCombatAction == 7 ? FirstTurnPlayerDices.name.Replace("Dices","") : SecondTurnPlayerDices.name.Replace("Dices","");
+  //          print("Próba kradzieży golda przez : "+playerName);
+
             GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
             GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
 
-            print("steal 1/2 <=> steal 2/1");
-            var playerComtainer = IndexOfCombatAction == 5 ? Player1BattlefieldDiceContainer : Player2BattlefieldDiceContainer;
-            readyToFight = false;
+            var playerComtainer = IndexOfCombatAction == 5 ? FirstTurnPlayerDices : SecondTurnPlayerDices;
 
             var goldStealDices = GetDiceOfType("Steal", GetDicesFromContainer(playerComtainer));
 
@@ -121,10 +150,22 @@ public class CombatManager : MonoBehaviour
 
             StartCoroutine(Steal(goldStealDices, playerComtainer.name));
         }
-        if (IndexOfCombatAction == 7 && readyToFight)
+        if ((IndexOfCombatAction == 7|| IndexOfCombatAction == 8) && readyToFight)
         {
-           GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = true;
-           IndexOfCombatAction++;
+            readyToFight = false;
+
+            string playerName = IndexOfCombatAction == 7 ? FirstTurnPlayerDices.name.Replace("Dices","") : SecondTurnPlayerDices.name.Replace("Dices","");
+//            print("Próba użycia skilla przez : "+playerName);
+            GameObject.Find(playerName).GetComponent<EnemyAI>().AI_Player.GodsManager_Script.OnClick_ExecuteSelectedGodSkill();            
+
+            IndexOfCombatAction++;
+            readyToFight = true;
+        }
+        if (IndexOfCombatAction == 9 && readyToFight)
+        {
+            readyToFight = false;
+            IndexOfCombatAction++;
+            ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL();
         }        
     }
     void WrzucKostkiNaArene(List<GameObject> dices)
@@ -136,9 +177,16 @@ public class CombatManager : MonoBehaviour
     }
     void ZdejmijKostkiIZmienKolorNaSzary(List<GameObject> dices)
     {
-        foreach (var dice in dices)
+        try
         {
-            dice.GetComponent<DiceActionScript>().InBattlefield = true;
+            foreach (var dice in dices)
+            {
+                dice.GetComponent<DiceActionScript>().InBattlefield = true;
+            }
+        }
+        catch (System.Exception)
+        {
+//            throw;
         }
     }
     List<GameObject> GetDiceOfType(string diceType, List<GameObject> playerDices)
@@ -218,7 +266,6 @@ public class CombatManager : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
 
-        // wyzorowanie info o otryzmanych obrazeniach
         GM_Script.Player_1.TemporaryIntakeDamage = 0;
         GM_Script.Player_2.TemporaryIntakeDamage = 0;
 
@@ -258,20 +305,33 @@ public class CombatManager : MonoBehaviour
         GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
         GM_Script.Player_1.TemporaryGoldVault = 0;
 
-
-
         ZdejmijKostkiIZmienKolorNaSzary(goldStealingDices);
         yield return new WaitForSeconds(0.5f);
 
-
-        GM_Script.Player_1.CumulativeGoldStealingCounter = 0;
+        GM_Script.Player_2.CumulativeGoldStealingCounter = 0;
         GM_Script.Player_2.TemporaryGoldVault = 0;
-        
 
+        //print("gracz zaczął kraść, czekam za końcem zeby przejść do następnego etapu");
+        yield return new WaitUntil(()=>IsPayerEndStealing);
+      //  print("Gracz skońćzył kraść ;d");
         IndexOfCombatAction++;
         readyToFight = true;
     }
-    
+
+    public void StartFightCoroutine()
+    {
+        co_Fight = StartCoroutine(Fight());
+    }
+
+    private IEnumerator Fight()
+    {
+        yield return new WaitUntil(()=>((co_Fight != null) && (GoldIsAddedSuccesully == true)) && GM_Script.IsBattleModeTurnOn);
+        co_Fight = null;
+        
+        IndexOfCombatAction = 1;
+        readyToFight = true;
+    }
+
     public void ANDROID_BUTTON_START_COMBAT_ROUTINE()
     {
         IndexOfCombatAction = 1;
@@ -280,11 +340,14 @@ public class CombatManager : MonoBehaviour
 
     public void ANDROID_BUTTON_END_COMBAT_AND_BACK_TO_ROLL()
     {
-        IndexOfCombatAction = 0;
+        readyToFight = false;
         GM_Script.ChangeUIToRollingMode();
+        GameObject.Find("Player1").GetComponent<EnemyAI>().IsRollAllowed = true;
+        GameObject.Find("Player2").GetComponent<EnemyAI>().IsRollAllowed = true;
+
+        IndexOfCombatAction = 0;
     }
 
-[ContextMenu("Fight is over => CANCEL AND CLEAN")]
     public void BackDicesToHand()
     {
         try
@@ -293,30 +356,27 @@ public class CombatManager : MonoBehaviour
             var player2currentFightingDices = new List<GameObject>();
 
             var p1ListActionScripts = Player1ArenaDiceContainer.GetComponentsInChildren<DiceActionScript>().ToList();
-            foreach(var diceScript in p1ListActionScripts)
+            foreach (var diceScript in p1ListActionScripts)
             {
                 player1currentFightingDices.Add(diceScript.transform.gameObject);
             }
 
             var p2ListActionScripts = Player2ArenaDiceContainer.GetComponentsInChildren<DiceActionScript>().ToList();
-            foreach(var diceScript in p2ListActionScripts)
+            foreach (var diceScript in p2ListActionScripts)
             {
                 player2currentFightingDices.Add(diceScript.transform.gameObject);
             }
 
-            AndroidLogger.Log("Zdjete kostki gracza 1"+player1currentFightingDices.Count.ToString());
-            AndroidLogger.Log("Zdjete kostki gracza 2"+player2currentFightingDices.Count.ToString());
 
             ZdejmijKostkiIZmienKolorNaSzary(player1currentFightingDices);
             ZdejmijKostkiIZmienKolorNaSzary(player2currentFightingDices);
 
             IndexOfCombatAction = 0;
-            GM_Script.ChangeUIToRollingMode();
-            
+
         }
-        catch(Exception ex)
+        catch(Exception)
         {
-            print("Wszystko w porządku, nie było potrzeby sprzątać kostek"+ex.Message);
+            // Wszystko w porządku, nie było potrzeby sprzątać
         }
     }
 }

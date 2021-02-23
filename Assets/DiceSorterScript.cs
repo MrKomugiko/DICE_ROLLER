@@ -38,11 +38,6 @@ public class DiceSorterScript : MonoBehaviour
 
     private void RearrangeDicesInContainer(Dictionary<int, int> listaNowychIndexowKosci, List<GameObject> listaKosci)
     {
-        foreach (KeyValuePair<int, int> posortowanapozycja in listaNowychIndexowKosci)
-        {
-         //   print($"[{posortowanapozycja.Key}][{posortowanapozycja.Value}]");
-        }
-
         // wyciągnięcie kontenera z obiektów
         GameObject diceContainer = GameObject.Find(listaKosci[0].transform.parent.name);
 
@@ -53,19 +48,11 @@ public class DiceSorterScript : MonoBehaviour
                 if (kosc.GetComponent<DiceRollScript>().DiceNumber == poprawnapozycja.Key)
                 {
                     kosc.transform.SetSiblingIndex(poprawnapozycja.Value + 1);
-                   // print(kosc.transform.name + "diceNumber = " + poprawnapozycja.Key + " Została przeniesiona na pozycje " + (poprawnapozycja.Value + 1));
                 }
             }
         }
     }
 
-    /// <summary> 
-    ///     Posortowanie danej listy obiektów kości wwedług kolejności względem typu jaki sobą reprezentują, /n
-    ///         (przykład  atak fizyczny > obrona fizyczna > atak dystansowy > obrona dystansowa > kradziez).
-    /// </summary>
-    /// <remarks>
-    ///     <param name ="dicesOnBattleground"> lista GameObject'ow z kontenera kości (metoda działa na całych obiektach, włącznie z ich komponnentami) </param>
-    /// </remarks>
     Dictionary<int, int> SortDicesByType_V2(List<GameObject> dicesOnBattleground)
     {
         Dictionary<int, int> SortedDict = new Dictionary<int, int>();

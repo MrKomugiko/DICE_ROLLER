@@ -400,7 +400,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -418,13 +418,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -776,7 +776,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1048,8 +1048,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.051, y: 1.873}
-  m_SizeDelta: {x: 1388.058, y: 1207.371}
+  m_AnchoredPosition: {x: 1.051, y: 2.3}
+  m_SizeDelta: {x: 1388.058, y: 1006.108}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &167097287
 MonoBehaviour:
@@ -1462,7 +1462,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 482941161}
         m_TargetAssemblyTypeName: EnemyAI, Assembly-CSharp
-        m_MethodName: OnClick_TurnOnAI
+        m_MethodName: OnClick_TurnOnOFFAI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1470,7 +1470,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &243463605
 MonoBehaviour:
@@ -2304,7 +2304,9 @@ MonoBehaviour:
   Player2BattlefieldDiceContainer: {fileID: 298172344}
   IndexOfCombatAction: 0
   readyToFight: 0
-  GM_Script: {fileID: 0}
+  GM_Script: {fileID: 1301416607}
+  lastGameFirstAttacking: 
+  RecentAttacker: 
 --- !u!1 &458059115
 GameObject:
   m_ObjectHideFlags: 0
@@ -2612,7 +2614,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -2630,7 +2632,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -2648,7 +2650,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -2939,9 +2941,15 @@ MonoBehaviour:
   IsTurnON: 0
   isMockedDataInitiated: 0
   calculatingNewPickValuesIsCompleted: 0
-  IsRollAllowed: 1
   itsNeedToReCalculateRandomPickingValues: 1
+  IsRollAllowed: 1
   debugShowDict: []
+  needToRollDices: 1
+  isSkillSelected: 0
+  THOR: 1
+  IDUN: 1
+  bot_can_use_skills: 1
+  smartSkillSelect: 0
 --- !u!1 &483921941
 GameObject:
   m_ObjectHideFlags: 0
@@ -3217,7 +3225,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3235,7 +3243,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3253,7 +3261,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3596,7 +3604,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -3614,13 +3622,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -5407,7 +5415,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0.4995656, b: 1, a: 1}
+    m_NormalColor: {r: 0, g: 0.4995656, b: 1, a: 0}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -5455,7 +5463,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6025,7 +6033,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1113751808
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6432,7 +6440,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0, g: 0.4995656, b: 1, a: 1}
+    m_NormalColor: {r: 0, g: 0.4995656, b: 1, a: 0}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -6480,7 +6488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7376,7 +7384,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7406,13 +7414,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7569,7 +7577,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7599,13 +7607,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -7738,9 +7746,13 @@ MonoBehaviour:
   interpolationPeriod: 0.5
   _turnNumber: 0
   isBattleModeTurnOn: 0
-  CurrentPlayer: 
+  _currentPlayer: 
+  LastGameWinner: 
   currentGamePhase: 
   CombatManager_Script: {fileID: 0}
+  PlayerWhoMakeFirstRollinCurrentGameSession: 
+  PlayerWhoMakeFirstRollInCurrentRound: 
+  rundCounter: 0
 --- !u!4 &1301416608
 Transform:
   m_ObjectHideFlags: 0
@@ -7785,6 +7797,7 @@ MonoBehaviour:
   liczbaPrzelewaniaObrazen: 0
   _temporaryIntakeDamage: 0
   DiceManager: {fileID: 1795155977}
+  skillsLoades: 0
 --- !u!114 &1301416610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7815,6 +7828,7 @@ MonoBehaviour:
   liczbaPrzelewaniaObrazen: 0
   _temporaryIntakeDamage: 0
   DiceManager: {fileID: 228421449}
+  skillsLoades: 0
 --- !u!224 &1313521715 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3485725472894925092, guid: 484a3e544c4e6ee4283848bbe1a16755,
@@ -8946,7 +8960,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -8964,7 +8978,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -8976,7 +8990,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -9060,9 +9074,15 @@ MonoBehaviour:
   IsTurnON: 0
   isMockedDataInitiated: 0
   calculatingNewPickValuesIsCompleted: 0
-  IsRollAllowed: 1
   itsNeedToReCalculateRandomPickingValues: 1
+  IsRollAllowed: 1
   debugShowDict: []
+  needToRollDices: 1
+  isSkillSelected: 0
+  THOR: 1
+  IDUN: 1
+  bot_can_use_skills: 1
+  smartSkillSelect: 1
 --- !u!1 &1640551751
 GameObject:
   m_ObjectHideFlags: 0
@@ -9319,7 +9339,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1587131166}
         m_TargetAssemblyTypeName: EnemyAI, Assembly-CSharp
-        m_MethodName: OnClick_TurnOnAI
+        m_MethodName: OnClick_TurnOnOFFAI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9327,7 +9347,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &1683576308
 MonoBehaviour:
@@ -9906,7 +9926,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -9924,7 +9944,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[2]
       value: 
-      objectReference: {fileID: 8659474824711615487, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -7973671759688957095, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -9936,7 +9956,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -10099,7 +10119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1901050492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10154,8 +10174,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.0510001, y: -3.305}
-  m_SizeDelta: {x: 1388.058, y: 1234.404}
+  m_AnchoredPosition: {x: 1.0510001, y: -3.71}
+  m_SizeDelta: {x: 1388.058, y: 1006.108}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1904219872
 GameObject:
@@ -10465,7 +10485,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -10489,7 +10509,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -10501,7 +10521,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11129,7 +11149,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11153,13 +11173,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11772,7 +11792,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11796,7 +11816,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11808,7 +11828,7 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[5]
       value: 
-      objectReference: {fileID: 4821343164171663738, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: 8307739992205655649, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -11980,7 +12000,7 @@ PrefabInstance:
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.size
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
@@ -12004,13 +12024,13 @@ PrefabInstance:
         type: 3}
       propertyPath: listaDiceImages.Array.data[3]
       value: 
-      objectReference: {fileID: -2253250221482601086, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -1856999777594593378, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}
       propertyPath: listaDiceImages.Array.data[4]
       value: 
-      objectReference: {fileID: -4765851570883655592, guid: ec638f43da591804fb0268628fe5ebf9,
+      objectReference: {fileID: -4342403458676084701, guid: ec638f43da591804fb0268628fe5ebf9,
         type: 3}
     - target: {fileID: 3485725472894925095, guid: 484a3e544c4e6ee4283848bbe1a16755,
         type: 3}

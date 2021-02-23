@@ -71,6 +71,7 @@ public class GodsManager : MonoBehaviour
                 }
                 else
                 {
+                    print("nie stać Cie na tego skilla");
                     AndroidLogger.Log("you dont have enought Gold to cast skill", AndroidLogger.GetPlayerLogColor(ownerName));
                     lastUsedSkill.SkillIsSelected = false;
                 }
@@ -80,25 +81,32 @@ public class GodsManager : MonoBehaviour
     }
     public void CollorSkillButtonsIfCanBeUsed()
     {
-        foreach (var god in _godCardsInContainer.Where(g=>g._card.IsReverseRevelated))
-        {
-            int ignoredButtonIndex = 0;
-            if (god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
-
-            for(int level = 1; level <= 3; level++)
+        try
+        {    
+            foreach (var god in _godCardsInContainer.Where(g=>g._card.IsReverseRevelated))
             {
-                if (ignoredButtonIndex != level)
+                int ignoredButtonIndex = 0;
+                if (god._skill.SkillIsSelected == true) ignoredButtonIndex = god._skill.selectedSkillLevel;
+
+                for(int level = 1; level <= 3; level++)
                 {
-                    if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, level) == false)
+                    if (ignoredButtonIndex != level)
                     {
-                        ChangeSkillButtonToDissabled(god, level: level);
-                    }
-                    else
-                    {
-                        ChangeSkillButtonToEnabled(god, level: level);
+                        if (Skill.CheckIfPlayerHaveEnoughtGoldToUseSkill(ownerName, god._skill, level) == false)
+                        {
+                            ChangeSkillButtonToDissabled(god, level: level);
+                        }
+                        else
+                        {
+                            ChangeSkillButtonToEnabled(god, level: level);
+                        }
                     }
                 }
             }
+        }
+        catch (System.Exception)
+        {
+            print("skill uzyty przez bota bez uzycia interfejsu.");
         }
     }
     private void ChangeSkillButtonToEnabled(GodScript godScript, int level)

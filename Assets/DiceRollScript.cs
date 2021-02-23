@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DiceRoller_Console;
@@ -13,7 +14,7 @@ public class DiceRollScript : MonoBehaviour
     public static int ILOSC_RZUTOW = 20;
 
     [SerializeField] public bool DiceSlotIsLocked;
-    [SerializeField] public bool rollingIsCompleted;
+    [SerializeField] private bool _rollingIsCompleted;
     [SerializeField] public List<Sprite> listaDiceImages;
 
     [SerializeField] Image _diceImage;
@@ -106,16 +107,20 @@ public class DiceRollScript : MonoBehaviour
 
                 GameObject playerBattlefiel = GetComponentInParent<DiceManager>().PlayerBattlefieldDiceHolder;
                 var Dices = playerBattlefiel.transform.GetComponentsInChildren<DiceRollScript>();
-                Destroy(Dices.Where(d=>d.DiceNumber == this.DiceNumber).First().gameObject);
+                 try{Destroy(Dices.Where(d=>d.DiceNumber == this.DiceNumber).First().gameObject);}
+                 catch(Exception)
+                 {
+                     //print("nie znaleziono kostki do usunięcia");
+                     }
             }
         }
     }
     public bool RollingIsCompleted
     {
-        get => rollingIsCompleted;
+        get => _rollingIsCompleted;
         set
         {
-            rollingIsCompleted = value;
+            _rollingIsCompleted = value;
             // jezeli kość nie jest na polu bitwy
             if (!this.IsSentToBattlefield)
             {

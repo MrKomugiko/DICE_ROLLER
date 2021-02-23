@@ -1,10 +1,12 @@
-﻿using System.Diagnostics.Tracing;
+﻿using System.Runtime.ExceptionServices;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,12 +15,12 @@ public class GameManager : MonoBehaviour
 
     #region GENERAL   
     [SerializeField] private bool _isGameEnded = false;
-    [SerializeField] public static float GameSpeedValueModifier = 5;
-    [SerializeField] GameObject EndGameResultWindows;
+    [SerializeField] public static float GameSpeedValueModifier = 100;
+    [SerializeField] public GameObject EndGameResultWindows;
     [SerializeField] GameObject BattleField;
     [SerializeField] public GameObject DicePrefab;
     [SerializeField] float interpolationPeriod = .5f;
-    [SerializeField] float _turnNumber;
+    [SerializeField] public float _turnNumber;
     [SerializeField] bool isBattleModeTurnOn;
     public bool IsBattleModeTurnOn
     {
@@ -32,8 +34,8 @@ public class GameManager : MonoBehaviour
                 BattleField.transform.Find("Player1Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
                 BattleField.transform.Find("Player2Dices").GetComponent<DiceSorterScript>().PosortujKosci = true;
 
-                Player_1.TurnBlocker.SetActive(false);
-                Player_2.TurnBlocker.SetActive(false);
+                //......Player_1.TurnBlocker.SetActive(false);
+                //......Player_2.TurnBlocker.SetActive(false);
 
                 GameObject.Find("Player1").transform.Find("EndTurnButton").gameObject.SetActive(false);
                 GameObject.Find("Player2").transform.Find("EndTurnButton").gameObject.SetActive(false);
@@ -44,8 +46,9 @@ public class GameManager : MonoBehaviour
         }
     }
     float time = 0.0f, time2 = 0.0f;
-    [SerializeField] string CurrentPlayer;
-    [SerializeField] string FirstMoveByPlayer;
+    [SerializeField] private string _currentPlayer;
+    [SerializeField] public string LastGameWinner;
+
     [SerializeField] string currentGamePhase;
     float TurnNumber
     {
@@ -77,39 +80,66 @@ public class GameManager : MonoBehaviour
         set
         {
             _isGameEnded = value;
-            Player_1.TurnBlocker.SetActive(false);
-            Player_2.TurnBlocker.SetActive(false);
+            //......Player_1.TurnBlocker.SetActive(false);
+            //......Player_2.TurnBlocker.SetActive(false);
+            if (value == true)
+            {
+                StartCoroutine(CoroutineWcisnijNowaGraPo2SekundachPrzerwy());
+            }
+        }
+    }
+
+    public string CurrentPlayer
+    {
+        get => _currentPlayer;
+        set
+        {
+            // print($"zmiana curent playera z {_currentPlayer} na {value}");
+            _currentPlayer = value;
         }
     }
     #endregion
 
+    IEnumerator CoroutineWcisnijNowaGraPo2SekundachPrzerwy()
+    {
+        yield return new WaitForSecondsRealtime(0.2f);
+        OnClick_PlayAgain();
+    }
+
     public CombatManager CombatManager_Script;
     public void ShowEndGameResultWindow(string winner)
     {
-        IsGameEnded = true;
-
         if (winner == "Player2")
         {
+            AndroidLogger.Log("Wygrana gracza : " + winner, AndroidLogger.GetPlayerLogColor(winner));
             EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(true);
+
         }
         else
         {
+            AndroidLogger.Log("Wygrana gracza : " + winner, AndroidLogger.GetPlayerLogColor(winner));
             EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(true);
         }
     }
-
+    void Awake()
+    {
+        AndroidLogger.ApplicationStartedCheckLogFilesAndChangeNumber();
+    }
     void Start()
     {
-        FirstMoveByPlayer = "Player1";
-        CurrentPlayer = FirstMoveByPlayer;
+        CurrentPlayer = CurrentlyPlayingPlayerName;
+        // pierwsze przypisanie gracza, zostanie zmieniony na następnego defacto zaczynać będzie gracz 2
+        CurrentPlayer = "Player1";
+        // LastPlayerWhoRollingBeforeBattle = "Player1";
         currentGamePhase = "Dice Rolling Mode";
         TurnNumber = 0;
 
         CombatManager_Script = GameObject.Find("FightZone").GetComponent<CombatManager>();
-
-        ChangePlayersTurn();
+        // faktyczny start ze zmianą tury, zostanie rpzypisany gracz2 jako zaczynający
+        ChangeUIToRollingMode(FirstRun: true);
+        // ChangePlayersTurn();
     }
-    void Update()
+    void FixedUpdate()
     {
         Time.timeScale = GameSpeedValueModifier;
 
@@ -185,12 +215,34 @@ public class GameManager : MonoBehaviour
         {
             Player_1.RollingCounter++;
             CurrentPlayer = "Player2";
+            if (PlayerWhoMakeFirstRollInCurrentRound == "")
+            {
+                PlayerWhoMakeFirstRollInCurrentRound = playerfirstrollinginlastturn == "Player1" ? "Player2" : "Player1";
+                // zapisanie tylko nazwy gracza ktory zaczal jako 1 w rundzie
+                CurrentPlayer = "Player2";
+
+
+             //   print("playerfirstrollinginlastturn = " + playerfirstrollinginlastturn + "/ PlayerWhoMakeFirstRollInCurrentRound.1 = " + PlayerWhoMakeFirstRollInCurrentRound);
+            }
+            if (PlayerWhoMakeFirstRollinCurrentGameSession == "") PlayerWhoMakeFirstRollinCurrentGameSession = CurrentPlayer;
+
         }
-        else
+        else if (CurrentPlayer == "Player2")
         {
             Player_2.RollingCounter++;
             CurrentPlayer = "Player1";
+            if (PlayerWhoMakeFirstRollInCurrentRound == "")
+            {
+                // zapisanie tylko nazwy gracza ktory zaczal jako 1 w rundzie               PlayerWhoMakeFirstRollInCurrentRound = playerfirstrollinginlastturn == "Player1"?"Player2":"Player1";
+                PlayerWhoMakeFirstRollInCurrentRound = playerfirstrollinginlastturn == "Player1" ? "Player2" : "Player1";
+                CurrentPlayer = "Player1";
+
+                //     print("playerfirstrollinginlastturn = " + playerfirstrollinginlastturn + "/ PlayerWhoMakeFirstRollInCurrentRound.1 = " + PlayerWhoMakeFirstRollInCurrentRound);
+            }
+            if (PlayerWhoMakeFirstRollinCurrentGameSession == "") PlayerWhoMakeFirstRollinCurrentGameSession = CurrentPlayer;
+
         }
+
         if (!IsBattleModeTurnOn)
         {
             if (CurrentPlayer == "Player1")
@@ -204,6 +256,7 @@ public class GameManager : MonoBehaviour
                 Player_2.TurnBlocker.SetActive(false);
             }
         }
+
     }
 
     internal void SwapRollButonWithEndTurn_OnClick(string playerName)
@@ -213,9 +266,10 @@ public class GameManager : MonoBehaviour
 
     public void EndYoursTurn_OnClick(string playerName)
     {
+        //  print("EndYoursTurn_OnClick");
         GameObject.Find(playerName).transform.Find("EndTurnButton").SetSiblingIndex(1);
         GameObject.Find(playerName).transform.Find("DiceHolder").GetComponent<DiceManager>().SetDicesOff = true;
-        CurrentPlayer = playerName;
+        // CurrentPlayer = playerName;
         ChangePlayersTurn();
 
         // automatyczne przelączenie sie do widoku walki jezeli na polu bitwy znajduje sie 12 kostek
@@ -257,8 +311,8 @@ public class GameManager : MonoBehaviour
             var battlefieldRT = BattleField.GetComponent<RectTransform>();
             battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x, battlefieldRT.sizeDelta.y * 3.2f);
 
-            Player_1.TurnBlocker.SetActive(false);
-            Player_2.TurnBlocker.SetActive(false);
+            //......Player_1.TurnBlocker.SetActive(false);
+            //......Player_2.TurnBlocker.SetActive(false);
 
             var p1Dices = GameObject.Find("Player1Dices").GetComponentsInChildren<DiceActionScript>();
             foreach (var dice in p1Dices)
@@ -272,13 +326,43 @@ public class GameManager : MonoBehaviour
             }
             IsBattleModeTurnOn = true;
 
-            GameObject.Find("ANDROID_TEST_STARTCOMBATROUTINE").GetComponent<Button>().interactable = true;
+            CombatManager_Script.StartFightCoroutine();
+            // GameObject.Find("ANDROID_TEST_STARTCOMBATROUTINE").GetComponent<Button>().interactable = true;
         }
     }
 
-    public void ChangeUIToRollingMode()
+    [SerializeField] public string PlayerWhoMakeFirstRollinCurrentGameSession = "";
+    [SerializeField] public string PlayerWhoMakeFirstRollInCurrentRound = "";
+    private string playerfirstrollinginlastturn = "";
+
+    public void ChangeUIToRollingMode(bool lastRound = false, bool FirstRun = false)
     {
-        if (IsBattleModeTurnOn == true)
+
+        if (!lastRound)
+        {
+            AndroidLogger.Log_Which_Player_Attack_First_and_how_many_rounds(
+                whoStartGameSession: PlayerWhoMakeFirstRollinCurrentGameSession,
+                whoAttackedFirstInThisRund: CombatManager_Script.RecentAttacker,
+                whoRollinCurrentRund: PlayerWhoMakeFirstRollInCurrentRound,
+                numberOfRund: rundCounter.ToString(),
+                winner: LastGameWinner,
+
+                P1_HP: Player_1.CurrentHealth_Value.ToString(),
+                P1_Gold: Player_1.CurrentGold_Value.ToString(),
+
+                P2_HP: Player_2.CurrentHealth_Value.ToString(),
+                P2_Gold: Player_2.CurrentGold_Value.ToString()
+                );
+
+
+        }
+        rundCounter++;
+
+        playerfirstrollinginlastturn = PlayerWhoMakeFirstRollInCurrentRound;
+        PlayerWhoMakeFirstRollInCurrentRound = "";
+
+        //        print("playerfirstrollinginlastturn = " + playerfirstrollinginlastturn + "/ PlayerWhoMakeFirstRollInCurrentRound.1 = " + PlayerWhoMakeFirstRollInCurrentRound);
+        if (IsBattleModeTurnOn == true || FirstRun)
         {
             Player_1.DiceManager.transform.parent.GetComponentInParent<EnemyAI>().FirstRoll = true;
             Player_2.DiceManager.transform.parent.GetComponentInParent<EnemyAI>().FirstRoll = true;
@@ -287,8 +371,11 @@ public class GameManager : MonoBehaviour
             currentGamePhase = "Dice Rolling Mode";
 
             // 1. zmniejszenie battlegroundu
-            var battlefieldRT = BattleField.GetComponent<RectTransform>();
-            battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x, battlefieldRT.sizeDelta.y / 3.2f);
+            if (!FirstRun)
+            {
+                var battlefieldRT = BattleField.GetComponent<RectTransform>();
+                battlefieldRT.sizeDelta = new Vector2(battlefieldRT.sizeDelta.x, battlefieldRT.sizeDelta.y / 3.2f);
+            }
 
             // 2. wyzerowanie numeru tury i liczby losowan przez graczy
             TurnNumber = 0;
@@ -299,7 +386,6 @@ public class GameManager : MonoBehaviour
             IsBattleModeTurnOn = false;
 
             // 4. odkrycie buttonków rolla i końca tury dla graczy
-
             Player_1.TurnBlocker.SetActive(true);
             Player_2.TurnBlocker.SetActive(true);
 
@@ -328,20 +414,17 @@ public class GameManager : MonoBehaviour
                 dice.RollingIsCompleted = false;
             }
 
-            FirstMoveByPlayer = FirstMoveByPlayer == "Player1" ? "Player2" : "Player1";
-            CurrentPlayer = FirstMoveByPlayer;
-            ChangePlayersTurn();
 
             // 7. przywrócenie opcji losowania ( zamiana miejscami z guzikiem konca tury )
             GameObject.Find("Player1").transform.Find("EndTurnButton").SetSiblingIndex(1);
             GameObject.Find("Player2").transform.Find("EndTurnButton").SetSiblingIndex(1);
 
-            // 8. przycisk zakonczenia walki i powrotu zostane dezaktywowany
-            GameObject.Find("ANDROID_TEST_ENDCOMBATANDBACKTOROLL").GetComponent<Button>().interactable = false;
-            GameObject.Find("ANDROID_TEST_STARTCOMBATROUTINE").GetComponent<Button>().interactable = false;
+            CurrentPlayer = CurrentPlayer == "Player1" ? "Player2" : "Player1";
+            ChangePlayersTurn();
         }
     }
 
+    public static string CurrentlyPlayingPlayerName = "Player1";
     public void OnClick_OpenGodSkillsWindow(string playerName)
     {
         switch (playerName)
@@ -382,10 +465,25 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [SerializeField] int rundCounter = 1;
     public void OnClick_PlayAgain()
     {
-        if (GameObject.Find("Player1").GetComponent<EnemyAI>().IsTurnON == true) GameObject.Find("Player1").GetComponent<EnemyAI>().OnClick_TurnOnAI();
-        if (GameObject.Find("Player2").GetComponent<EnemyAI>().IsTurnON == true) GameObject.Find("Player2").GetComponent<EnemyAI>().OnClick_TurnOnAI();
+        AndroidLogger.Log_Which_Player_Attack_First_and_how_many_rounds(
+            whoStartGameSession: PlayerWhoMakeFirstRollinCurrentGameSession,
+            whoAttackedFirstInThisRund: CombatManager_Script.RecentAttacker,
+            whoRollinCurrentRund: PlayerWhoMakeFirstRollInCurrentRound,
+            numberOfRund: rundCounter.ToString(),
+            winner: LastGameWinner,
+
+            P1_HP: Player_1.CurrentHealth_Value.ToString(),
+            P1_Gold: Player_1.CurrentGold_Value.ToString(),
+
+            P2_HP: Player_2.CurrentHealth_Value.ToString(),
+            P2_Gold: Player_2.CurrentGold_Value.ToString()
+            );
+        // wyłączamy AI zeby nie wlaczyly sie przed czasem włączymy je w roll modzie spowrotem
+        //   if (GameObject.Find("Player1").GetComponent<EnemyAI>().IsTurnON == true) GameObject.Find("Player1").GetComponent<EnemyAI>().OnClick_TurnOnOFFAI();
+        //  if (GameObject.Find("Player2").GetComponent<EnemyAI>().IsTurnON == true) GameObject.Find("Player2").GetComponent<EnemyAI>().OnClick_TurnOnOFFAI();
 
         CombatManager_Script.BackDicesToHand();
 
@@ -398,17 +496,41 @@ public class GameManager : MonoBehaviour
         Player_1.coinText_TMP.SetText("");
         Player_2.coinText_TMP.SetText("");
 
-        ChangeUIToRollingMode();
+        // PlayerWhoFirstStartRollingInCurrentGameSession = "";
+        /* new */
+        //  print($"[PlayerWhoMakeFirstRollinCurrentGameSession] = {PlayerWhoMakeFirstRollinCurrentGameSession} / [CurrentPlayer] = {CurrentPlayer}");// <- dzieki temu w tej rundzie zacznie druga osoba
+        CurrentPlayer = PlayerWhoMakeFirstRollinCurrentGameSession;
 
+        bool lastRound = true;
+        ChangeUIToRollingMode(lastRound);
+        rundCounter = 1;
+        lastRound = false;
+        //dodanie pustej linijki do logó po każdej grze / dla przejrzystosci
+
+
+        PlayerWhoMakeFirstRollinCurrentGameSession = "";
 
         EndGameResultWindows.transform.Find("WIN").transform.gameObject.SetActive(false);
         EndGameResultWindows.transform.Find("LOSE").transform.gameObject.SetActive(false);
 
+        // zerowy log nastepnej rundy, info o hp
+        // AndroidLogger.Log_Which_Player_Attack_First_and_how_many_rounds(
+        //     whoStartGameSession: PlayerWhoMakeFirstRollinCurrentGameSession,
+        //     whoAttackedFirstInThisRund: CombatManager_Script.RecentAttacker,
+        //     whoRollinCurrentRund: PlayerWhoMakeFirstRollInCurrentRound,
+        //     numberOfRund: "0 - Start",
+
+        //     P1_HP: Player_1.CurrentHealth_Value.ToString(),
+        //     P1_Gold: Player_1.CurrentGold_Value.ToString(),
+
+        //     P2_HP: Player_2.CurrentHealth_Value.ToString(),
+        //     P2_Gold: Player_2.CurrentGold_Value.ToString()
+        //     );
+        LastGameWinner = "";
         IsGameEnded = false;
 
-
-
-        //TODO: dodac reset aktywnego skilla.
+        // GameObject.Find("Player1").GetComponent<EnemyAI>().IsTurnON = true;
+        // GameObject.Find("Player2").GetComponent<EnemyAI>().IsTurnON = true;
 
         //TODO: przerolowanie bogów.
     }

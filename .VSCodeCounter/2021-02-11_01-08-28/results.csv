@@ -1,0 +1,48 @@
+"filename", "language", "C#", "XML", "Markdown", "JSON", "HLSL", "ShaderLab", "Log", "comment", "blank", "total"
+"d:\Programowanie\Unity\DICE_ROLLER\Assembly-CSharp.csproj", "XML", 0, 699, 0, 0, 0, 0, 0, 7, 1, 707
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\AIPickChanceUi.cs", "C#", 60, 0, 0, 0, 0, 0, 0, 1, 13, 74
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\AndroidLogger.cs", "C#", 26, 0, 0, 0, 0, 0, 0, 0, 8, 34
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\CardScript.cs", "C#", 267, 0, 0, 0, 0, 0, 0, 7, 25, 299
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\CombatManager.cs", "C#", 249, 0, 0, 0, 0, 0, 0, 17, 57, 323
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\DiceActionScript.cs", "C#", 287, 0, 0, 0, 0, 0, 0, 17, 25, 329
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\DiceManager.cs", "C#", 66, 0, 0, 0, 0, 0, 0, 0, 3, 69
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\DiceRollScript.cs", "C#", 229, 0, 0, 0, 0, 0, 0, 10, 12, 251
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\DiceSorterScript.cs", "C#", 58, 0, 0, 0, 0, 0, 0, 24, 18, 100
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\GameManager.cs", "C#", 328, 0, 0, 0, 0, 0, 0, 18, 69, 415
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\GodScript.cs", "C#", 57, 0, 0, 0, 0, 0, 0, 0, 9, 66
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\GodsManager.cs", "C#", 140, 0, 0, 0, 0, 0, 0, 0, 13, 153
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Graphic\Scripts\Program.cs", "C#", 68, 0, 0, 0, 0, 0, 0, 1, 10, 79
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Graphic\Scripts\RandomNumberGenerator.cs", "C#", 24, 0, 0, 0, 0, 0, 0, 10, 3, 37
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\EnemyAI.cs", "C#", 415, 0, 0, 0, 0, 0, 0, 54, 56, 525
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\God.cs", "C#", 38, 0, 0, 0, 0, 0, 0, 0, 9, 47
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\GodSkills\BragiSkill.cs", "C#", 16, 0, 0, 0, 0, 0, 0, 15, 4, 35
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\GodSkills\IdunSkill.cs", "C#", 36, 0, 0, 0, 0, 0, 0, 15, 5, 56
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\GodSkills\OdinSkill.cs", "C#", 15, 0, 0, 0, 0, 0, 0, 17, 4, 36
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\GodSkills\ThorSkill.cs", "C#", 38, 0, 0, 0, 0, 0, 0, 15, 4, 57
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\Player.cs", "C#", 188, 0, 0, 0, 0, 0, 0, 11, 24, 223
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\Scripts\Skill.cs", "C#", 176, 0, 0, 0, 0, 0, 0, 0, 34, 210
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\SelectionController.cs", "C#", 203, 0, 0, 0, 0, 0, 0, 9, 23, 235
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader", "ShaderLab", 0, 0, 0, 0, 0, 109, 0, 2, 33, 144
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader", "ShaderLab", 0, 0, 0, 0, 0, 112, 0, 3, 31, 146
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader", "ShaderLab", 0, 0, 0, 0, 0, 109, 0, 2, 33, 144
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader", "ShaderLab", 0, 0, 0, 0, 0, 243, 0, 4, 71, 318
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader", "ShaderLab", 0, 0, 0, 0, 0, 188, 0, 10, 50, 248
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader", "ShaderLab", 0, 0, 0, 0, 0, 183, 0, 8, 50, 241
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader", "ShaderLab", 0, 0, 0, 0, 0, 183, 0, 8, 50, 241
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader", "ShaderLab", 0, 0, 0, 0, 0, 103, 0, 8, 28, 139
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader", "ShaderLab", 0, 0, 0, 0, 0, 122, 0, 4, 33, 159
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader", "ShaderLab", 0, 0, 0, 0, 0, 243, 0, 4, 71, 318
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader", "ShaderLab", 0, 0, 0, 0, 0, 93, 0, 0, 22, 115
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc", "HLSL", 0, 0, 0, 0, 63, 0, 0, 2, 20, 85
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc", "HLSL", 0, 0, 0, 0, 62, 0, 0, 10, 14, 86
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc", "HLSL", 0, 0, 0, 0, 76, 0, 0, 7, 19, 102
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader", "ShaderLab", 0, 0, 0, 0, 0, 241, 0, 4, 66, 311
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader", "ShaderLab", 0, 0, 0, 0, 0, 82, 0, 4, 21, 107
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc", "HLSL", 0, 0, 0, 0, 122, 0, 0, 2, 34, 158
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\TextMesh Pro\Sprites\EmojiOne.json", "JSON", 0, 0, 0, 155, 0, 0, 0, 0, 2, 157
+"d:\Programowanie\Unity\DICE_ROLLER\Assets\status.cs", "C#", 10, 0, 0, 0, 0, 0, 0, 4, 4, 18
+"d:\Programowanie\Unity\DICE_ROLLER\Logs\Packages-Update.log", "Log", 0, 0, 0, 0, 0, 0, 59, 0, 10, 69
+"d:\Programowanie\Unity\DICE_ROLLER\Packages\manifest.json", "JSON", 0, 0, 0, 45, 0, 0, 0, 0, 1, 46
+"d:\Programowanie\Unity\DICE_ROLLER\Packages\packages-lock.json", "JSON", 0, 0, 0, 365, 0, 0, 0, 0, 1, 366
+"d:\Programowanie\Unity\DICE_ROLLER\README.md", "Markdown", 0, 0, 1, 0, 0, 0, 0, 0, 1, 2
+"Total", "-", 2994, 699, 1, 565, 323, 2011, 59, 334, 1094, 8080
