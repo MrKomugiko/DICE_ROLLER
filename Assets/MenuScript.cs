@@ -10,6 +10,7 @@ public class MenuScript : MonoBehaviour
     [SerializeField] private Button _buttonShow;
     [SerializeField] private Button _buttonHide;
     [SerializeField] private GameObject _pauseImageObject;
+    [SerializeField] private GameObject _settingsWindow;
 
     [SerializeField] menuStatus menuCurrentState = menuStatus.closed;
 
@@ -39,6 +40,8 @@ public class MenuScript : MonoBehaviour
         this.gameObject.transform.localPosition = new Vector3(-width, 0, 0);
         print($"Canvas Size [ {width},{height} ]");
 
+        ConfigureSettingsIconPosition();
+
         Debug_CurrentButtonAction = $"Open button = OpenWindowHalf // Close button = null)";
 
         _buttonShow.onClick.AddListener(() => { OpenWindowHalf(width, height); });
@@ -57,6 +60,8 @@ public class MenuScript : MonoBehaviour
         Color32 newColor = new Color32(r: 0, g: 164, b: 164, a: 200);
 
         _pauseImageObject.SetActive(true);
+    
+        
         print("przycisk wciśnięty, menu zostanie wysunięte do połowy");
 
         menuCurrentState = menuStatus.halfOpen;
@@ -74,6 +79,14 @@ public class MenuScript : MonoBehaviour
         _buttonHide.onClick.AddListener(() => { CloseWindow(width, height); });
         _buttonHide.interactable = true;
     }
+
+    private void ConfigureSettingsIconPosition()
+    {
+        var SettingsButton = _pauseImageObject.transform.Find("SettingsButton").transform.GetComponent<RectTransform>();
+        var size = SettingsButton.rect.width;
+        SettingsButton.transform.localPosition = new Vector3((width/2)-(size/2),(height/2)-(size/2),0);
+    }
+
     void ExpandWindowFull(float width, float height)
     {
         if(isButtonPressed == true) return;
@@ -153,14 +166,20 @@ public class MenuScript : MonoBehaviour
         yield return new WaitUntil(() => isPossibleToAnimateMenu);
         isPossibleToAnimateMenu = false;
 
+        var settingsButton = _pauseImageObject.transform.Find("SettingsButton").GetComponent<Image>();
+
         Vector3 startPositionVector3 = new Vector3(startPosition, 0, 0);
         Vector3 endPositionVector3 = new Vector3(endPosition, 0, 0);
+
+        Color32 settingsStartColor = new Color32(255,255,255,startColor.a);
+        Color32 settingsEndColor = new Color32(255,255,255,endColor.a>0?(byte)255:(byte)0);
 
         for (float i = 0; i < 1.05; i += 0.05f)
         {
             _pauseImageObject.GetComponent<Image>().color = Color.Lerp(startColor, endColor, i);
             this.gameObject.transform.localPosition = Vector3.Lerp(startPositionVector3, endPositionVector3, i);
-            // print("wysuniecie i przyciemnianie tła ednoczesnie");
+
+            settingsButton.color = Color.Lerp(settingsStartColor,settingsEndColor,i);
 
             yield return new WaitForSecondsRealtime(0.005f);
         }
@@ -169,5 +188,14 @@ public class MenuScript : MonoBehaviour
         if (endColor.a != 0) _pauseImageObject.SetActive(true);
         isPossibleToAnimateMenu = true;
         isButtonPressed = false;
+    }
+
+    public void OnClick_OpenSettings()
+    {
+        _settingsWindow.SetActive(true);
+    }
+    public void OnClick_CloseSettings()
+    {
+        _settingsWindow.SetActive(false);
     }
 }
