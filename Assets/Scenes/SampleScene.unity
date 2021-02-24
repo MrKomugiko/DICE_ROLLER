@@ -2864,10 +2864,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1842740891}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 414309914}
-  m_Toggle: {fileID: 414309917}
 --- !u!114 &414309916
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2880,10 +2876,6 @@ MonoBehaviour:
   m_Script: {fileID: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Text: {fileID: 1842740891}
-  m_Image: {fileID: 0}
-  m_RectTransform: {fileID: 414309914}
-  m_Toggle: {fileID: 414309917}
 --- !u!114 &414309917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14123,7 +14115,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -539.99994, y: 0}
+  m_AnchoredPosition: {x: -540, y: 0}
   m_SizeDelta: {x: 1080, y: 2340}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1802007373
@@ -14143,6 +14135,7 @@ MonoBehaviour:
   _buttonHide: {fileID: 969361601}
   _pauseImageObject: {fileID: 1136768311}
   _settingsWindow: {fileID: 1733321652}
+  _menuContent: {fileID: 1812875432}
   menuCurrentState: 2
   Debug_CurrentButtonAction: Open button = OpenWindowHalf // Close button = null)
   width: 1079.9999
@@ -14187,8 +14180,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_SizeDelta: {x: -0.00012207031, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1842740889
 GameObject:

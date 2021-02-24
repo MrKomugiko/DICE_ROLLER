@@ -11,17 +11,9 @@ public class MenuScript : MonoBehaviour
     [SerializeField] private Button _buttonHide;
     [SerializeField] private GameObject _pauseImageObject;
     [SerializeField] private GameObject _settingsWindow;
+    [SerializeField] private GameObject _menuContent;
 
     [SerializeField] menuStatus menuCurrentState = menuStatus.closed;
-
-    enum menuStatus
-    {
-        open,
-        halfOpen,
-        closed,
-    }
-    public UnityAction CurrentButtonAction;
-    private UnityAction<float, float> myAction;
     public string Debug_CurrentButtonAction;
     RectTransform canvasRT, menuRT;
     [SerializeField] float width, height;
@@ -49,7 +41,12 @@ public class MenuScript : MonoBehaviour
 
         _buttonHide.interactable = false;
     }
-
+    void ConfigureSettingsIconPosition()
+    {
+        var SettingsButton = _pauseImageObject.transform.Find("SettingsButton").transform.GetComponent<RectTransform>();
+        var size = SettingsButton.rect.width;
+        SettingsButton.transform.localPosition = new Vector3((width/2)-(size/2),(height/2)-(size/2),0);
+    }
     void OpenWindowHalf(float width, float height)
     {
         if(isButtonPressed == true) return;
@@ -60,7 +57,6 @@ public class MenuScript : MonoBehaviour
         Color32 newColor = new Color32(r: 0, g: 164, b: 164, a: 200);
 
         _pauseImageObject.SetActive(true);
-    
         
         print("przycisk wciśnięty, menu zostanie wysunięte do połowy");
 
@@ -78,15 +74,7 @@ public class MenuScript : MonoBehaviour
 
         _buttonHide.onClick.AddListener(() => { CloseWindow(width, height); });
         _buttonHide.interactable = true;
-    }
-
-    private void ConfigureSettingsIconPosition()
-    {
-        var SettingsButton = _pauseImageObject.transform.Find("SettingsButton").transform.GetComponent<RectTransform>();
-        var size = SettingsButton.rect.width;
-        SettingsButton.transform.localPosition = new Vector3((width/2)-(size/2),(height/2)-(size/2),0);
-    }
-
+    }   
     void ExpandWindowFull(float width, float height)
     {
         if(isButtonPressed == true) return;
@@ -96,7 +84,6 @@ public class MenuScript : MonoBehaviour
         
         Time.timeScale = 0;
 
-        
         Color32 currentColor = new Color32(r: 0, g: 164, b: 164, a: 200);
         Color32 newColor = new Color32(r: 0, g: 0, b: 0, a: 255);
 
@@ -135,7 +122,6 @@ public class MenuScript : MonoBehaviour
 
         _buttonHide.onClick.AddListener(() => { CloseWindow(width, height); });
         _buttonHide.interactable = true;
-
     }
     void CloseWindow(float width, float height)
     {
@@ -157,7 +143,6 @@ public class MenuScript : MonoBehaviour
         _buttonHide.interactable = true;
 
         _buttonHide.interactable = false;
-
         
         Time.timeScale = GameManager.GameSpeedValueModifier;
     }
@@ -171,15 +156,36 @@ public class MenuScript : MonoBehaviour
         Vector3 startPositionVector3 = new Vector3(startPosition, 0, 0);
         Vector3 endPositionVector3 = new Vector3(endPosition, 0, 0);
 
-        Color32 settingsStartColor = new Color32(255,255,255,startColor.a);
-        Color32 settingsEndColor = new Color32(255,255,255,endColor.a>0?(byte)255:(byte)0);
+        Color32 settingsStartColor = new Color32(255, 255, 255, startColor.a);
+        Color32 settingsEndColor = new Color32(255, 255, 255, endColor.a > 0 ? (byte)255 : (byte)0);
 
-        for (float i = 0; i < 1.05; i += 0.05f)
+        var menuContent = _menuContent.transform.GetComponent<RectTransform>();
+        Vector2 contentStartPosition, contentEndPosition;
+        if(menuCurrentState == menuStatus.open)
+        {
+            contentStartPosition = menuContent.offsetMin;
+            contentEndPosition = new Vector2(Mathf.RoundToInt(width / (-2f)),0);
+            print(contentStartPosition.ToString() + " / " + contentEndPosition.ToString());
+        }
+        else if(menuCurrentState == menuStatus.halfOpen)
+        {
+            contentStartPosition = menuContent.offsetMin;
+            contentEndPosition = Vector2.zero;; 
+            print(contentStartPosition.ToString() + " / " + contentEndPosition.ToString());
+        }
+        else 
+        {
+            contentStartPosition = Vector2.zero;
+            contentEndPosition = Vector2.zero;; 
+            print(contentStartPosition.ToString() + " / " + contentEndPosition.ToString());
+        }
+
+        for (float i = 0; i < 1.05; i += 0.1f)
         {
             _pauseImageObject.GetComponent<Image>().color = Color.Lerp(startColor, endColor, i);
             this.gameObject.transform.localPosition = Vector3.Lerp(startPositionVector3, endPositionVector3, i);
-
-            settingsButton.color = Color.Lerp(settingsStartColor,settingsEndColor,i);
+            menuContent.offsetMin = Vector2.Lerp(contentStartPosition, contentEndPosition, i);
+            settingsButton.color = Color.Lerp(settingsStartColor, settingsEndColor, i);
 
             yield return new WaitForSecondsRealtime(0.005f);
         }
@@ -197,5 +203,12 @@ public class MenuScript : MonoBehaviour
     public void OnClick_CloseSettings()
     {
         _settingsWindow.SetActive(false);
+    }
+
+    enum menuStatus
+    {
+        open,
+        halfOpen,
+        closed,
     }
 }
